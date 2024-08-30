@@ -2,7 +2,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-library">
   <a class="navbar-brand" href="#">LibGra</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+  <button class="navbar-toggler" type="button" id="boton-style-app" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
   </button>
@@ -80,7 +80,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <!-- Botón para mostrar el formulario -->
-                    <button class="btn btn-primary mb-3" *ngIf="!esLector && isLoggedIn" (click)="toggleDropdown()">Añadir un libro</button>
+                    <button id="boton-style-app" class="btn btn-primary mb-3" *ngIf="!esLector && isLoggedIn" (click)="toggleDropdown()">Añadir un libro</button>
                     
                     <!-- Formulario desplegable para añadir un nuevo libro -->
                     <div *ngIf="showDropdown" class="card p-4">
@@ -165,7 +165,7 @@
                             <p class="card-text"><strong>ISBN:</strong> {{ book.isbn }}</p>
                             <p class="card-text"><strong>Fecha de Publicación:</strong> {{ book.fecha_publicacion | date:'dd/MM/yyyy' }}</p>
                             <p class="card-text">{{ book.id_autor.nombre || 'No hay autor disponible.' }}</p>
-                            <a [href]="book.archivo" class="btn btn-primary" target="_blank" *ngIf="book.archivo && isLoggedIn">Ver Archivo</a>
+                            <a [href]="baseUrl + book.archivo" class="btn btn-primary" target="_blank" *ngIf="book.archivo && isLoggedIn">Ver Archivo</a>
                             <a [href]="book.resenas_libro.length ? '/resenas/' + book.id_autor : ''" class="btn btn-secondary" *ngIf="book.resenas_libro.length && isLoggedIn">Leer Reseñas</a>
                         </div>
                     </div>

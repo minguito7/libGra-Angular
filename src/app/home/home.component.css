@@ -208,3 +208,12 @@ li a#csesion{
     background-color: #007bff; /* Fondo azul */
     color: #fff; /* Texto blanco */
 }
+
+/*BOTONES*/
+.btn-primary{
+    background-color: #6f4e37;
+    color: #fff3e6;
+    text-align: center;
+    padding: 10px 0;
+    font-family: 'Georgia', serif;  
+}

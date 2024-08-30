@@ -74,10 +74,10 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    this.bookService.getBooksActivos().subscribe(response => {     
+      this.bookService.getBooksActivos().subscribe(response => {     
          
       this.books = response.resultado;
+      console.log("aquiiiiii: "+response.resultado)
     });
 
     this.bookService.getNovedadesLibros().subscribe(response => {     
@@ -253,12 +253,32 @@ checkLoginStatus() {
       // Enviar los datos al backend
       this.bookService.addBook(formData).subscribe((response: any) => {
         // Manejo de la respuesta
+           // Cerrar el toggle
+      this.showDropdown = false;
+      // Limpiar el formulario
+      this.bookForm.reset();
+      // Limpiar los archivos seleccionados
+      this.selectedPortada = undefined;
+      this.selectedArchivo = undefined;
+      // Actualizar la lista de libros en el home
+     // this.updateBookList();
+      // Navegar de vuelta al home (si es necesario)
+     
         this.router.navigate(['/']);
       }, (error: any) => {
         console.error('Error al añadir libro:', error);
       });
     }
   }
+
+  updateBookList(): void {
+    this.bookService.getBooksActivos().subscribe((books: any) => {
+      this.books = books;
+    }, (error: any) => {
+      console.error('Error al obtener la lista de libros:', error);
+    });
+  }
+  
   
   removeFile(fieldName: string): void {
     if (fieldName === 'portada') {
