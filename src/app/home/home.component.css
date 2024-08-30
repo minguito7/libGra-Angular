@@ -1,0 +1,210 @@
+/* Skeleton Loader Styles */
+.skeleton-loader {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .skeleton-card {
+    width: 100%;
+    max-width: 100%;
+    height: 250px;
+    background: #e0e0e0;
+    border-radius: 8px;
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+  .navbar-library {
+    background-color: #6f4e37;
+}
+
+.navbar-library .nav-link {
+    color: #fff3e6;
+}
+
+.navbar-library .nav-link:hover {
+    color: #ffd9b3;
+}
+
+.navbar-library .navbar-brand {
+    color: #fff3e6;
+    font-family: 'Georgia', serif;
+}
+
+.navbar-library .nav-item .btn {
+    color: #6f4e37;
+    background-color: #fff3e6;
+    border: 1px solid #fff3e6;
+    border-radius: 5px;
+    margin-left: 10px;    
+    object-fit: cover;
+}
+
+.navbar-library .nav-item .btn:hover {
+    color: #fff3e6;
+    background-color: #6f4e37;
+    border-color: #6f4e37;
+}
+
+.footer-library {
+    background-color: #6f4e37;
+    color: #fff3e6;
+    text-align: center;
+    padding: 10px 0;
+    font-family: 'Georgia', serif;
+}
+
+.banner {
+    height: 300px;
+    background-color: #d3c6b1;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-family: 'Georgia', serif;
+}
+
+.ad-container {
+    background-color: #fff200;
+    padding: 0;
+    margin: 0;
+    border: 1px solid black;
+}
+
+.ad-sidebar {
+    padding: 0;
+    margin: 0;
+    height: 300px;
+}
+
+/*AÑADIR LIBRO*/
+.book-form {
+    background-color: #d3c6b1; /* Similar al fondo del banner */
+    padding: 20px;
+    border-radius: 8px;
+    font-family: 'Georgia', serif;
+    color: #6f4e37; /* Texto en el mismo tono marrón */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button #book-form{
+    color: #6f4e37; /* Texto en el mismo tono marrón */
+    border-radius: 8px;
+    font-weight: bold;
+    font-family: 'Georgia', serif;
+
+}
+
+.book-form .form-group label {
+    color: #6f4e37;
+    font-weight: bold;
+}
+
+.book-form .form-control {
+    border: 1px solid #6f4e37;
+    border-radius: 5px;
+    background-color: #fff3e6; /* Fondo claro similar a los botones */
+    color: #6f4e37;
+}
+
+.book-form .form-control:focus {
+    border-color: #6f4e37;
+    box-shadow: 0 0 5px rgba(111, 78, 55, 0.5);
+}
+
+.book-form .btn-primary {
+    background-color: #6f4e37;
+    color: #fff3e6;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-family: 'Georgia', serif;
+    transition: background-color 0.3s ease;
+}
+
+.book-form .btn-primary:hover {
+    background-color: #8c6b54; /* Un poco más oscuro para el hover */
+    color: #fff3e6;
+}
+
+.book-form .btn-secondary {
+    background-color: #8c6b54;
+    color: #fff3e6;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-family: 'Georgia', serif;
+    transition: background-color 0.3s ease;
+}
+
+.book-form .btn-secondary:hover {
+    background-color: #6f4e37;
+    color: #fff3e6;
+}
+
+
+
+
+
+#contenido {
+    padding: 20px;
+}
+
+.card-img-top {
+}
+
+.card {
+    height: 150px;
+    width: 130px;
+    object-fit: cover;
+    margin: 15px;
+    margin-bottom: 100px;
+}
+
+#cards {
+    margin-left: 50px;
+}
+/*carrousel novedades*/
+.container-novedades {
+    width: 100%; /* Ocupa todo el ancho disponible */
+    padding: 0 20px; /* Opcional: añadir algo de relleno a los lados */
+}
+
+#square {
+    width: 100%; /* Ocupa todo el ancho del contenedor */
+    height: 250px; /* Altura fija de 250px */
+    background-color: #3498db; /* Color de fondo opcional */
+}
+
+
+li a#csesion{
+  color: crimson;
+  border: 1px solid black;
+  text-decoration-color: red;
+}
+
+.custom-select-wrapper {
+    position: relative;
+}
+
+.custom-select {
+    border-radius: 0.375rem; /* Bordes redondeados */
+    box-shadow: 0 0 0.125rem rgba(0, 0, 0, 0.075); /* Sombra sutil */
+    padding: 0.5rem 1rem; /* Espaciado interno */
+    background-color: #f8f9fa; /* Fondo claro */
+}
+
+.custom-select option {
+    padding: 0.5rem; /* Espaciado para opciones */
+}
+
+.custom-select:focus {
+    border-color: #007bff; /* Color del borde en foco */
+    box-shadow: 0 0 0.125rem rgba(0, 0, 0, 0.075); /* Sombra en foco */
+}
+
+/* Estilo para opciones seleccionadas */
+.custom-select option:checked {
+    background-color: #007bff; /* Fondo azul */
+    color: #fff; /* Texto blanco */
+}

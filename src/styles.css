@@ -1,0 +1,144 @@
+/* You can add global styles to this file, and also import other style files */
+/* Skeleton Loader Styles */
+.skeleton-loader {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .skeleton-card {
+    width: 100%;
+    max-width: 100%;
+    height: 250px;
+    background: #e0e0e0;
+    border-radius: 8px;
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+  .navbar-library {
+    background-color: #6f4e37;
+}
+
+.navbar-library .nav-link {
+    color: #fff3e6;
+}
+
+.navbar-library .nav-link:hover {
+    color: #ffd9b3;
+}
+
+.navbar-library .navbar-brand {
+    color: #fff3e6;
+    font-family: 'Georgia', serif;
+}
+
+.navbar-library .nav-item .btn {
+    color: #6f4e37;
+    background-color: #fff3e6;
+    border: 1px solid #fff3e6;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.navbar-library .nav-item .btn:hover {
+    color: #fff3e6;
+    background-color: #6f4e37;
+    border-color: #6f4e37;
+}
+
+.footer-library {
+    background-color: #6f4e37;
+    color: #fff3e6;
+    text-align: center;
+    padding: 10px 0;
+    font-family: 'Georgia', serif;
+}
+
+.banner {
+    height: 300px;
+    background-color: #d3c6b1;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-family: 'Georgia', serif;
+}
+
+.ad-container {
+    background-color: #fff200;
+    padding: 0;
+    margin: 0;
+    border: 1px solid black;
+}
+
+.ad-sidebar {
+    padding: 0;
+    margin: 0;
+    height: 300px;
+}
+
+#contenido {
+    padding: 20px;
+}
+
+.card-img-top {
+    height: 100px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.card {
+    object-fit: cover;
+}
+
+
+.carousel-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 300px;
+}
+
+.carousel-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item {
+    flex: 0 0 16.66%;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.carousel-item .banner {
+    height: 300px;
+    background-color: #d3c6b1;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+}
+
+.carousel-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    background-color: #6f4e37;
+    color: #fff3e6;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background-color: #4e3f2f;
+}

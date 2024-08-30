@@ -1,0 +1,64 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Registro</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="registerForm" (ngSubmit)="registro()">
+            <div class="mb-3">
+              <label for="NOMBRE" class="form-label">Nombre:</label>
+              <input formControlName="NOMBRE" id="NOMBRE" type="text" class="form-control" placeholder="Introduce tu nombre">
+            </div>
+            <div class="mb-3">
+              <label for="APELLIDOS" class="form-label">Apellidos:</label>
+              <input formControlName="APELLIDOS" id="APELLIDOS" type="text" class="form-control" placeholder="Introduce tus apellidos">
+            </div>
+            <div class="mb-3">
+              <label for="NAMEAPP" class="form-label">Mote:</label>
+              <input formControlName="NAMEAPP" id="NAMEAPP" type="text" class="form-control" placeholder="Introduce tu nombre de usuario">
+            </div>
+            <div class="mb-3">
+              <label for="PASSWORD" class="form-label">Password:</label>
+              <input formControlName="PASSWORD" id="PASSWORD" type="password" class="form-control" placeholder="Introduce tu contraseña">
+            </div>
+            <div class="mb-3">
+              <label for="EMAIL" class="form-label">Email:</label>
+              <input formControlName="EMAIL" id="EMAIL" type="email" class="form-control" placeholder="Introduce tu email">
+            </div>
+            <div class="mb-3">
+              <label for="FECHANAC" class="form-label">Fecha de Nacimiento:</label>
+              <input formControlName="FECHANAC" id="FECHANAC" type="date" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label for="DNI" class="form-label">DNI:</label>
+              <input formControlName="DNI" id="DNI" type="text" class="form-control" placeholder="Introduce tu DNI">
+            </div>
+            <div class="mb-3">
+              <label for="SEXO" class="form-label">Sexo:</label>
+              <select formControlName="SEXO" id="SEXO" class="form-select">
+                <option value="hombre">Hombre</option>
+                <option value="mujer">Mujer</option>
+                <option value="otro">Prefiero no identificarme</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="ID_POBLACION" class="form-label">Población:</label>
+              <select formControlName="ID_POBLACION" id="ID_POBLACION" class="form-select">
+                <option *ngFor="let poblacion of poblaciones" [value]="poblacion._id">{{ poblacion.nombre }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="avatar" class="form-label">Avatar:</label>
+              <input type="file" id="avatar" (change)="onFileSelected($event)" class="form-control">
+            </div>
+            <div class="mb-3">
+              <button type="submit" class="btn btn-primary w-100" [disabled]="registerForm.invalid">Registrarse</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

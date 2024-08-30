@@ -1,0 +1,197 @@
+
+
+<nav class="navbar navbar-expand-lg navbar-library">
+  <a class="navbar-brand" href="#">LibGra</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <!-- Enlaces de la izquierda -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+          <a class="nav-link" href="/">Inicio</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="#">Biblioteca</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="#">Acerca de</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="#">Contacto</a>
+      </li>
+    </ul>
+    <!-- Enlaces de la derecha -->
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item" *ngIf="!isLoggedIn">
+        <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
+      </li>
+      <li class="nav-item" *ngIf="!isLoggedIn">
+        <a class="nav-link" routerLink="/registro" routerLinkActive="active">Registro</a>
+      </li>
+      <li class="nav-item" *ngIf="isLoggedIn">
+        <a class="nav-link" id="csesion" (click)="logout()">Cerrar sesión</a>
+      </li>
+      <li class="nav-item" *ngIf="isLoggedIn">
+        <img [src]="this.fotoServ" class="rounded-circle" alt="User Image" style="width: 40px; height: 40px; margin-left: 10px;">
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
+<div class="container-fluid mt-5">
+  <div class="row no-gutters">
+      <div class="col-md-2 ad-sidebar">
+          <div class="ad-container">
+              <ins class="adsbygoogle"
+                  style="display:block; height: 300px;"
+                  data-ad-client="ca-pub-8704981339966312"
+                  data-ad-slot="8906943413"
+                  data-ad-format="auto"></ins>
+              <script>
+                  (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
+          </div>
+      </div>
+
+      <div class="col-md-8" id="contenido">
+          <div class="row">
+              <div class="col-md-12 text-center">
+                  <h1>Bienvenido a LibGra</h1>
+                  <p>Somos una biblioteca digital que ofrece a los usuarios acceso instantáneo a una amplia colección de libros electrónicos. Diseñada para una experiencia de lectura cómoda y fluida, permite explorar, seleccionar y leer libros directamente en la plataforma. Con una interfaz intuitiva y opciones de personalización, es el lugar perfecto para los amantes de la lectura que buscan disfrutar de sus títulos favoritos en cualquier momento y lugar.</p>
+              </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <h5>NOVEDADES</h5>
+              <div class="container-novedades">
+                <div id="square">
+
+                </div>
+            </div>
+            </div>
+          </div>
+          
+
+          <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Botón para mostrar el formulario -->
+                    <button class="btn btn-primary mb-3" *ngIf="!esLector && isLoggedIn" (click)="toggleDropdown()">Añadir un libro</button>
+                    
+                    <!-- Formulario desplegable para añadir un nuevo libro -->
+                    <div *ngIf="showDropdown" class="card p-4">
+                        <h3 class="card-title">Añadir Nuevo Libro</h3>
+                        <form [formGroup]="bookForm" (ngSubmit)="addBook()">
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label">Título:</label>
+                                <input type="text" id="titulo" formControlName="titulo" class="form-control" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id_autor" class="form-label">Autor:</label>
+                                <select id="id_autor" formControlName="id_autor" class="form-select">
+                                    <option *ngFor="let autor of autores" [value]="autor._id">{{ autor.NOMBRE }} {{ autor.apellidos }}</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="portada" class="form-label">Portada (imagen):</label>
+                                <input type="file" id="portada" (change)="onFileSelected($event, 'portada')" class="form-control">
+                                <button type="button" *ngIf="selectedPortada" (click)="removeFile('portada')" class="btn btn-danger mt-2">Eliminar Imagen</button>
+                                
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="categorias_libro" class="form-label">Categorías:</label>
+                                <select id="categorias_libro" formControlName="categorias_libro" class="form-select" multiple>
+                                    <option *ngFor="let categoria of categorias" [value]="categoria._id">{{ categoria.NOMBRE }}</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="isbn" class="form-label">ISBN:</label>
+                                <input type="text" id="isbn" formControlName="isbn" class="form-control">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="fecha_publicacion" class="form-label">Fecha de Publicación:</label>
+                                <input type="date" id="fecha_publicacion" formControlName="fecha_publicacion" class="form-control">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="generos_libro" class="form-label">Géneros:</label>
+                                <select id="generos_libro" formControlName="generos_libro" class="form-select" multiple>
+                                    <option *ngFor="let genero of generos" [value]="genero._id">{{ genero.NOMBRE }}</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción:</label>
+                                <textarea id="descripcion" formControlName="descripcion" class="form-control" rows="4"></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="archivo" class="form-label">Archivo (PDF):</label>
+                                <input type="file" id="archivo" (change)="onFileSelected($event, 'archivo')" class="form-control">
+                                <button type="button" *ngIf="selectedArchivo" (click)="removeFile('archivo')" class="btn btn-danger mt-2">Eliminar Imagen</button>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="resenas_libro" class="form-label">Reseñas:</label>
+                                <textarea id="resenas_libro" formControlName="resenas_libro" class="form-control" rows="4"></textarea>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary">Añadir Libro</button>
+                                <button type="button" class="btn btn-secondary" (click)="toggleDropdown()">Cerrar</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+        
+            <!-- Mostrar los libros añadidos -->
+            <div *ngIf="books.length" class="row mt-4">
+                <div *ngFor="let book of books" class="col-md-4 mb-4">
+                    <div class="card">
+                        <img [src]="baseUrl + book.portada" class="card-img-top" alt="{{ book.titulo }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.titulo }}</h5>
+                            <p class="card-text"><strong>ISBN:</strong> {{ book.isbn }}</p>
+                            <p class="card-text"><strong>Fecha de Publicación:</strong> {{ book.fecha_publicacion | date:'dd/MM/yyyy' }}</p>
+                            <p class="card-text">{{ book.id_autor.nombre || 'No hay autor disponible.' }}</p>
+                            <a [href]="book.archivo" class="btn btn-primary" target="_blank" *ngIf="book.archivo && isLoggedIn">Ver Archivo</a>
+                            <a [href]="book.resenas_libro.length ? '/resenas/' + book.id_autor : ''" class="btn btn-secondary" *ngIf="book.resenas_libro.length && isLoggedIn">Leer Reseñas</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+      </div>
+
+      <div class="col-md-2 ad-sidebar">
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                style="display:block; height: 300px;"
+                data-ad-client="ca-pub-8704981339966312"
+                data-ad-slot="8906943413"
+                data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer-library mt-5">
+  <p>&copy; 2024 BookApp. Todos los derechos reservados.</p>
+</footer>
+
+
