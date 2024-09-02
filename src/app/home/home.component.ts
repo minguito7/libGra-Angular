@@ -11,6 +11,10 @@ import { GenerosService } from '../services/generos.service';
 
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
+import { HttpEventType } from '@angular/common/http';
+import * as bootstrap from 'bootstrap';
+
+
 
 @Component({
   selector: 'app-home',
@@ -38,6 +42,9 @@ export class HomeComponent implements OnInit {
   categorias: Array<{_id: any; id: number, NOMBRE: string}> = [];
   generos: Array<{_id: any; id: number, NOMBRE: string }> = [];
   autores: Array<{_id: any; id: number, NOMBRE: string, apellidos: string, fecha_nacimiento: Date, nacionalidad: string, generos_autor: ArrayBuffer }> = [];
+  progress = 0;
+  isLoading = false; 
+
 
    // Controla la visibilidad del desplegable
   // Datos del nuevo libro
@@ -74,19 +81,19 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.checkLoginStatus();
+
       this.bookService.getBooksActivos().subscribe(response => {     
          
       this.books = response.resultado;
       console.log("aquiiiiii: "+response.resultado)
     });
-
     this.bookService.getNovedadesLibros().subscribe(response => {     
       console.log(response);
       this.booksNovedad = response.resultado;
     });
 
-    this.checkLoginStatus();
-    console.log(this.isLoggedIn);
+    //console.log(this.isLoggedIn);
 
 
     const token = localStorage.getItem('Bearer');
@@ -108,6 +115,7 @@ export class HomeComponent implements OnInit {
     this.loadGeneros();
     console.log(this.categorias +' '+this.generos);
   }
+  
   loadCategorias(): void {
     this.categoriaService.getCategorias().subscribe((resp: { resultado: { _id: any; id: number; NOMBRE: string; }[]; }) => {
       this.categorias = resp.resultado;
@@ -232,7 +240,7 @@ checkLoginStatus() {
     }
   }
 
-  addBook(): void {
+  /*addBook(): void {
     if (this.bookForm.valid) {
       const formData = new FormData();
       
@@ -269,11 +277,84 @@ checkLoginStatus() {
         console.error('Error al añadir libro:', error);
       });
     }
-  }
+  }*/
+    addBook(): void {
+      if (this.bookForm.valid) {
+        const formData = new FormData();
+        
+        // Añadir todos los campos del formulario
+        Object.keys(this.bookForm.controls).forEach(key => {
+          formData.append(key, this.bookForm.get(key)?.value);
+        });
+  
+        // Añadir los archivos (si se han seleccionado)
+        if (this.selectedPortada) {
+          formData.append('files', this.selectedPortada, this.selectedPortada.name);
+        }
+  
+        if (this.selectedArchivo) {
+          formData.append('files', this.selectedArchivo, this.selectedArchivo.name);
+        }
+  
+        // Inicializar el progreso
+        this.progress = 0;
+        this.isLoading = true;
+
+        // Enviar los datos al backend
+        this.bookService.addBook(formData, {
+          reportProgress: true,  // Habilitar el reporte de progreso
+          observe: 'events'      // Observar todos los eventos durante la subida
+        }).subscribe(
+          event => {
+            if (event.type === HttpEventType.UploadProgress) {
+              // Calcular el progreso de la subida
+              this.progress = Math.round(100 * event.loaded / (event.total ?? 1));
+            } else if (event.type === HttpEventType.Response) {
+              // Manejo de la respuesta
+              // Resetear el progreso
+              this.progress = 0;
+              this.isLoading = false;
+
+              // Cerrar el modal
+              this.hideModal();
+                
+              // Limpiar el formulario
+              this.bookForm.reset();
+  
+              // Limpiar los archivos seleccionados
+              this.selectedPortada = undefined;
+              this.selectedArchivo = undefined;
+  
+              // Actualizar la lista de libros en el home
+               this.updateBookList();
+  
+              // Navegar de vuelta al home
+              this.router.navigate(['/']);
+            }
+          },
+          error => {
+            console.error('Error al añadir libro:', error);
+            this.progress = 0; 
+            this.isLoading = false;// Reiniciar el progreso en caso de error
+          }
+        );
+      }
+    }
+  
+    hideModal(): void {
+      const modalElement = document.getElementById('addBookModal');
+      if (modalElement) {
+        
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        modalInstance?.hide();
+      }
+    }
 
   updateBookList(): void {
-    this.bookService.getBooksActivos().subscribe((books: any) => {
-      this.books = books;
+    this.bookService.getBooksActivos().subscribe(response => {     
+         
+      this.books = response.resultado;
+      console.log("aquiiiiii: "+response.resultado)
     }, (error: any) => {
       console.error('Error al obtener la lista de libros:', error);
     });
@@ -289,36 +370,6 @@ checkLoginStatus() {
       (document.getElementById('archivo') as HTMLInputElement).value = ''; // Limpiar el input file
     }
   }
-
-/*addBook(): void {
-  if (this.bookForm.valid) {
-    const formData = new FormData();
-    
-    Object.keys(this.bookForm.controls).forEach(key => {
-      formData.append(key, this.bookForm.get(key)?.value);
-    });
-
-    if (this.selectedFile) {
-      formData.append('myFile', this.selectedFile, this.selectedFile.name);
-    }
-
-    // Convertir FormData a objeto
-    const formDataObject: {[key: string]: any} = {};
-    formData.forEach((value, key) => {
-      formDataObject[key] = value;
-      
-    });
-    console.log('FormData Object:', formDataObject);
-
-    this.bookService.addBook(formData).subscribe((response: any) => {
-      
-      this.router.navigate(['/login']);
-    }, (error: any) => {
-      console.error('Error during registration:', error);
-    });
-  }
-  }*/
-
 }
 
 function base64UrlDecode(str: string): string {

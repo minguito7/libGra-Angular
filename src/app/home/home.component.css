@@ -217,3 +217,44 @@ li a#csesion{
     padding: 10px 0;
     font-family: 'Georgia', serif;  
 }
+
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.25em;
+  }
+
+  /* Configura el contenedor de la cuadrícula */
+#grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Ajusta el tamaño mínimo y el número de columnas */
+    gap: 10px; /* Espacio entre tarjetas */
+    border: 1px solid red;
+  }
+  
+  /* Asegúrate de que cada elemento de la cuadrícula se ajuste */
+  #grid-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Opcional: Ajusta el tamaño de la tarjeta */
+  #product-card {
+    width: 50%; /* Ocupa todo el ancho del elemento de la cuadrícula */
+  }
+  
+  

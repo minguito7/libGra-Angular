@@ -12,12 +12,16 @@ export class BookService {
 
   constructor(private http: HttpClient) { }
 
-  addBook(libro: FormData): Observable<any> {
+  addBook(libro: FormData, options: { reportProgress: boolean; observe: string; }): Observable<any> {
     const token = localStorage.getItem('Bearer');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    console.log(libro)
-
-    return this.http.post(`${this.apiUrl}/add-libro`, libro, {headers});
+  
+    // Incluye las opciones de reportProgress y observe en la llamada HTTP
+    return this.http.post(`${this.apiUrl}/add-libro`, libro, {
+      headers: headers,
+      reportProgress: options.reportProgress,  // Reportar progreso
+      observe: options.observe as 'events'     // Observar todos los eventos
+    });
   }
   
   getBooks(): Observable<any> {
