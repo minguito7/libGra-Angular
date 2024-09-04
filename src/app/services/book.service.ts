@@ -40,7 +40,11 @@ export class BookService {
     const token = localStorage.getItem('Bearer');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(`${this.apiUrl}/novedades-libros`, { headers});
-  
+    }
 
-  }
+    getArchivoLibro(bookId:string): Observable<any> {
+      const token = localStorage.getItem('Bearer');
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+      return this.http.get(`${this.apiUrl}/novedades-libros`, { headers});
+      }
 }

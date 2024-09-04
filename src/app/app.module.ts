@@ -12,8 +12,8 @@ import { HomeComponent } from './home/home.component';
 import { CommonModule, DatePipe } from '@angular/common';
 import { routes } from './app.routes';
 import { PerfilUserComponent } from './perfil-user/perfil-user.component';
-
-
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { BookReaderComponent } from './book-reader/book-reader.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +21,8 @@ import { PerfilUserComponent } from './perfil-user/perfil-user.component';
     RegisterComponent,
     LoginComponent,
     HomeComponent,
-    PerfilUserComponent
+    PerfilUserComponent,
+    BookReaderComponent
   ],
   imports: [
     BrowserModule,
@@ -30,8 +31,8 @@ import { PerfilUserComponent } from './perfil-user/perfil-user.component';
     HttpClientModule,
     CommonModule,
     NgxPaginationModule,
-    FormsModule
-    
+    FormsModule,
+    NgxExtendedPdfViewerModule
 ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

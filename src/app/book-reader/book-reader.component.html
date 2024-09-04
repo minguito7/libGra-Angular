@@ -1,0 +1,13 @@
+<div class="pdf-controls">
+    <button (click)="prevPage()">Anterior</button>
+    <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <button (click)="nextPage()">Siguiente</button>
+  
+    <button (click)="zoomOut()">Zoom -</button>
+    <button (click)="zoomIn()">Zoom +</button>
+  </div>
+  
+  <div class="pdf-container">
+    <canvas #pdfCanvas></canvas>
+  </div>
+  

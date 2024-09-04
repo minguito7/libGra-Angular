@@ -16,6 +16,7 @@ import * as bootstrap from 'bootstrap';
 import Swiper from 'swiper/bundle';
 import 'swiper/swiper-bundle.css';
 import { DatePipe } from '@angular/common';
+import { PdfStorageService } from '../services/pdf.service';
 
 @Component({
   selector: 'app-home',
@@ -50,7 +51,7 @@ export class HomeComponent implements OnInit {
   isLoading = false; 
   currentPage: number = 1;
   itemsPerPage: number = 9;
-
+  selectedBook: string | undefined;
 
    // Controla la visibilidad del desplegable
   // Datos del nuevo libro
@@ -63,7 +64,8 @@ export class HomeComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,
     private bookService: BookService,private authService: AuthService, 
     private poblacionService:PoblacionService, private categoriaService: CategoriasService,
-    private autoresSevice:AutoresService, private generoService: GenerosService, private datePipe: DatePipe) { 
+    private autoresSevice:AutoresService, private generoService: GenerosService, private datePipe: DatePipe,
+    private pdfService: PdfStorageService ) { 
     this.poblacionForm = this.fb.group({
       nombre: ['', [Validators.required]],
 
@@ -391,6 +393,15 @@ checkLoginStatus() {
 
   irAAdministrarPerfil(): void {
     this.router.navigate(['/perfil-user']);
+  }
+  irLeerLibro(book: any){
+
+    const file: string =this.baseUrl+book;
+    if (file) {
+      this.pdfService.setPdfFile(file);
+      this.router.navigate(['/book-reader']);
+
+    }
   }
 }
 

@@ -7,6 +7,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { AuthGuard } from './guards/auth.guard';
 import { PerfilUserComponent } from './perfil-user/perfil-user.component';
+import { BookReaderComponent } from './book-reader/book-reader.component';
 
 // src/app/app-routing.module.ts
 
@@ -15,6 +16,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegisterComponent },
   { path: 'perfil-user', component: PerfilUserComponent },
+  { path: 'book-reader', component: BookReaderComponent },
   { path: '**', redirectTo: '' } // Redirige cualquier ruta desconocida a HomeComponent
 ];
 

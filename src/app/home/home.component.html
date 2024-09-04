@@ -224,7 +224,7 @@
                       <p class="card-text"><strong>ISBN:</strong> {{ book.isbn }}</p>
                       <p class="card-text"><strong>Fecha de Publicación:</strong> {{ book.fecha_publicacion | date:'dd/MM/yyyy' }}</p>
                       <p class="card-text">{{ book.id_autor.nombre || 'No hay autor disponible.' }}</p>
-                      <a [href]="baseUrl + book.archivo" class="btn btn-primary" id="verArchivo" target="_blank" *ngIf="book.archivo && isLoggedIn">Ver Archivo</a>
+                      <a (click)="irLeerLibro(book.archivo)" class="btn btn-primary" id="verArchivo" target="_blank" *ngIf="book.archivo && isLoggedIn">Ver Archivo</a>
                       <a [href]="book.resenas_libro.length ? '/resenas/' + book.id_autor : ''" class="btn btn-secondary" *ngIf="book.resenas_libro.length && isLoggedIn">Leer Reseñas</a>
                     </div>
                   </div>

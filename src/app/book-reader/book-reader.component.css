@@ -1,0 +1,18 @@
+.pdf-controls {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .pdf-container {
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  canvas {
+    width: 100%;
+    border: 1px solid #000;
+  }
+  

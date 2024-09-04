@@ -24,7 +24,9 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+                "src/assets",
+                "src/assets/pdfjs/pdf.worker.js"
             ],
             "styles": [
               "src/styles.css"
@@ -96,5 +98,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
