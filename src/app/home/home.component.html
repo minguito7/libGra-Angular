@@ -21,6 +21,9 @@
       <li class="nav-item">
           <a class="nav-link" href="#">Contacto</a>
       </li>
+      <li class="nav-item" *ngIf="(esAdmin || esSoid) && isLoggedIn">
+        <a class="nav-link" href="#">Panel de Administrador</a>
+        </li>
     </ul>
     <!-- Enlaces de la derecha -->
     <ul class="navbar-nav ml-auto">
@@ -34,7 +37,7 @@
         <a class="nav-link" id="csesion" (click)="logout()">Cerrar sesión</a>
       </li>
       <li class="nav-item" *ngIf="isLoggedIn">
-        <img [src]="this.fotoServ" class="rounded-circle" alt="User Image" style="width: 40px; height: 40px; margin-left: 10px;">
+        <img [src]="this.fotoServ" class="rounded-circle" alt="User Image" style="width: 40px; height: 40px; margin-left: 10px;" (click)="irAAdministrarPerfil()">
       </li>
     </ul>
   </div>
@@ -65,38 +68,38 @@
           </div>
 
           <div class="row mt-4">
-            <div class="col-md-12">
-              <h5>NOVEDADES</h5>
-              <div class="container-novedades">
-                <section id="featured-products" class="product-store position-relative padding-large">
-                    <div class="container-fluid">
-                     
-                      <div class="row">
-                        <div id="featured-swiper" class="product-swiper col-md-12">
-                          <div id="grid-container">
-                            <div id="grid-item" *ngFor="let novedad of booksNovedad">
-                              <div id="product-card" class="product-card image-zoom-effect link-effect d-flex flex-wrap">
-                                <div class="image-holder">
-                                  <img [src]="baseUrl + novedad.portada" alt="product-item" class="product-image img-fluid">
-                                </div>
-                                <div class="cart-concern">
-                                  <h3 class="card-title text-uppercase pt-3 text-primary">
-                                    <a [href]="novedad.archivo" class="text-primary">{{ novedad.titulo }}</a>
-                                  </h3>
-                                  <div class="cart-info">
-                                    <a class="pseudo-text-effect" href="#"><span>{{ novedad.fecha_publicacion }}</span></a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="swiper-pagination text-center mt-5"></div>
+            <div class="col-md-12 text-center" >
+              <h3>ULTIMOS LIBROS SUBIDOS</h3>
+              <div class="swiper-container">
+                <div class="swiper-wrapper">
+                  <div class="swiper-slide" *ngFor="let novedad of booksNovedad">
+                    <div id="product-card" class="product-card image-zoom-effect link-effect d-flex flex-wrap">
+                      <div class="image-holder">
+                        <img [src]="baseUrl + novedad.portada" alt="product-item" class="product-image img-fluid">
+                      </div>
+                      <div class="cart-concern">
+                        <p class="card-title text-uppercase pt-3 text-primary">
+                          <a [href]="novedad.archivo" class="text-primary">{{ novedad.titulo }}</a>
+                        </p>
+                        <div class="cart-info">
+                          <p class="pseudo-text-effect" href="#"><span>{{ novedad.fecha_publicacion | date:'d MMMM yyyy' }}</span></p>
                         </div>
                       </div>
-                      
-                    </div>      
-                  </section>
-            </div>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <!-- Si usas paginación o navegación -->
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+              </div>
+              
+              
+              
+              
+              
+            
             </div>
           </div>
           
@@ -105,7 +108,7 @@
             <div class="row">
                 <div class="col-md-12">
                    <!-- Botón para abrir el modal -->
-            <button id="boton-style-app" class="btn btn-primary mb-3" *ngIf="!esLector && isLoggedIn" data-bs-toggle="modal" data-bs-target="#addBookModal">
+            <button id="boton-style-app" class="btn btn-primary mb-3" *ngIf="(!esLector || esAdmin || esSoid) && isLoggedIn" data-bs-toggle="modal" data-bs-target="#addBookModal">
                 Añadir un libro
             </button>
             <!-- Overlay de carga -->
@@ -135,6 +138,7 @@
                         <select id="id_autor" formControlName="id_autor" class="form-select">
                             <option *ngFor="let autor of autores" [value]="autor._id">{{ autor.NOMBRE }} {{ autor.apellidos }}</option>
                         </select>
+                      
                         </div>
                         
                         <div class="mb-3">
@@ -212,20 +216,23 @@
         
             <!-- Mostrar los libros añadidos -->
             <div *ngIf="books.length" class="row mt-4">
-                <div *ngFor="let book of books" class="col-md-4 mb-4">
-                    <div class="card">
-                        <img [src]="baseUrl + book.portada" class="card-img-top" alt="{{ book.titulo }}">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ book.titulo }}</h5>
-                            <p class="card-text"><strong>ISBN:</strong> {{ book.isbn }}</p>
-                            <p class="card-text"><strong>Fecha de Publicación:</strong> {{ book.fecha_publicacion | date:'dd/MM/yyyy' }}</p>
-                            <p class="card-text">{{ book.id_autor.nombre || 'No hay autor disponible.' }}</p>
-                            <a [href]="baseUrl + book.archivo" class="btn btn-primary" target="_blank" *ngIf="book.archivo && isLoggedIn">Ver Archivo</a>
-                            <a [href]="book.resenas_libro.length ? '/resenas/' + book.id_autor : ''" class="btn btn-secondary" *ngIf="book.resenas_libro.length && isLoggedIn">Leer Reseñas</a>
-                        </div>
+                <div *ngFor="let book of books | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" class="col-md-4 mb-4">
+                  <div class="card">
+                    <img [src]="baseUrl + book.portada" class="card-img-top" alt="{{ book.titulo }}">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ book.titulo }}</h5>
+                      <p class="card-text"><strong>ISBN:</strong> {{ book.isbn }}</p>
+                      <p class="card-text"><strong>Fecha de Publicación:</strong> {{ book.fecha_publicacion | date:'dd/MM/yyyy' }}</p>
+                      <p class="card-text">{{ book.id_autor.nombre || 'No hay autor disponible.' }}</p>
+                      <a [href]="baseUrl + book.archivo" class="btn btn-primary" id="verArchivo" target="_blank" *ngIf="book.archivo && isLoggedIn">Ver Archivo</a>
+                      <a [href]="book.resenas_libro.length ? '/resenas/' + book.id_autor : ''" class="btn btn-secondary" *ngIf="book.resenas_libro.length && isLoggedIn">Leer Reseñas</a>
                     </div>
+                  </div>
                 </div>
-            </div>
+              </div>
+              
+              <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+              
         </div>
         
       </div>

@@ -32,6 +32,10 @@ export class BookService {
     return this.http.get(`${this.apiUrl}/activos`);
   }
 
+  getBooksActivosAddedUser(id_user: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/activos/${id_user}`);
+  }
+
   getNovedadesLibros(): Observable<any> {
     const token = localStorage.getItem('Bearer');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);

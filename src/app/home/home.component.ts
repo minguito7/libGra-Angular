@@ -1,6 +1,6 @@
 // src/app/home/home.component.ts
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,AfterViewInit} from '@angular/core';
 import { BookService } from '../services/book.service';
 import { PoblacionService } from '../services/poblacion.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -13,17 +13,21 @@ import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HttpEventType } from '@angular/common/http';
 import * as bootstrap from 'bootstrap';
-
-
+import Swiper from 'swiper/bundle';
+import 'swiper/swiper-bundle.css';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html'
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css'
+
 })
 export class HomeComponent implements OnInit {
   selectedPortada: File | undefined;
   selectedArchivo: File | undefined;
   books: any[] = [];
+  paginatedBooks: any[] = [];
   booksNovedad: any[] = [];
   baseUrl: string = 'http://localhost:3000/';
   poblacionForm: FormGroup;
@@ -44,6 +48,8 @@ export class HomeComponent implements OnInit {
   autores: Array<{_id: any; id: number, NOMBRE: string, apellidos: string, fecha_nacimiento: Date, nacionalidad: string, generos_autor: ArrayBuffer }> = [];
   progress = 0;
   isLoading = false; 
+  currentPage: number = 1;
+  itemsPerPage: number = 9;
 
 
    // Controla la visibilidad del desplegable
@@ -57,7 +63,7 @@ export class HomeComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,
     private bookService: BookService,private authService: AuthService, 
     private poblacionService:PoblacionService, private categoriaService: CategoriasService,
-    private autoresSevice:AutoresService, private generoService: GenerosService) { 
+    private autoresSevice:AutoresService, private generoService: GenerosService, private datePipe: DatePipe) { 
     this.poblacionForm = this.fb.group({
       nombre: ['', [Validators.required]],
 
@@ -82,20 +88,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.checkLoginStatus();
-
-      this.bookService.getBooksActivos().subscribe(response => {     
-         
-      this.books = response.resultado;
-      console.log("aquiiiiii: "+response.resultado)
-    });
-    this.bookService.getNovedadesLibros().subscribe(response => {     
-      console.log(response);
-      this.booksNovedad = response.resultado;
-    });
-
-    //console.log(this.isLoggedIn);
-
-
     const token = localStorage.getItem('Bearer');
     console.log("TOKEN DEL ALMACENAMIENTO LOCAL: "+ token);
     if (token) {
@@ -104,18 +96,82 @@ export class HomeComponent implements OnInit {
       this.authService.validateToken(token).subscribe(resp => {
         this.fotoServ = this.baseUrl+resp.usuarioLogged.AVATAR;
         this.determinarRol(resp.usuarioLogged);
+        this.authService.setUsuario(resp.usuarioLogged);
+
         console.log(this.esAdmin + ' ' + this.esSoid + ' ' + this.esEditor + ' '+ this.esLector);
         //const objectURL = URL.createObjectURL(this.fotoServ);
         //this.photoUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
      
       });
     } 
+    this.loadBooks();
+
+    this.bookService.getNovedadesLibros().subscribe(response => {     
+      console.log(response);
+      this.booksNovedad = response.resultado;
+    });
+
+    //console.log(this.isLoggedIn);
+
+
+   
     this.loadAutores();
     this.loadCategorias();
     this.loadGeneros();
     console.log(this.categorias +' '+this.generos);
+    const swiper = new Swiper('.swiper-container', {
+      slidesPerView: 'auto', // Permite que el ancho de las diapositivas se ajuste automáticamente
+      spaceBetween: 25, // Espacio entre las diapositivas
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },      
+      autoplay: {
+        delay: 5000, // Cambia las diapositivas cada 5 segundos (puedes ajustar el tiempo)
+        disableOnInteraction: false, // Evita que el autoplay se detenga cuando el usuario interactúa con el carrusel
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+    this.bookService.getNovedadesLibros().subscribe(response => {     
+      console.log(response);
+      this.booksNovedad = response.resultado;
+    });
   }
   
+  loadBooks() {
+    this.bookService.getBooksActivos().subscribe(data => {
+      this.books = data.resultado; // Asegúrate de que data es un array
+      this.updatePaginatedBooks();
+    }, error => {
+      console.error('Error loading books:', error);
+    });
+  }
+
+  updatePaginatedBooks() {
+    if (Array.isArray(this.books)) { // Verifica que this.books sea un array
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      this.paginatedBooks = this.books.slice(startIndex, endIndex);
+    } else {
+      console.error('Expected books to be an array, but it is not.');
+    }
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.updatePaginatedBooks();
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.books.length / this.itemsPerPage);
+  }
+
   loadCategorias(): void {
     this.categoriaService.getCategorias().subscribe((resp: { resultado: { _id: any; id: number; NOMBRE: string; }[]; }) => {
       this.categorias = resp.resultado;
@@ -240,44 +296,6 @@ checkLoginStatus() {
     }
   }
 
-  /*addBook(): void {
-    if (this.bookForm.valid) {
-      const formData = new FormData();
-      
-      // Añadir todos los campos del formulario
-      Object.keys(this.bookForm.controls).forEach(key => {
-        formData.append(key, this.bookForm.get(key)?.value);
-      });
-  
-      // Añadir los archivos (si se han seleccionado)
-      if (this.selectedPortada) {
-        formData.append('files', this.selectedPortada, this.selectedPortada.name);
-      }
-  
-      if (this.selectedArchivo) {
-        formData.append('files', this.selectedArchivo, this.selectedArchivo.name);
-      }
-  
-      // Enviar los datos al backend
-      this.bookService.addBook(formData).subscribe((response: any) => {
-        // Manejo de la respuesta
-           // Cerrar el toggle
-      this.showDropdown = false;
-      // Limpiar el formulario
-      this.bookForm.reset();
-      // Limpiar los archivos seleccionados
-      this.selectedPortada = undefined;
-      this.selectedArchivo = undefined;
-      // Actualizar la lista de libros en el home
-     // this.updateBookList();
-      // Navegar de vuelta al home (si es necesario)
-     
-        this.router.navigate(['/']);
-      }, (error: any) => {
-        console.error('Error al añadir libro:', error);
-      });
-    }
-  }*/
     addBook(): void {
       if (this.bookForm.valid) {
         const formData = new FormData();
@@ -369,6 +387,10 @@ checkLoginStatus() {
       this.selectedArchivo = undefined;
       (document.getElementById('archivo') as HTMLInputElement).value = ''; // Limpiar el input file
     }
+  }
+
+  irAAdministrarPerfil(): void {
+    this.router.navigate(['/perfil-user']);
   }
 }
 

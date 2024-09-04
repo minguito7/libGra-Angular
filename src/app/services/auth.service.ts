@@ -12,7 +12,8 @@ export class AuthService {
   isLoggedIn = false;
   private apiUrl = 'http://localhost:3000/auth';
   private _userImage = 'path_to_default_user_image';
-
+  private usuarioLogueado: any;
+  
   constructor(private http: HttpClient) { }
 
   login(email: string, password: string): Observable<any> {
@@ -50,5 +51,15 @@ export class AuthService {
     });
     return this.http.get<any>(`${this.apiUrl}/validate-token`, { headers });
   }
+  setUsuario(usuario: any): void {
+    this.usuarioLogueado = usuario;
+  }
 
+  getUsuario(): any {
+    return this.usuarioLogueado;
+  }
+
+  clearUsuario(): void {
+    this.usuarioLogueado = null;
+  }
 }

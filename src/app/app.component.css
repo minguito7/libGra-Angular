@@ -1,0 +1,9 @@
+.btn-primary {
+    background-color: #6f4e37;
+    color: #fff3e6;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-family: 'Georgia', serif;
+    transition: background-color 0.3s ease;
+}

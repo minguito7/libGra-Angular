@@ -148,17 +148,18 @@ button #book-form{
 
 #contenido {
     padding: 20px;
+    width: 100%;
 }
 
 .card-img-top {
+    width: 100%;
 }
 
 .card {
-    height: 150px;
-    width: 130px;
+    height: 100%;
+    width: 100%;
     object-fit: cover;
-    margin: 15px;
-    margin-bottom: 100px;
+    margin: 10px;
 }
 
 #cards {
@@ -178,9 +179,8 @@ button #book-form{
 
 
 li a#csesion{
-  color: crimson;
-  border: 1px solid black;
-  text-decoration-color: red;
+  color: rgb(255, 0, 0);
+  cursor: pointer;   
 }
 
 .custom-select-wrapper {
@@ -217,6 +217,12 @@ li a#csesion{
     padding: 10px 0;
     font-family: 'Georgia', serif;  
 }
+#verArchivo{
+    align-items: center;
+    padding-left: 25%;
+    padding-right: 25%;
+    
+}
 
 
 .overlay {
@@ -237,24 +243,59 @@ li a#csesion{
     border-width: 0.25em;
   }
 
-  /* Configura el contenedor de la cuadrícula */
-#grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Ajusta el tamaño mínimo y el número de columnas */
-    gap: 10px; /* Espacio entre tarjetas */
-    border: 1px solid red;
+/* Configura el contenedor del Swiper */
+.swiper-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
   }
   
-  /* Asegúrate de que cada elemento de la cuadrícula se ajuste */
-  #grid-item {
+  /* Configura el contenedor de las diapositivas */
+  .swiper-wrapper {
     display: flex;
+    flex-direction: row; /* Asegura que las diapositivas se alineen horizontalmente */
+  }
+  
+  /* Configura el contenedor del Swiper */
+.swiper-container {
+    width: 100%;
+    
+    overflow: hidden;
+  }
+  
+  /* Configura el contenedor de las diapositivas */
+  .swiper-wrapper {
+    display: flex;
+  }
+  
+  /* Configura cada diapositiva */
+  .swiper-slide {
+    width: 200px !important;
+    height:400px; /* Ancho fijo de cada diapositiva */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    flex-shrink: 0; /* Evita que las diapositivas se reduzcan de tamaño */
+  }
+  
+  /* Configura el estilo de la tarjeta del producto */
+  .product-card {
+    width: 100%; /* La tarjeta ocupa todo el ancho de la diapositiva */
+    height: 100%; /* La tarjeta ocupa toda la altura de la diapositiva */
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
   }
   
-  /* Opcional: Ajusta el tamaño de la tarjeta */
-  #product-card {
-    width: 50%; /* Ocupa todo el ancho del elemento de la cuadrícula */
+  /* Estilo de los botones de navegación */
+  .swiper-button-next, .swiper-button-prev {
+    color: #ff0000; /* Personaliza el color aquí */
   }
   
+  /* Estilo de los puntos de paginación */
+  .swiper-pagination-bullet {
+    background: #000;
+  }
   
