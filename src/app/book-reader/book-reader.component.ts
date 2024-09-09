@@ -15,6 +15,7 @@ export class BookReaderComponent implements OnInit{
   currentPage = 1;
   totalPages: number = 0;
   zoom = 1.0;
+  app!:string;
 
   constructor(private bookService: BookService, private pdfService: PdfStorageService){}
   
