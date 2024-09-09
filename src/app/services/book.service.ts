@@ -28,6 +28,12 @@ export class BookService {
    console.log('golaa');
     return this.http.get(`${this.apiUrl}`);
   }
+
+  getOneBook(bookId:string): Observable<any>{
+    const token = localStorage.getItem('Bearer');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${this.apiUrl}/${bookId}`, { headers});
+  }
   getBooksActivos(): Observable<any> {
     return this.http.get(`${this.apiUrl}/activos`);
   }
@@ -42,9 +48,9 @@ export class BookService {
     return this.http.get(`${this.apiUrl}/novedades-libros`, { headers});
     }
 
-    getArchivoLibro(bookId:string): Observable<any> {
+  getArchivoLibro(bookId:string): Observable<any> {
       const token = localStorage.getItem('Bearer');
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-      return this.http.get(`${this.apiUrl}/novedades-libros`, { headers});
+      return this.http.get(`${this.apiUrl}/descargar-libro/${bookId}`, { headers});
       }
 }

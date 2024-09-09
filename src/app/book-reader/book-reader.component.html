@@ -1,13 +1,63 @@
-<div class="pdf-controls">
-    <button (click)="prevPage()">Anterior</button>
-    <span>Página {{ currentPage }} de {{ totalPages }}</span>
-    <button (click)="nextPage()">Siguiente</button>
-  
-    <button (click)="zoomOut()">Zoom -</button>
-    <button (click)="zoomIn()">Zoom +</button>
+<nav class="navbar navbar-expand-lg navbar-library">
+  <a class="navbar-brand" href="#">LibGra</a>
+  <button class="navbar-toggler" type="button" id="boton-style-app" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <!-- Enlaces de la izquierda -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+          <a class="nav-link" href="/">Inicio</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="#">Biblioteca</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="#">Acerca de</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="#">Contacto</a>
+      </li>
+      <li class="nav-item" *ngIf="(esAdmin || esSoid) && isLoggedIn">
+        <a class="nav-link" href="#">Panel de Administrador</a>
+        </li>
+    </ul>
+    <!-- Enlaces de la derecha -->
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item" *ngIf="!isLoggedIn">
+        <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
+      </li>
+      <li class="nav-item" *ngIf="!isLoggedIn">
+        <a class="nav-link" routerLink="/registro" routerLinkActive="active">Registro</a>
+      </li>
+      <li class="nav-item" *ngIf="isLoggedIn">
+        <a class="nav-link" id="csesion" (click)="logout()">Cerrar sesión</a>
+      </li>
+      <li class="nav-item" *ngIf="isLoggedIn">
+        <img [src]="this.fotoServ" class="rounded-circle" alt="User Image" style="width: 40px; height: 40px; margin-left: 10px;" (click)="irAAdministrarPerfil()">
+      </li>
+    </ul>
   </div>
-  
-  <div class="pdf-container">
-    <canvas #pdfCanvas></canvas>
+</nav>
+
+<p> {{libro.titulo}}</p>
+
+<!--<iframe [src]="safePdfUrl" width="420px" height="630px" sandbox="allow-scripts allow-same-origin"></iframe>-->
+
+
+<!--pantalla-->
+<div class="container">
+  <div class="sidebar">
+      <img [src]="{{libro.portada}}" alt="Foto" class="photo">
+      <p class="info">Aquí va la información debajo de la foto.</p>
   </div>
-  
+  <div class="main-content">
+      <iframe [src]="safePdfUrl" width="420px" height="630px" sandbox="allow-scripts allow-same-origin"></iframe>
+  </div>
+</div>
+
+
+<footer class="footer-library mt-5">
+  <p>&copy; 2024 BookApp. Todos los derechos reservados.</p>
+</footer>

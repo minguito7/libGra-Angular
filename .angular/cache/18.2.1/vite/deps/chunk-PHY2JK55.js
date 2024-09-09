@@ -3,7 +3,7 @@ import {
   XhrFactory,
   isPlatformServer,
   parseCookieValue
-} from "./chunk-4B4MXSGG.js";
+} from "./chunk-4AMQB3PM.js";
 import {
   APP_BOOTSTRAP_LISTENER,
   ApplicationRef,
@@ -40,12 +40,12 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵinject
-} from "./chunk-D4GKTBBZ.js";
+} from "./chunk-IN3MQ4VI.js";
 import {
   __async,
   __objRest,
   __spreadValues
-} from "./chunk-JZPNJTJT.js";
+} from "./chunk-Y2PH64DW.js";
 
 // node_modules/@angular/common/fesm2022/http.mjs
 var HttpHandler = class {
@@ -336,7 +336,10 @@ var STANDARD_ENCODING_REPLACEMENTS = {
   "2F": "/"
 };
 function standardEncoding(v) {
-  return encodeURIComponent(v).replace(STANDARD_ENCODING_REGEX, (s, t) => STANDARD_ENCODING_REPLACEMENTS[t] ?? s);
+  return encodeURIComponent(v).replace(STANDARD_ENCODING_REGEX, (s, t) => {
+    var _a;
+    return (_a = STANDARD_ENCODING_REPLACEMENTS[t]) != null ? _a : s;
+  });
 }
 function valueToString(value) {
   return `${value}`;
@@ -612,6 +615,7 @@ function isUrlSearchParams(value) {
 }
 var HttpRequest = class _HttpRequest {
   constructor(method, url, third, fourth) {
+    var _a, _b;
     this.url = url;
     this.body = null;
     this.reportProgress = false;
@@ -642,8 +646,8 @@ var HttpRequest = class _HttpRequest {
       }
       this.transferCache = options.transferCache;
     }
-    this.headers ??= new HttpHeaders();
-    this.context ??= new HttpContext();
+    (_a = this.headers) != null ? _a : this.headers = new HttpHeaders();
+    (_b = this.context) != null ? _b : this.context = new HttpContext();
     if (!this.params) {
       this.params = new HttpParams();
       this.urlWithParams = url;
@@ -708,16 +712,17 @@ var HttpRequest = class _HttpRequest {
     return null;
   }
   clone(update = {}) {
+    var _a, _b, _c, _d;
     const method = update.method || this.method;
     const url = update.url || this.url;
     const responseType = update.responseType || this.responseType;
-    const transferCache = update.transferCache ?? this.transferCache;
+    const transferCache = (_a = update.transferCache) != null ? _a : this.transferCache;
     const body = update.body !== void 0 ? update.body : this.body;
-    const withCredentials = update.withCredentials ?? this.withCredentials;
-    const reportProgress = update.reportProgress ?? this.reportProgress;
+    const withCredentials = (_b = update.withCredentials) != null ? _b : this.withCredentials;
+    const reportProgress = (_c = update.reportProgress) != null ? _c : this.reportProgress;
     let headers = update.headers || this.headers;
     let params = update.params || this.params;
-    const context = update.context ?? this.context;
+    const context = (_d = update.context) != null ? _d : this.context;
     if (update.setHeaders !== void 0) {
       headers = Object.keys(update.setHeaders).reduce((headers2, name) => headers2.set(name, update.setHeaders[name]), headers);
     }
@@ -1112,9 +1117,10 @@ function getResponseUrl$1(response) {
 }
 var _FetchBackend = class _FetchBackend {
   constructor() {
-    this.fetchImpl = inject(FetchFactory, {
+    var _a, _b;
+    this.fetchImpl = (_b = (_a = inject(FetchFactory, {
       optional: true
-    })?.fetch ?? fetch.bind(globalThis);
+    })) == null ? void 0 : _a.fetch) != null ? _b : fetch.bind(globalThis);
     this.ngZone = inject(NgZone);
   }
   handle(request) {
@@ -1128,6 +1134,7 @@ var _FetchBackend = class _FetchBackend {
   }
   doRequest(request, signal, observer) {
     return __async(this, null, function* () {
+      var _a, _b, _c, _d;
       const init = this.createRequestInit(request);
       let response;
       try {
@@ -1142,7 +1149,7 @@ var _FetchBackend = class _FetchBackend {
       } catch (error) {
         observer.error(new HttpErrorResponse({
           error,
-          status: error.status ?? 0,
+          status: (_a = error.status) != null ? _a : 0,
           statusText: error.statusText,
           url: request.urlWithParams,
           headers: error.headers
@@ -1151,7 +1158,7 @@ var _FetchBackend = class _FetchBackend {
       }
       const headers = new HttpHeaders(response.headers);
       const statusText = response.statusText;
-      const url = getResponseUrl$1(response) ?? request.urlWithParams;
+      const url = (_b = getResponseUrl$1(response)) != null ? _b : request.urlWithParams;
       let status = response.status;
       let body = null;
       if (request.reportProgress) {
@@ -1182,7 +1189,7 @@ var _FetchBackend = class _FetchBackend {
             chunks.push(value);
             receivedLength += value.length;
             if (request.reportProgress) {
-              partialText = request.responseType === "text" ? (partialText ?? "") + (decoder ??= new TextDecoder()).decode(value, {
+              partialText = request.responseType === "text" ? (partialText != null ? partialText : "") + (decoder != null ? decoder : decoder = new TextDecoder()).decode(value, {
                 stream: true
               }) : void 0;
               const reportProgress = () => observer.next({
@@ -1197,7 +1204,7 @@ var _FetchBackend = class _FetchBackend {
         }));
         const chunksAll = this.concatChunks(chunks, receivedLength);
         try {
-          const contentType = response.headers.get("Content-Type") ?? "";
+          const contentType = (_c = response.headers.get("Content-Type")) != null ? _c : "";
           body = this.parseBody(request, chunksAll, contentType);
         } catch (error) {
           observer.error(new HttpErrorResponse({
@@ -1205,7 +1212,7 @@ var _FetchBackend = class _FetchBackend {
             headers: new HttpHeaders(response.headers),
             status: response.status,
             statusText: response.statusText,
-            url: getResponseUrl$1(response) ?? request.urlWithParams
+            url: (_d = getResponseUrl$1(response)) != null ? _d : request.urlWithParams
           }));
           return;
         }
@@ -1320,10 +1327,11 @@ var REQUESTS_CONTRIBUTE_TO_STABILITY = new InjectionToken(ngDevMode ? "REQUESTS_
 function legacyInterceptorFnFactory() {
   let chain = null;
   return (req, handler) => {
+    var _a;
     if (chain === null) {
-      const interceptors = inject(HTTP_INTERCEPTORS, {
+      const interceptors = (_a = inject(HTTP_INTERCEPTORS, {
         optional: true
-      }) ?? [];
+      })) != null ? _a : [];
       chain = interceptors.reduceRight(adaptLegacyInterceptorToChain, interceptorChainEndFn);
     }
     const pendingTasks = inject(PendingTasks);
@@ -1485,7 +1493,7 @@ var _JsonpClientBackend = class _JsonpClientBackend {
     });
   }
   removeListeners(script) {
-    foreignDocument ??= this.document.implementation.createHTMLDocument();
+    foreignDocument != null ? foreignDocument : foreignDocument = this.document.implementation.createHTMLDocument();
     foreignDocument.adoptNode(script);
   }
 };
@@ -1880,9 +1888,10 @@ function provideHttpClient(...features) {
   }, {
     provide: HttpBackend,
     useFactory: () => {
-      return inject(FetchBackend, {
+      var _a;
+      return (_a = inject(FetchBackend, {
         optional: true
-      }) ?? inject(HttpXhrBackend);
+      })) != null ? _a : inject(HttpXhrBackend);
     }
   }, {
     provide: HTTP_INTERCEPTOR_FNS,
@@ -2099,6 +2108,7 @@ var RESPONSE_TYPE = "rt";
 var CACHE_OPTIONS = new InjectionToken(ngDevMode ? "HTTP_TRANSFER_STATE_CACHE_OPTIONS" : "");
 var ALLOWED_METHODS = ["GET", "HEAD"];
 function transferCacheInterceptorFn(req, next) {
+  var _b;
   const _a = inject(CACHE_OPTIONS), {
     isCacheActive
   } = _a, globalOptions = __objRest(_a, [
@@ -2110,7 +2120,7 @@ function transferCacheInterceptorFn(req, next) {
   } = req;
   if (!isCacheActive || requestOptions === false || // POST requests are allowed either globally or at request level
   requestMethod === "POST" && !globalOptions.includePostRequests && !requestOptions || requestMethod !== "POST" && !ALLOWED_METHODS.includes(requestMethod) || // Do not cache request that require authorization when includeRequestsWithAuthHeaders is falsey
-  !globalOptions.includeRequestsWithAuthHeaders && hasAuthHeaders(req) || globalOptions.filter?.(req) === false) {
+  !globalOptions.includeRequestsWithAuthHeaders && hasAuthHeaders(req) || ((_b = globalOptions.filter) == null ? void 0 : _b.call(globalOptions, req)) === false) {
     return next(req);
   }
   const transferState = inject(TransferState);
@@ -2148,7 +2158,7 @@ function transferCacheInterceptorFn(req, next) {
     }
     let headers = new HttpHeaders(httpHeaders);
     if (typeof ngDevMode === "undefined" || ngDevMode) {
-      headers = appendMissingHeadersDetection(req.url, headers, headersToInclude ?? []);
+      headers = appendMissingHeadersDetection(req.url, headers, headersToInclude != null ? headersToInclude : []);
     }
     return of(new HttpResponse({
       body,
@@ -2330,4 +2340,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-C6G4Q5SW.js.map
+//# sourceMappingURL=chunk-PHY2JK55.js.map

@@ -1,6 +1,6 @@
 import {
   __commonJS
-} from "./chunk-JZPNJTJT.js";
+} from "./chunk-Y2PH64DW.js";
 
 // browser-external:url
 var require_url = __commonJS({
@@ -15,4 +15,4 @@ var require_url = __commonJS({
   }
 });
 export default require_url();
-//# sourceMappingURL=url-AF6OGG5E.js.map
+//# sourceMappingURL=url-P63XGHRY.js.map

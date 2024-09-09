@@ -58,12 +58,12 @@ import {
   ɵɵinject,
   ɵɵinjectAttribute,
   ɵɵstyleProp
-} from "./chunk-D4GKTBBZ.js";
+} from "./chunk-IN3MQ4VI.js";
 import {
   __async,
   __spreadProps,
   __spreadValues
-} from "./chunk-JZPNJTJT.js";
+} from "./chunk-Y2PH64DW.js";
 
 // node_modules/@angular/common/fesm2022/common.mjs
 var _DOM = null;
@@ -71,7 +71,7 @@ function getDOM() {
   return _DOM;
 }
 function setRootDomAdapter(adapter) {
-  _DOM ??= adapter;
+  _DOM != null ? _DOM : _DOM = adapter;
 }
 var DomAdapter = class {
 };
@@ -258,10 +258,11 @@ var LocationStrategy = _LocationStrategy;
 var APP_BASE_HREF = new InjectionToken(ngDevMode ? "appBaseHref" : "");
 var _PathLocationStrategy = class _PathLocationStrategy extends LocationStrategy {
   constructor(_platformLocation, href) {
+    var _a, _b, _c;
     super();
     this._platformLocation = _platformLocation;
     this._removeListenerFns = [];
-    this._baseHref = href ?? this._platformLocation.getBaseHrefFromDOM() ?? inject(DOCUMENT).location?.origin ?? "";
+    this._baseHref = (_c = (_b = href != null ? href : this._platformLocation.getBaseHrefFromDOM()) != null ? _b : (_a = inject(DOCUMENT).location) == null ? void 0 : _a.origin) != null ? _c : "";
   }
   /** @nodoc */
   ngOnDestroy() {
@@ -301,7 +302,8 @@ var _PathLocationStrategy = class _PathLocationStrategy extends LocationStrategy
     return this._platformLocation.getState();
   }
   historyGo(relativePosition = 0) {
-    this._platformLocation.historyGo?.(relativePosition);
+    var _a, _b;
+    (_b = (_a = this._platformLocation).historyGo) == null ? void 0 : _b.call(_a, relativePosition);
   }
 };
 _PathLocationStrategy.ɵfac = function PathLocationStrategy_Factory(__ngFactoryType__) {
@@ -354,7 +356,8 @@ var _HashLocationStrategy = class _HashLocationStrategy extends LocationStrategy
     return this._baseHref;
   }
   path(includeHash = false) {
-    const path = this._platformLocation.hash ?? "#";
+    var _a;
+    const path = (_a = this._platformLocation.hash) != null ? _a : "#";
     return path.length > 0 ? path.substring(1) : path;
   }
   prepareExternalUrl(internal) {
@@ -385,7 +388,8 @@ var _HashLocationStrategy = class _HashLocationStrategy extends LocationStrategy
     return this._platformLocation.getState();
   }
   historyGo(relativePosition = 0) {
-    this._platformLocation.historyGo?.(relativePosition);
+    var _a, _b;
+    (_b = (_a = this._platformLocation).historyGo) == null ? void 0 : _b.call(_a, relativePosition);
   }
 };
 _HashLocationStrategy.ɵfac = function HashLocationStrategy_Factory(__ngFactoryType__) {
@@ -430,7 +434,8 @@ var _Location = class _Location {
   }
   /** @nodoc */
   ngOnDestroy() {
-    this._urlChangeSubscription?.unsubscribe();
+    var _a;
+    (_a = this._urlChangeSubscription) == null ? void 0 : _a.unsubscribe();
     this._urlChangeListeners = [];
   }
   /**
@@ -541,7 +546,8 @@ var _Location = class _Location {
    * @see https://developer.mozilla.org/en-US/docs/Web/API/History_API#Moving_to_a_specific_point_in_history
    */
   historyGo(relativePosition = 0) {
-    this._locationStrategy.historyGo?.(relativePosition);
+    var _a, _b;
+    (_b = (_a = this._locationStrategy).historyGo) == null ? void 0 : _b.call(_a, relativePosition);
   }
   /**
    * Registers a URL change listener. Use to catch updates performed by the Angular
@@ -551,15 +557,17 @@ var _Location = class _Location {
    * @returns A function that, when executed, unregisters a URL change listener.
    */
   onUrlChange(fn) {
+    var _a;
     this._urlChangeListeners.push(fn);
-    this._urlChangeSubscription ??= this.subscribe((v) => {
+    (_a = this._urlChangeSubscription) != null ? _a : this._urlChangeSubscription = this.subscribe((v) => {
       this._notifyUrlChangeListeners(v.url, v.state);
     });
     return () => {
+      var _a2;
       const fnIndex = this._urlChangeListeners.indexOf(fn);
       this._urlChangeListeners.splice(fnIndex, 1);
       if (this._urlChangeListeners.length === 0) {
-        this._urlChangeSubscription?.unsubscribe();
+        (_a2 = this._urlChangeSubscription) == null ? void 0 : _a2.unsubscribe();
         this._urlChangeSubscription = null;
       }
     };
@@ -1121,8 +1129,9 @@ function createDate(year, month, date) {
   return newDate;
 }
 function getNamedFormat(locale, format) {
+  var _a;
   const localeId = getLocaleId(locale);
-  NAMED_FORMATS[localeId] ??= {};
+  (_a = NAMED_FORMATS[localeId]) != null ? _a : NAMED_FORMATS[localeId] = {};
   if (NAMED_FORMATS[localeId][format]) {
     return NAMED_FORMATS[localeId][format];
   }
@@ -2135,6 +2144,7 @@ var _NgComponentOutlet = class _NgComponentOutlet {
   }
   /** @nodoc */
   ngOnChanges(changes) {
+    var _a;
     if (this._needToReCreateComponentInstance(changes)) {
       this._viewContainerRef.clear();
       this._inputsUsed.clear();
@@ -2142,7 +2152,7 @@ var _NgComponentOutlet = class _NgComponentOutlet {
       if (this.ngComponentOutlet) {
         const injector = this.ngComponentOutletInjector || this._viewContainerRef.parentInjector;
         if (this._needToReCreateNgModuleInstance(changes)) {
-          this._moduleRef?.destroy();
+          (_a = this._moduleRef) == null ? void 0 : _a.destroy();
           if (this.ngComponentOutletNgModule) {
             this._moduleRef = createNgModule(this.ngComponentOutletNgModule, getParentInjector(injector));
           } else if (this.ngComponentOutletNgModuleFactory) {
@@ -2172,7 +2182,8 @@ var _NgComponentOutlet = class _NgComponentOutlet {
   }
   /** @nodoc */
   ngOnDestroy() {
-    this._moduleRef?.destroy();
+    var _a;
+    (_a = this._moduleRef) == null ? void 0 : _a.destroy();
   }
   _applyInputStateDiff(componentRef) {
     for (const [inputName, touched] of this._inputsUsed) {
@@ -2580,7 +2591,7 @@ var _NgSwitch = class _NgSwitch {
   /** @internal */
   _matchCase(value) {
     const matched = value === this._ngSwitch;
-    this._lastCasesMatched ||= matched;
+    this._lastCasesMatched || (this._lastCasesMatched = matched);
     this._lastCaseCheckIndex++;
     if (this._lastCaseCheckIndex === this._caseCount) {
       this._updateDefaultCases(!this._lastCasesMatched);
@@ -2888,6 +2899,7 @@ var _NgTemplateOutlet = class _NgTemplateOutlet {
     this.ngTemplateOutletInjector = null;
   }
   ngOnChanges(changes) {
+    var _a;
     if (this._shouldRecreateView(changes)) {
       const viewContainerRef = this._viewContainerRef;
       if (this._viewRef) {
@@ -2899,7 +2911,7 @@ var _NgTemplateOutlet = class _NgTemplateOutlet {
       }
       const viewContext = this._createContextForwardProxy();
       this._viewRef = viewContainerRef.createEmbeddedView(this.ngTemplateOutlet, viewContext, {
-        injector: this.ngTemplateOutletInjector ?? void 0
+        injector: (_a = this.ngTemplateOutletInjector) != null ? _a : void 0
       });
     }
   }
@@ -3051,10 +3063,11 @@ var _AsyncPipe = class _AsyncPipe {
     this._obj = null;
   }
   _updateLatestValue(async, value) {
+    var _a;
     if (async === this._obj) {
       this._latestValue = value;
       if (this.markForCheckOnValueUpdate) {
-        this._ref?.markForCheck();
+        (_a = this._ref) == null ? void 0 : _a.markForCheck();
       }
     }
   }
@@ -3176,10 +3189,11 @@ var _DatePipe = class _DatePipe {
     this.defaultOptions = defaultOptions;
   }
   transform(value, format, timezone, locale) {
+    var _a, _b, _c, _d, _e;
     if (value == null || value === "" || value !== value) return null;
     try {
-      const _format = format ?? this.defaultOptions?.dateFormat ?? DEFAULT_DATE_FORMAT;
-      const _timezone = timezone ?? this.defaultOptions?.timezone ?? this.defaultTimezone ?? void 0;
+      const _format = (_b = format != null ? format : (_a = this.defaultOptions) == null ? void 0 : _a.dateFormat) != null ? _b : DEFAULT_DATE_FORMAT;
+      const _timezone = (_e = (_d = timezone != null ? timezone : (_c = this.defaultOptions) == null ? void 0 : _c.timezone) != null ? _d : this.defaultTimezone) != null ? _e : void 0;
       return formatDate(value, _format, locale || this.locale, _timezone);
     } catch (error) {
       throw invalidPipeArgumentError(_DatePipe, error.message);
@@ -3349,10 +3363,11 @@ var _KeyValuePipe = class _KeyValuePipe {
     this.compareFn = defaultComparator;
   }
   transform(input, compareFn = defaultComparator) {
+    var _a;
     if (!input || !(input instanceof Map) && typeof input !== "object") {
       return null;
     }
-    this.differ ??= this.differs.find(input).create();
+    (_a = this.differ) != null ? _a : this.differ = this.differs.find(input).create();
     const differChanges = this.differ.diff(input);
     const compareFnChanged = compareFn !== this.compareFn;
     if (differChanges) {
@@ -3424,7 +3439,7 @@ var _DecimalPipe = class _DecimalPipe {
    */
   transform(value, digitsInfo, locale) {
     if (!isValue(value)) return null;
-    locale ||= this._locale;
+    locale || (locale = this._locale);
     try {
       const num = strToNumber(value);
       return formatNumber(num, locale, digitsInfo);
@@ -3480,7 +3495,7 @@ var _PercentPipe = class _PercentPipe {
    */
   transform(value, digitsInfo, locale) {
     if (!isValue(value)) return null;
-    locale ||= this._locale;
+    locale || (locale = this._locale);
     try {
       const num = strToNumber(value);
       return formatPercent(num, locale, digitsInfo);
@@ -3554,7 +3569,7 @@ var _CurrencyPipe = class _CurrencyPipe {
    */
   transform(value, currencyCode = this._defaultCurrencyCode, display = "symbol", digitsInfo, locale) {
     if (!isValue(value)) return null;
-    locale ||= this._locale;
+    locale || (locale = this._locale);
     if (typeof display === "boolean") {
       if ((typeof ngDevMode === "undefined" || ngDevMode) && console && console.warn) {
         console.warn(`Warning: the currency pipe has been changed in Angular v5. The symbolDisplay option (third parameter) is now a string instead of a boolean. The accepted values are "code", "symbol" or "symbol-narrow".`);
@@ -3973,7 +3988,8 @@ function provideNetlifyLoader(path) {
 }
 var validParams = /* @__PURE__ */ new Map([["height", "h"], ["fit", "fit"], ["quality", "q"], ["q", "q"], ["position", "position"]]);
 function createNetlifyUrl(config, path) {
-  const url = new URL(path ?? "https://a/");
+  var _a, _b, _c, _d;
+  const url = new URL(path != null ? path : "https://a/");
   url.pathname = "/.netlify/images";
   if (!isAbsoluteUrl(config.src) && !config.src.startsWith("/")) {
     config.src = "/" + config.src;
@@ -3982,11 +3998,11 @@ function createNetlifyUrl(config, path) {
   if (config.width) {
     url.searchParams.set("w", config.width.toString());
   }
-  const configQuality = config.loaderParams?.["quality"] ?? config.loaderParams?.["q"];
+  const configQuality = (_c = (_a = config.loaderParams) == null ? void 0 : _a["quality"]) != null ? _c : (_b = config.loaderParams) == null ? void 0 : _b["q"];
   if (config.isPlaceholder && !configQuality) {
     url.searchParams.set("q", PLACEHOLDER_QUALITY);
   }
-  for (const [param, value] of Object.entries(config.loaderParams ?? {})) {
+  for (const [param, value] of Object.entries((_d = config.loaderParams) != null ? _d : {})) {
     if (validParams.has(param)) {
       url.searchParams.set(validParams.get(param), value.toString());
     } else {
@@ -4025,10 +4041,11 @@ var _LCPImageObserver = class _LCPImageObserver {
    */
   initPerformanceObserver() {
     const observer = new PerformanceObserver((entryList) => {
+      var _a, _b;
       const entries = entryList.getEntries();
       if (entries.length === 0) return;
       const lcpElement = entries[entries.length - 1];
-      const imgSrc = lcpElement.element?.src ?? "";
+      const imgSrc = (_b = (_a = lcpElement.element) == null ? void 0 : _a.src) != null ? _b : "";
       if (imgSrc.startsWith("data:") || imgSrc.startsWith("blob:")) return;
       const img = this.images.get(imgSrc);
       if (!img) return;
@@ -4141,11 +4158,12 @@ var _PreconnectLinkChecker = class _PreconnectLinkChecker {
    * @param originalNgSrc ngSrc value
    */
   assertPreconnect(rewrittenSrc, originalNgSrc) {
+    var _a;
     if (this.isServer) return;
     const imgUrl = getUrl(rewrittenSrc, this.window);
     if (this.blocklist.has(imgUrl.hostname) || this.alreadySeen.has(imgUrl.origin)) return;
     this.alreadySeen.add(imgUrl.origin);
-    this.preconnectLinks ??= this.queryPreconnectLinks();
+    (_a = this.preconnectLinks) != null ? _a : this.preconnectLinks = this.queryPreconnectLinks();
     if (!this.preconnectLinks.has(imgUrl.origin)) {
       console.warn(formatRuntimeError(2956, `${imgDirectiveDetails(originalNgSrc)} there is no preconnect tag present for this image. Preconnecting to the origin(s) that serve priority images ensures that these images are delivered as soon as possible. To fix this, please add the following element into the <head> of the document:
   <link rel="preconnect" href="${imgUrl.origin}">`));
@@ -4162,7 +4180,8 @@ var _PreconnectLinkChecker = class _PreconnectLinkChecker {
     return preconnectUrls;
   }
   ngOnDestroy() {
-    this.preconnectLinks?.clear();
+    var _a;
+    (_a = this.preconnectLinks) == null ? void 0 : _a.clear();
     this.alreadySeen.clear();
   }
 };
@@ -4344,7 +4363,7 @@ var _NgOptimizedImage = class _NgOptimizedImage {
   }
   setHostAttributes() {
     if (this.fill) {
-      this.sizes ||= "100vw";
+      this.sizes || (this.sizes = "100vw");
     } else {
       this.setHostAttribute("width", this.width.toString());
       this.setHostAttribute("height", this.height.toString());
@@ -4362,6 +4381,7 @@ var _NgOptimizedImage = class _NgOptimizedImage {
   }
   /** @nodoc */
   ngOnChanges(changes) {
+    var _a;
     if (ngDevMode) {
       assertNoPostInitInputChange(this, changes, ["ngSrcset", "width", "height", "priority", "fill", "loading", "sizes", "loaderParams", "disableOptimizedSrcset"]);
     }
@@ -4372,11 +4392,12 @@ var _NgOptimizedImage = class _NgOptimizedImage {
       if (this.lcpObserver !== null && oldSrc && newSrc && oldSrc !== newSrc) {
         const ngZone = this.injector.get(NgZone);
         ngZone.runOutsideAngular(() => {
-          this.lcpObserver?.updateImage(oldSrc, newSrc);
+          var _a2;
+          (_a2 = this.lcpObserver) == null ? void 0 : _a2.updateImage(oldSrc, newSrc);
         });
       }
     }
-    if (ngDevMode && changes["placeholder"]?.currentValue && !this.isServer) {
+    if (ngDevMode && ((_a = changes["placeholder"]) == null ? void 0 : _a.currentValue) && !this.isServer) {
       assertPlaceholderDimensions(this, this.imgElement);
     }
   }
@@ -4425,11 +4446,12 @@ var _NgOptimizedImage = class _NgOptimizedImage {
     }
   }
   getResponsiveSrcset() {
+    var _a;
     const {
       breakpoints
     } = this.config;
     let filteredBreakpoints = breakpoints;
-    if (this.sizes?.trim() === "100vw") {
+    if (((_a = this.sizes) == null ? void 0 : _a.trim()) === "100vw") {
       filteredBreakpoints = breakpoints.filter((bp) => bp >= VIEWPORT_BREAKPOINT_CUTOFF);
     }
     const finalSrcs = filteredBreakpoints.map((bp) => `${this.callImageLoader({
@@ -4667,7 +4689,7 @@ function assertNotBase64Image(dir) {
 }
 function assertNoComplexSizes(dir) {
   let sizes = dir.sizes;
-  if (sizes?.match(/((\)|,)\s|^)\d+px/)) {
+  if (sizes == null ? void 0 : sizes.match(/((\)|,)\s|^)\d+px/)) {
     throw new RuntimeError(2952, `${imgDirectiveDetails(dir.ngSrc, false)} \`sizes\` was set to a string including pixel values. For automatic \`srcset\` generation, \`sizes\` must only include responsive values, such as \`sizes="50vw"\` or \`sizes="(min-width: 768px) 50vw, 100vw"\`. To fix this, modify the \`sizes\` attribute, or provide your own \`ngSrcset\` value directly.`);
   }
 }
@@ -5016,4 +5038,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-4B4MXSGG.js.map
+//# sourceMappingURL=chunk-4AMQB3PM.js.map

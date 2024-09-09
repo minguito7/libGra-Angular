@@ -1,6 +1,6 @@
 import {
   withHttpTransferCache
-} from "./chunk-C6G4Q5SW.js";
+} from "./chunk-PHY2JK55.js";
 import {
   CommonModule,
   DOCUMENT,
@@ -11,7 +11,7 @@ import {
   isPlatformServer,
   parseCookieValue,
   setRootDomAdapter
-} from "./chunk-4B4MXSGG.js";
+} from "./chunk-4AMQB3PM.js";
 import {
   APP_ID,
   ApplicationModule,
@@ -68,11 +68,11 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵinject
-} from "./chunk-D4GKTBBZ.js";
+} from "./chunk-IN3MQ4VI.js";
 import {
   __spreadProps,
   __spreadValues
-} from "./chunk-JZPNJTJT.js";
+} from "./chunk-Y2PH64DW.js";
 
 // node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs
 var GenericBrowserDomAdapter = class extends DomAdapter {
@@ -343,13 +343,15 @@ var _SharedStylesHost = class _SharedStylesHost {
     }
   }
   onStyleRemoved(style) {
+    var _a, _b;
     const styleRef = this.styleRef;
-    styleRef.get(style)?.elements?.forEach((node) => node.remove());
+    (_b = (_a = styleRef.get(style)) == null ? void 0 : _a.elements) == null ? void 0 : _b.forEach((node) => node.remove());
     styleRef.delete(style);
   }
   collectServerRenderedStyles() {
-    const styles = this.doc.head?.querySelectorAll(`style[${APP_ID_ATTRIBUTE_NAME}="${this.appId}"]`);
-    if (styles?.length) {
+    var _a;
+    const styles = (_a = this.doc.head) == null ? void 0 : _a.querySelectorAll(`style[${APP_ID_ATTRIBUTE_NAME}="${this.appId}"]`);
+    if (styles == null ? void 0 : styles.length) {
       const styleMap = /* @__PURE__ */ new Map();
       styles.forEach((style) => {
         if (style.textContent != null) {
@@ -375,8 +377,8 @@ var _SharedStylesHost = class _SharedStylesHost {
   }
   getStyleElement(host, style) {
     const styleNodesInDOM = this.styleNodesInDOM;
-    const styleEl = styleNodesInDOM?.get(style);
-    if (styleEl?.parentNode === host) {
+    const styleEl = styleNodesInDOM == null ? void 0 : styleNodesInDOM.get(style);
+    if ((styleEl == null ? void 0 : styleEl.parentNode) === host) {
       styleNodesInDOM.delete(style);
       styleEl.removeAttribute(APP_ID_ATTRIBUTE_NAME);
       if (typeof ngDevMode === "undefined" || ngDevMode) {
@@ -397,9 +399,10 @@ var _SharedStylesHost = class _SharedStylesHost {
     }
   }
   addStyleToHost(host, style) {
+    var _a;
     const styleEl = this.getStyleElement(host, style);
     const styleRef = this.styleRef;
-    const styleElRef = styleRef.get(style)?.elements;
+    const styleElRef = (_a = styleRef.get(style)) == null ? void 0 : _a.elements;
     if (styleElRef) {
       styleElRef.push(styleEl);
     } else {
@@ -1047,8 +1050,9 @@ function createApplication(options) {
   return internalCreateApplication(createProvidersConfig(options));
 }
 function createProvidersConfig(options) {
+  var _a;
   return {
-    appProviders: [...BROWSER_MODULE_PROVIDERS, ...options?.providers ?? []],
+    appProviders: [...BROWSER_MODULE_PROVIDERS, ...(_a = options == null ? void 0 : options.providers) != null ? _a : []],
     platformProviders: INTERNAL_BROWSER_PLATFORM_PROVIDERS
   };
 }
@@ -1929,4 +1933,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-5MLM4V22.js.map
+//# sourceMappingURL=chunk-NAJG3GMW.js.map

@@ -107,7 +107,44 @@ export class HomeComponent implements OnInit {
       });
     } 
     this.loadBooks();
-
+    function base64UrlDecode(str: string): string {
+      // Reemplazar caracteres específicos de URL
+      str = str.replace(/-/g, '+').replace(/_/g, '/');
+    
+      // Decodificar base64
+      const decodedStr = atob(str);
+    
+      // Decodificar URI
+      return decodeURIComponent(
+        decodedStr
+          .split('')
+          .map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join('')
+      );
+    }
+    
+    function jwt_decode(token: string): any {
+      try {
+        // Dividir el token en sus tres partes
+        const parts = token.split('.');
+    
+        if (parts.length !== 3) {
+          throw new Error('El token JWT no tiene el formato adecuado');
+        }
+    
+        // Decodificar la parte del payloadthis.fotoServ
+        const payload = parts[1];
+        const decodedPayload = base64UrlDecode(payload);
+    
+        // Parsear el payload a un objeto JSON
+        return JSON.parse(decodedPayload);
+      } catch (error) {
+        console.error('Error decoding JWT:', error);
+        return null;
+      }
+    }
     this.bookService.getNovedadesLibros().subscribe(response => {     
       console.log(response);
       this.booksNovedad = response.resultado;
@@ -394,12 +431,13 @@ checkLoginStatus() {
   irAAdministrarPerfil(): void {
     this.router.navigate(['/perfil-user']);
   }
-  irLeerLibro(book: any){
+  irLeerLibro(bookId: any){
 
-    const file: string =this.baseUrl+book;
-    if (file) {
-      this.pdfService.setPdfFile(file);
-      this.router.navigate(['/book-reader']);
+    //const file: string =this.baseUrl+book;
+    if (bookId) {
+      this.pdfService.setPdfFile(bookId);
+
+      this.router.navigate(['/book-reader', bookId]);
 
     }
   }

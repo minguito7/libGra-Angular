@@ -16,7 +16,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegisterComponent },
   { path: 'perfil-user', component: PerfilUserComponent },
-  { path: 'book-reader', component: BookReaderComponent },
+  { path: 'book-reader/:bookId', component: BookReaderComponent },
   { path: '**', redirectTo: '' } // Redirige cualquier ruta desconocida a HomeComponent
 ];
 

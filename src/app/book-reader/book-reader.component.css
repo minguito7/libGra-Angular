@@ -1,18 +1,37 @@
-.pdf-controls {
-    margin-bottom: 20px;
-    display: flex;
-    gap: 10px;
-  }
-  
-  .pdf-container {
-    border: 1px solid #ccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  canvas {
-    width: 100%;
-    border: 1px solid #000;
-  }
-  
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  display: flex;
+  height: 100vh; /* Altura completa de la ventana del navegador */
+}
+
+.sidebar {
+  width: 250px; /* Ancho fijo para el contenedor de la izquierda */
+  background-color: #f4f4f4;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar .photo {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.sidebar .info {
+  margin-top: 10px;
+}
+
+.main-content {
+  flex: 1; /* Ocupa el espacio restante */
+  padding: 20px;
+  background-color: #fff;
+  overflow-y: auto; /* Agrega barra de desplazamiento si es necesario */
+}
+
+.main-content h1 {
+  margin-top: 0;
+}

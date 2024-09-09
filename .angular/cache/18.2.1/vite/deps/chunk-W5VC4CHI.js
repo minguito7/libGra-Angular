@@ -1,6 +1,6 @@
 import {
   getDOM
-} from "./chunk-4B4MXSGG.js";
+} from "./chunk-4AMQB3PM.js";
 import {
   ChangeDetectorRef,
   Directive,
@@ -45,11 +45,11 @@ import {
   ɵɵdirectiveInject,
   ɵɵgetInheritedFactory,
   ɵɵlistener
-} from "./chunk-D4GKTBBZ.js";
+} from "./chunk-IN3MQ4VI.js";
 import {
   __spreadProps,
   __spreadValues
-} from "./chunk-JZPNJTJT.js";
+} from "./chunk-Y2PH64DW.js";
 
 // node_modules/@angular/forms/fesm2022/forms.mjs
 var _BaseControlValueAccessor = class _BaseControlValueAccessor {
@@ -1016,32 +1016,40 @@ var AbstractControlStatus = class {
     this._cd = cd;
   }
   get isTouched() {
-    this._cd?.control?._touched?.();
-    return !!this._cd?.control?.touched;
+    var _a, _b, _c, _d, _e;
+    (_c = (_b = (_a = this._cd) == null ? void 0 : _a.control) == null ? void 0 : _b._touched) == null ? void 0 : _c.call(_b);
+    return !!((_e = (_d = this._cd) == null ? void 0 : _d.control) == null ? void 0 : _e.touched);
   }
   get isUntouched() {
-    return !!this._cd?.control?.untouched;
+    var _a, _b;
+    return !!((_b = (_a = this._cd) == null ? void 0 : _a.control) == null ? void 0 : _b.untouched);
   }
   get isPristine() {
-    this._cd?.control?._pristine?.();
-    return !!this._cd?.control?.pristine;
+    var _a, _b, _c, _d, _e;
+    (_c = (_b = (_a = this._cd) == null ? void 0 : _a.control) == null ? void 0 : _b._pristine) == null ? void 0 : _c.call(_b);
+    return !!((_e = (_d = this._cd) == null ? void 0 : _d.control) == null ? void 0 : _e.pristine);
   }
   get isDirty() {
-    return !!this._cd?.control?.dirty;
+    var _a, _b;
+    return !!((_b = (_a = this._cd) == null ? void 0 : _a.control) == null ? void 0 : _b.dirty);
   }
   get isValid() {
-    this._cd?.control?._status?.();
-    return !!this._cd?.control?.valid;
+    var _a, _b, _c, _d, _e;
+    (_c = (_b = (_a = this._cd) == null ? void 0 : _a.control) == null ? void 0 : _b._status) == null ? void 0 : _c.call(_b);
+    return !!((_e = (_d = this._cd) == null ? void 0 : _d.control) == null ? void 0 : _e.valid);
   }
   get isInvalid() {
-    return !!this._cd?.control?.invalid;
+    var _a, _b;
+    return !!((_b = (_a = this._cd) == null ? void 0 : _a.control) == null ? void 0 : _b.invalid);
   }
   get isPending() {
-    return !!this._cd?.control?.pending;
+    var _a, _b;
+    return !!((_b = (_a = this._cd) == null ? void 0 : _a.control) == null ? void 0 : _b.pending);
   }
   get isSubmitted() {
-    this._cd?._submitted?.();
-    return !!this._cd?.submitted;
+    var _a, _b, _c;
+    (_b = (_a = this._cd) == null ? void 0 : _a._submitted) == null ? void 0 : _b.call(_a);
+    return !!((_c = this._cd) == null ? void 0 : _c.submitted);
   }
 };
 var ngControlStatusHost = {
@@ -1708,9 +1716,10 @@ var AbstractControl = class {
     this.asyncValidator = null;
   }
   markAsTouched(opts = {}) {
+    var _a;
     const changed = this.touched === false;
     this.touched = true;
-    const sourceControl = opts.sourceControl ?? this;
+    const sourceControl = (_a = opts.sourceControl) != null ? _a : this;
     if (this._parent && !opts.onlySelf) {
       this._parent.markAsTouched(__spreadProps(__spreadValues({}, opts), {
         sourceControl
@@ -1739,10 +1748,11 @@ var AbstractControl = class {
     this._forEachChild((control) => control.markAllAsTouched(opts));
   }
   markAsUntouched(opts = {}) {
+    var _a;
     const changed = this.touched === true;
     this.touched = false;
     this._pendingTouched = false;
-    const sourceControl = opts.sourceControl ?? this;
+    const sourceControl = (_a = opts.sourceControl) != null ? _a : this;
     this._forEachChild((control) => {
       control.markAsUntouched({
         onlySelf: true,
@@ -1758,9 +1768,10 @@ var AbstractControl = class {
     }
   }
   markAsDirty(opts = {}) {
+    var _a;
     const changed = this.pristine === true;
     this.pristine = false;
-    const sourceControl = opts.sourceControl ?? this;
+    const sourceControl = (_a = opts.sourceControl) != null ? _a : this;
     if (this._parent && !opts.onlySelf) {
       this._parent.markAsDirty(__spreadProps(__spreadValues({}, opts), {
         sourceControl
@@ -1771,10 +1782,11 @@ var AbstractControl = class {
     }
   }
   markAsPristine(opts = {}) {
+    var _a;
     const changed = this.pristine === false;
     this.pristine = true;
     this._pendingDirty = false;
-    const sourceControl = opts.sourceControl ?? this;
+    const sourceControl = (_a = opts.sourceControl) != null ? _a : this;
     this._forEachChild((control) => {
       control.markAsPristine({
         onlySelf: true,
@@ -1789,8 +1801,9 @@ var AbstractControl = class {
     }
   }
   markAsPending(opts = {}) {
+    var _a;
     this.status = PENDING;
-    const sourceControl = opts.sourceControl ?? this;
+    const sourceControl = (_a = opts.sourceControl) != null ? _a : this;
     if (opts.emitEvent !== false) {
       this._events.next(new StatusChangeEvent(this.status, sourceControl));
       this.statusChanges.emit(this.status);
@@ -1802,6 +1815,7 @@ var AbstractControl = class {
     }
   }
   disable(opts = {}) {
+    var _a;
     const skipPristineCheck = this._parentMarkedDirty(opts.onlySelf);
     this.status = DISABLED;
     this.errors = null;
@@ -1811,7 +1825,7 @@ var AbstractControl = class {
       }));
     });
     this._updateValue();
-    const sourceControl = opts.sourceControl ?? this;
+    const sourceControl = (_a = opts.sourceControl) != null ? _a : this;
     if (opts.emitEvent !== false) {
       this._events.next(new ValueChangeEvent(this.value, sourceControl));
       this._events.next(new StatusChangeEvent(this.status, sourceControl));
@@ -1883,6 +1897,7 @@ var AbstractControl = class {
     return this.value;
   }
   updateValueAndValidity(opts = {}) {
+    var _a;
     this._setInitialStatus();
     this._updateValue();
     if (this.enabled) {
@@ -1893,7 +1908,7 @@ var AbstractControl = class {
         this._runAsyncValidator(shouldHaveEmitted, opts.emitEvent);
       }
     }
-    const sourceControl = opts.sourceControl ?? this;
+    const sourceControl = (_a = opts.sourceControl) != null ? _a : this;
     if (opts.emitEvent !== false) {
       this._events.next(new ValueChangeEvent(this.value, sourceControl));
       this._events.next(new StatusChangeEvent(this.status, sourceControl));
@@ -1939,9 +1954,10 @@ var AbstractControl = class {
     }
   }
   _cancelExistingSubscription() {
+    var _a, _b;
     if (this._asyncValidationSubscription) {
       this._asyncValidationSubscription.unsubscribe();
-      const shouldHaveEmitted = this._hasOwnPendingAsyncValidator?.emitEvent ?? false;
+      const shouldHaveEmitted = (_b = (_a = this._hasOwnPendingAsyncValidator) == null ? void 0 : _a.emitEvent) != null ? _b : false;
       this._hasOwnPendingAsyncValidator = null;
       return shouldHaveEmitted;
     }
@@ -2501,6 +2517,7 @@ function controlPath(name, parent) {
   return [...parent.path, name];
 }
 function setUpControl(control, dir, callSetDisabledState = setDisabledStateDefault) {
+  var _a, _b;
   if (typeof ngDevMode === "undefined" || ngDevMode) {
     if (!control) _throwError(dir, "Cannot find control with");
     if (!dir.valueAccessor) _throwMissingValueAccessorError(dir);
@@ -2508,7 +2525,7 @@ function setUpControl(control, dir, callSetDisabledState = setDisabledStateDefau
   setUpValidators(control, dir);
   dir.valueAccessor.writeValue(control.value);
   if (control.disabled || callSetDisabledState === "always") {
-    dir.valueAccessor.setDisabledState?.(control.disabled);
+    (_b = (_a = dir.valueAccessor).setDisabledState) == null ? void 0 : _b.call(_a, control.disabled);
   }
   setUpViewChangePipeline(control, dir);
   setUpModelChangePipeline(control, dir);
@@ -2645,7 +2662,7 @@ function _throwError(dir, message) {
 function _describeControlLocation(dir) {
   const path = dir.path;
   if (path && path.length > 1) return `path: '${path.join(" -> ")}'`;
-  if (path?.[0]) return `name: '${path}'`;
+  if (path == null ? void 0 : path[0]) return `name: '${path}'`;
   return "unspecified name attribute";
 }
 function _throwMissingValueAccessorError(dir) {
@@ -2878,10 +2895,11 @@ var _NgForm = class _NgForm extends ControlContainer {
    * @param $event The "submit" event object
    */
   onSubmit($event) {
+    var _a;
     this.submittedReactive.set(true);
     syncPendingControls(this.form, this._directives);
     this.ngSubmit.emit($event);
-    return $event?.target?.method === "dialog";
+    return ((_a = $event == null ? void 0 : $event.target) == null ? void 0 : _a.method) === "dialog";
   }
   /**
    * @description
@@ -3377,22 +3395,24 @@ var _NgModel = class _NgModel extends NgControl {
   }
   _updateValue(value) {
     resolvedPromise.then(() => {
+      var _a;
       this.control.setValue(value, {
         emitViewToModelChange: false
       });
-      this._changeDetectorRef?.markForCheck();
+      (_a = this._changeDetectorRef) == null ? void 0 : _a.markForCheck();
     });
   }
   _updateDisabled(changes) {
     const disabledValue = changes["isDisabled"].currentValue;
     const isDisabled = disabledValue !== 0 && booleanAttribute(disabledValue);
     resolvedPromise.then(() => {
+      var _a;
       if (isDisabled && !this.control.disabled) {
         this.control.disable();
       } else if (!isDisabled && this.control.disabled) {
         this.control.enable();
       }
-      this._changeDetectorRef?.markForCheck();
+      (_a = this._changeDetectorRef) == null ? void 0 : _a.markForCheck();
     });
   }
   _getPath(controlName) {
@@ -3650,15 +3670,16 @@ var RadioControlRegistry = _RadioControlRegistry;
 })();
 var _RadioControlValueAccessor = class _RadioControlValueAccessor extends BuiltInControlValueAccessor {
   constructor(renderer, elementRef, _registry, _injector) {
+    var _a;
     super(renderer, elementRef);
     this._registry = _registry;
     this._injector = _injector;
     this.setDisabledStateFired = false;
     this.onChange = () => {
     };
-    this.callSetDisabledState = inject(CALL_SET_DISABLED_STATE, {
+    this.callSetDisabledState = (_a = inject(CALL_SET_DISABLED_STATE, {
       optional: true
-    }) ?? setDisabledStateDefault;
+    })) != null ? _a : setDisabledStateDefault;
   }
   /** @nodoc */
   ngOnInit() {
@@ -4187,11 +4208,12 @@ var _FormGroupDirective = class _FormGroupDirective extends ControlContainer {
    * @param $event The "submit" event object
    */
   onSubmit($event) {
+    var _a;
     this._submittedReactive.set(true);
     syncPendingControls(this.form, this.directives);
     this.ngSubmit.emit($event);
     this.form._events.next(new FormSubmittedEvent(this.control));
-    return $event?.target?.method === "dialog";
+    return ((_a = $event == null ? void 0 : $event.target) == null ? void 0 : _a.method) === "dialog";
   }
   /**
    * @description
@@ -5974,7 +5996,8 @@ var FormArray = class extends AbstractControl {
   }
   /** @internal */
   _find(name) {
-    return this.at(name) ?? null;
+    var _a;
+    return (_a = this.at(name)) != null ? _a : null;
   }
 };
 var UntypedFormArray = FormArray;
@@ -6231,11 +6254,12 @@ var _FormsModule = class _FormsModule {
    * correct, or to only call it `whenDisabled`, which is the legacy behavior.
    */
   static withConfig(opts) {
+    var _a;
     return {
       ngModule: _FormsModule,
       providers: [{
         provide: CALL_SET_DISABLED_STATE,
-        useValue: opts.callSetDisabledState ?? setDisabledStateDefault
+        useValue: (_a = opts.callSetDisabledState) != null ? _a : setDisabledStateDefault
       }]
     };
   }
@@ -6273,14 +6297,15 @@ var _ReactiveFormsModule = class _ReactiveFormsModule {
    * correct, or to only call it `whenDisabled`, which is the legacy behavior.
    */
   static withConfig(opts) {
+    var _a, _b;
     return {
       ngModule: _ReactiveFormsModule,
       providers: [{
         provide: NG_MODEL_WITH_FORM_CONTROL_WARNING,
-        useValue: opts.warnOnNgModelWithFormControl ?? "always"
+        useValue: (_a = opts.warnOnNgModelWithFormControl) != null ? _a : "always"
       }, {
         provide: CALL_SET_DISABLED_STATE,
-        useValue: opts.callSetDisabledState ?? setDisabledStateDefault
+        useValue: (_b = opts.callSetDisabledState) != null ? _b : setDisabledStateDefault
       }]
     };
   }
@@ -6381,4 +6406,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-H2L74U3O.js.map
+//# sourceMappingURL=chunk-W5VC4CHI.js.map
