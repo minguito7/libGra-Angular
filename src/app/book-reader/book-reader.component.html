@@ -41,7 +41,7 @@
   </div>
 </nav>
 
-<p> {{libro.titulo}}</p>
+
 
 <!--<iframe [src]="safePdfUrl" width="420px" height="630px" sandbox="allow-scripts allow-same-origin"></iframe>-->
 
@@ -49,11 +49,13 @@
 <!--pantalla-->
 <div class="container">
   <div class="sidebar">
-      <img [src]="{{libro.portada}}" alt="Foto" class="photo">
-      <p class="info">Aquí va la información debajo de la foto.</p>
+      <img [src]="baseUrl+libro.portada" alt="Portada" class="portada">
+      <div class="containerTitulo">
+        <p class="tituloLibro"> {{libro.titulo}}</p>
+      </div>
   </div>
   <div class="main-content">
-      <iframe [src]="safePdfUrl" width="420px" height="630px" sandbox="allow-scripts allow-same-origin"></iframe>
+      <iframe [src]="this.safePdfUrl" class="pdf-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
   </div>
 </div>
 

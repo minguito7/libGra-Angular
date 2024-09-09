@@ -75,11 +75,11 @@
                   <div class="swiper-slide" *ngFor="let novedad of booksNovedad">
                     <div id="product-card" class="product-card image-zoom-effect link-effect d-flex flex-wrap">
                       <div class="image-holder">
-                        <img [src]="baseUrl + novedad.portada" alt="product-item" class="product-image img-fluid">
+                        <img (click)="irLeerLibro(novedad._id)" [src]="baseUrl + novedad.portada" alt="product-item" class="product-image img-fluid">
                       </div>
                       <div class="cart-concern">
                         <p class="card-title text-uppercase pt-3 text-primary">
-                          <a [href]="novedad.archivo" class="text-primary">{{ novedad.titulo }}</a>
+                          <a (click)="irLeerLibro(novedad._id)" class="text-primary" target="_blank">{{ novedad.titulo }}</a>
                         </p>
                         <div class="cart-info">
                           <p class="pseudo-text-effect" href="#"><span>{{ novedad.fecha_publicacion | date:'d MMMM yyyy' }}</span></p>
