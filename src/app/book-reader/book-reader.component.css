@@ -55,3 +55,107 @@ body {
   height: calc(100vh - 40px); /* Ajusta la altura restando el padding del contenedor */
   border: none; /* Elimina el borde por defecto del iframe */
 }
+
+
+.bookmarket-container {
+  display: flex;
+  flex-direction: column; /* Apila los elementos verticalmente */
+  gap: 10px; /* Espacio entre elementos */
+}
+
+.bookmarket-item {
+  display: flex;
+  justify-content: space-between; /* Espacia los elementos de izquierda a derecha */
+  align-items: center; /* Alinea verticalmente en el centro */
+  border-bottom: 1px solid #ddd; /* Línea separadora entre elementos */
+  padding: 10px 0; /* Espacio interno en la parte superior e inferior */
+}
+
+.bookmarket-item:last-child {
+  border-bottom: none; /* Elimina el borde inferior del último elemento */
+}
+
+.bookmarket-date,
+.bookmarket-page,
+.bookmarket-status {
+  margin-right: 10px; /* Espacio entre elementos */
+}
+
+.bookmarket-status {
+  color: red; /* Color para el estado "Acabado" */
+  font-weight: bold;
+}
+
+.pagination-controls {
+  margin-top: 10px; /* Espacio superior para los controles de paginación */
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-width: 90%;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+}
+
+.modal-content h2 {
+  margin-bottom: 10px;
+  color: #5e403f; /* Marrón oscuro */
+}
+
+.modal-content p {
+  color: #5e403f;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #6f4e37; /* Marrón */
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #5e403f;
+}
+
+.btn-secondary {
+  background-color: #ccc;
+}
+
+.btn-secondary:hover {
+  background-color: #bbb;
+}

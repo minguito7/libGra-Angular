@@ -52,10 +52,78 @@
       <img [src]="baseUrl+libro.portada" alt="Portada" class="portada">
       <div class="containerTitulo">
         <p class="tituloLibro"> {{libro.titulo}}</p>
+        
       </div>
+      <div class="book-container">
+        <!-- Botón que carga los datos cuando es presionado  
+        <p>Fecha: {{ ultBookmark.fecha_lectura| date:'d MMMM yyyy' }} 
+          <br>Página: {{ ultBookmark.pagina_actual }}</p>-->
+         
+  
+          
+          <!-- Botón para mostrar/ocultar el historial de lectura -->
+          <button (click)="toggleBookmarket()">
+            {{ showBookmarket ? 'Ocultar historial de lectura' : 'Mostrar historial de lectura' }}
+          </button>
+
+          <!-- Desplegable que muestra el `bookmarket` una vez cargado -->
+          <div *ngIf="showBookmarket">
+            <!-- Contenedor para los marcapáginas -->
+            <div *ngIf="bookmarket.length" class="bookmarket-container">
+              <div class="bookmarket-container">
+                <div class="bookmarket-item">
+                  <span class="bookmarket-date">Fecha</span>
+                  <span class="bookmarket-page">Página</span>
+                </div>
+              </div>
+              <div *ngFor="let bookmark of bookmarket | slice:(currentPage-1)*itemsPerPage:(currentPage*itemsPerPage)" class="bookmarket-item">
+                <span *ngIf="!bookmark.completado" class="bookmarket-date">{{ bookmark.fecha_lectura | date:'d MMMM yyyy' }}</span>
+                <span *ngIf="!bookmark.completado" class="bookmarket-page">{{ bookmark.pagina_actual }}</span>
+                <span *ngIf="bookmark.completado" style="background-color: red;" class="bookmarket-date">{{ bookmark.fecha_lectura | date:'d MMMM yyyy' }}</span>
+                <span *ngIf="bookmark.completado" style="background-color: red;" class="bookmarket-page">{{ bookmark.pagina_actual }}</span>
+                <p *ngIf="bookmark.completado" style="background-color: red;" class="bookmarket-status">Acabado</p>
+              </div>
+              <hr *ngIf="bookmarket.length">
+            </div>
+
+            <!-- Controles de paginación personalizados -->
+            <div class="pagination-controls">
+              <button (click)="goToPage(1)" [disabled]="currentPage === 1">&lt;&lt;</button>
+              <button (click)="goToPreviousPage()" [disabled]="currentPage === 1">&lt;</button>
+              <span>Page {{currentPage}} of {{ totalPages }}</span>
+              <button (click)="goToNextPage()" [disabled]="currentPage === totalPages">&gt;</button>
+              <button (click)="goToPage(totalPages)" [disabled]="currentPage === totalPages">&gt;&gt;</button>
+            </div>
+          </div>
+
+
+      </div>
+      
   </div>
   <div class="main-content">
-      <iframe [src]="this.safePdfUrl" class="pdf-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+
+    <div class="pdf-container">
+      <!-- Botón para añadir el marcapáginas -->
+      <button (click)="openBookmarkModal()">Añadir Marcapáginas</button>
+
+      <!-- Modal personalizado -->
+      <div *ngIf="showModal" class="modal-overlay">
+        <div class="modal-content">
+          <h2>Añadir Marcapáginas</h2>
+          <p>Ingresa la página donde te has quedado leyendo:</p>
+          <input type="number" [(ngModel)]="userPageInput" placeholder="Número de página" />
+          
+          <div class="modal-actions">
+            <button class="btn btn-primary" (click)="confirmBookmark()">Confirmar</button>
+            <button class="btn btn-secondary" (click)="closeBookmarkModal()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <iframe #pdfIframe [src]="this.safePdfUrl" class="pdf-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+    </div>
+    
+      <!--<iframe [src]="this.safePdfUrl" class="pdf-iframe" sandbox="allow-scripts allow-same-origin"></iframe>-->
   </div>
 </div>
 

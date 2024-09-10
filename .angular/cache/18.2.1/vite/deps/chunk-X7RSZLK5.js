@@ -1,7 +1,7 @@
 import {
   __spreadProps,
   __spreadValues
-} from "./chunk-Y2PH64DW.js";
+} from "./chunk-QEGWMSHQ.js";
 
 // node_modules/@angular/core/fesm2022/primitives/signals.mjs
 function defaultEquals(a, b) {
@@ -3047,64 +3047,6 @@ function forkJoin() {
   return resultSelector ? result.pipe(mapOneOrManyArgs(resultSelector)) : result;
 }
 
-// node_modules/rxjs/dist/esm5/internal/observable/fromEvent.js
-var nodeEventEmitterMethods = ["addListener", "removeListener"];
-var eventTargetMethods = ["addEventListener", "removeEventListener"];
-var jqueryMethods = ["on", "off"];
-function fromEvent(target, eventName, options, resultSelector) {
-  if (isFunction(options)) {
-    resultSelector = options;
-    options = void 0;
-  }
-  if (resultSelector) {
-    return fromEvent(target, eventName, options).pipe(mapOneOrManyArgs(resultSelector));
-  }
-  var _a2 = __read(isEventTarget(target) ? eventTargetMethods.map(function(methodName) {
-    return function(handler) {
-      return target[methodName](eventName, handler, options);
-    };
-  }) : isNodeStyleEventEmitter(target) ? nodeEventEmitterMethods.map(toCommonHandlerRegistry(target, eventName)) : isJQueryStyleEventEmitter(target) ? jqueryMethods.map(toCommonHandlerRegistry(target, eventName)) : [], 2), add = _a2[0], remove2 = _a2[1];
-  if (!add) {
-    if (isArrayLike(target)) {
-      return mergeMap(function(subTarget) {
-        return fromEvent(subTarget, eventName, options);
-      })(innerFrom(target));
-    }
-  }
-  if (!add) {
-    throw new TypeError("Invalid event target");
-  }
-  return new Observable(function(subscriber) {
-    var handler = function() {
-      var args = [];
-      for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-      }
-      return subscriber.next(1 < args.length ? args : args[0]);
-    };
-    add(handler);
-    return function() {
-      return remove2(handler);
-    };
-  });
-}
-function toCommonHandlerRegistry(target, eventName) {
-  return function(methodName) {
-    return function(handler) {
-      return target[methodName](eventName, handler);
-    };
-  };
-}
-function isNodeStyleEventEmitter(target) {
-  return isFunction(target.addListener) && isFunction(target.removeListener);
-}
-function isJQueryStyleEventEmitter(target) {
-  return isFunction(target.on) && isFunction(target.off);
-}
-function isEventTarget(target) {
-  return isFunction(target.addEventListener) && isFunction(target.removeEventListener);
-}
-
 // node_modules/rxjs/dist/esm5/internal/observable/never.js
 var NEVER = new Observable(noop);
 
@@ -3165,50 +3107,6 @@ function scanInternals(accumulator, seed, hasSeed, emitOnNext, emitBeforeComplet
 // node_modules/rxjs/dist/esm5/internal/operators/concatMap.js
 function concatMap(project, resultSelector) {
   return isFunction(resultSelector) ? mergeMap(project, resultSelector, 1) : mergeMap(project, 1);
-}
-
-// node_modules/rxjs/dist/esm5/internal/operators/debounceTime.js
-function debounceTime(dueTime, scheduler) {
-  if (scheduler === void 0) {
-    scheduler = asyncScheduler;
-  }
-  return operate(function(source, subscriber) {
-    var activeTask = null;
-    var lastValue = null;
-    var lastTime = null;
-    var emit = function() {
-      if (activeTask) {
-        activeTask.unsubscribe();
-        activeTask = null;
-        var value = lastValue;
-        lastValue = null;
-        subscriber.next(value);
-      }
-    };
-    function emitWhenIdle() {
-      var targetTime = lastTime + dueTime;
-      var now = scheduler.now();
-      if (now < targetTime) {
-        activeTask = this.schedule(void 0, targetTime - now);
-        subscriber.add(activeTask);
-        return;
-      }
-      emit();
-    }
-    source.subscribe(createOperatorSubscriber(subscriber, function(value) {
-      lastValue = value;
-      lastTime = scheduler.now();
-      if (!activeTask) {
-        activeTask = scheduler.schedule(emitWhenIdle, dueTime);
-        subscriber.add(activeTask);
-      }
-    }, function() {
-      emit();
-      subscriber.complete();
-    }, void 0, function() {
-      lastValue = activeTask = null;
-    }));
-  });
 }
 
 // node_modules/rxjs/dist/esm5/internal/operators/defaultIfEmpty.js
@@ -27191,11 +27089,9 @@ export {
   concat,
   defer,
   forkJoin,
-  fromEvent,
   filter,
   catchError,
   concatMap,
-  debounceTime,
   defaultIfEmpty,
   take,
   mapTo,
@@ -27724,4 +27620,4 @@ export {
    * found in the LICENSE file at https://angular.io/license
    *)
 */
-//# sourceMappingURL=chunk-IN3MQ4VI.js.map
+//# sourceMappingURL=chunk-X7RSZLK5.js.map

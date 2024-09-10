@@ -6,6 +6,10 @@ import * as pdfjsLib from 'pdfjs-dist';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { LibroLeidoService } from '../services/libro-leido.service';
+import Swiper from 'swiper/bundle';
+import 'swiper/swiper-bundle.css';
+import { LibroLeido } from '../interfaces/libro-leido';
 
 
 @Component({
@@ -14,6 +18,13 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrl: './book-reader.component.css'
 })
 export class BookReaderComponent implements OnInit{
+  private pdfDoc: any = null;
+  currentPage: number = 1;
+  itemsPerPage: number = 3; // Número de elementos por página
+  totalItems:number = 0;
+
+  bookmarket:LibroLeido[] = [];
+  public loading: boolean = false;
   baseUrl: string = 'http://localhost:3000/';
  
   //USUARIO LOGUEADO
@@ -25,19 +36,26 @@ export class BookReaderComponent implements OnInit{
   userProfileImage: string | undefined;
   photoUrl: any;
   fotoServ: string | undefined;
-
   //Libro
   productId: any = '';
   libro:any;
   safePdfUrl!:SafeResourceUrl;
+  ultBookmark:any;
+  showBookmarket: boolean = false;
+  showModal = false;  // Para mostrar u ocultar el modal
+  userPageInput!: number;  // Donde guardaremos la página ingresada por el usuario
+
+
 
   constructor(private bookService: BookService, private pdfService: PdfStorageService
     , private authService: AuthService, private router: Router,
-    private route: ActivatedRoute, private sanitizer: DomSanitizer
+    private route: ActivatedRoute, private sanitizer: DomSanitizer,
+    private librosLeidos:LibroLeidoService
   ){}
   
   ngOnInit(){
     this.productId = this.route.snapshot.paramMap.get('bookId');
+    
     this.bookService.getOneBook(this.productId).subscribe(resp =>{
       console.log('libro: '+ resp.archivo);
       this.libro = resp;
@@ -64,11 +82,86 @@ export class BookReaderComponent implements OnInit{
      
       })
     }
-  
-
+    this.loadBookmarket();
+   
     
      
   }
+  ngAfterViewInit() {
+
+  }
+
+//PRUEBA
+
+  // Función para abrir el modal
+  openBookmarkModal(): void {
+    this.showModal = true;
+  }
+
+  // Función para cerrar el modal
+  closeBookmarkModal(): void {
+    this.showModal = false;
+  }
+  // Función para confirmar el marcapáginas
+  confirmBookmark(): void {
+    if (this.userPageInput && this.userPageInput > 0) {
+      this.addBookmark(this.userPageInput);
+      this.closeBookmarkModal(); // Cerrar modal al confirmar
+    } else {
+      alert('Por favor, ingresa un número de página válido.');
+    }
+  }
+  addBookmark(pageNumber: number): void {
+    const bookmarkData = {
+      id_usuario: this.authService.getUsuario()._id,
+      id_libro: this.libro._id,
+      pagina_actual: pageNumber, // Usamos la página ingresada por el usuario
+    };
+    const idUsuario = this.authService.getUsuario()._id;  // Reemplaza con el ID del usuario
+    const idLibro = this.libro._id;      // Reemplaza con el ID del libro
+    this.loading = true;
+  
+    this.librosLeidos.getComprobacionBookMarketPagina(idUsuario, idLibro, pageNumber).subscribe(
+      (resp: any) => {
+        console.log(resp.resultado);
+        
+        // Si no hay resultado (nunca se ha guardado un marcador antes), o si es válido
+        if (resp.resultado === null || resp.resultado === undefined || resp.resultado) {
+          
+          // Llamada a la API para guardar el marcapáginas
+          this.librosLeidos.postBookMarket(bookmarkData).subscribe(
+            (response) => {
+              console.log('Marcador guardado', response);
+            },
+            (error) => {
+              console.error('Error al guardar el marcador', error);
+            }
+          );
+        } else {
+          // Mostrar mensaje de error si hay un marcador anterior y la página es inferior
+          this.showError('No puedes añadir un marcador en una página inferior a la última guardada.');
+        }
+        this.loading = false;
+      },
+      (error) => {
+        console.error('Error en la comprobación de página', error);
+        this.loading = false;
+      }
+    );
+  }
+  
+  // Función para mostrar el mensaje de error
+  showError(message: string): void {
+    alert(message);  // O usar un modal o componente visual según prefieras.
+  }
+  
+  
+getCurrentPageFromIframe(url: string): number {
+  const pageMatch = url.match(/#page=(\d+)/);
+  return pageMatch ? parseInt(pageMatch[1], 10) : 1;
+}
+
+//
   checkLoginStatus() {
     const token = localStorage.getItem('Bearer');
     console.log(token);
@@ -139,6 +232,57 @@ export class BookReaderComponent implements OnInit{
   irAAdministrarPerfil(): void {
     this.router.navigate(['/perfil-user']);
   }
+
+  loadBookmarket(): void {
+    const idUsuario = this.authService.getUsuario()._id;  // Reemplaza con el ID del usuario
+    const idLibro = this.libro._id;      // Reemplaza con el ID del libro
+    console.log('id librooo: ' + idLibro);
+    this.loading = true;
+
+
+    this.librosLeidos.getBookMarkets(idUsuario, idLibro).subscribe(
+      (response: any) => {
+        this.bookmarket = response.resultado;
+        this.totalItems = this.bookmarket.length;
+        this.loading = false; // Desactiva el indicador de carga
+        console.log(response.resultado);
+      },
+      (error) => {
+        console.error('Error al cargar los datos del bookmarket:', error);
+        this.loading = false; // Desactiva el indicador de carga si hay un error
+      }
+    );
+  }
+  toggleBookmarket() {
+    this.showBookmarket = !this.showBookmarket; // Cambia el estado de visibilidad
+    if (this.showBookmarket) {
+      this.loadBookmarket(); // Carga los datos solo si el historial se va a mostrar
+    }
+  }
+
+ // Métodos para cambiar de página
+ goToPage(page: number): void {
+  if (page > 0 && page <= Math.ceil(this.totalItems / this.itemsPerPage)) {
+    this.currentPage = page;
+  }
+}
+
+goToPreviousPage(): void {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+  }
+}
+
+goToNextPage(): void {
+  if (this.currentPage < Math.ceil(this.totalItems / this.itemsPerPage)) {
+    this.currentPage++;
+  }
+
+}
+get totalPages(): number {
+  return Math.ceil(this.totalItems / this.itemsPerPage);
+}
+  
 
 }
 function base64UrlDecode(str: string): string {

@@ -14,7 +14,6 @@ import { routes } from './app.routes';
 import { PerfilUserComponent } from './perfil-user/perfil-user.component';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { BookReaderComponent } from './book-reader/book-reader.component';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @NgModule({
   declarations: [
@@ -33,8 +32,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     CommonModule,
     NgxPaginationModule,
     FormsModule,
-    NgxExtendedPdfViewerModule,
-    PdfViewerModule
+    NgxExtendedPdfViewerModule
 ],
   providers: [DatePipe],
   bootstrap: [AppComponent]
