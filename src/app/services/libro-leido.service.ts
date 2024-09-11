@@ -19,7 +19,10 @@ export class LibroLeidoService {
     const token = localStorage.getItem('Bearer');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    return this.http.get(`${this.apiUrl}/comprobar-pagina/${idUsuario}/${idLibro}`, pagina_actual ,{headers});
+    return this.http.get(`${this.apiUrl}/comprobar-pagina/${idUsuario}/${idLibro}`,{
+      headers,
+      params: { pagina_actual }
+    });
   }
 
   postBookMarket(libro: any){
@@ -27,7 +30,7 @@ export class LibroLeidoService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const body = {libro}
     // Incluye las opciones de reportProgress y observe en la llamada HTTP
-    return this.http.post(`${this.apiUrl}/add-libro-leido`, body, {headers});
+    return this.http.post(`${this.apiUrl}/add-libro-leido`, libro, {headers});
   }
 
 }

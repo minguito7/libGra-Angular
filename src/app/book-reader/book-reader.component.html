@@ -54,20 +54,68 @@
         <p class="tituloLibro"> {{libro.titulo}}</p>
         
       </div>
-      <div class="book-container">
-        <!-- Botón que carga los datos cuando es presionado  
-        <p>Fecha: {{ ultBookmark.fecha_lectura| date:'d MMMM yyyy' }} 
-          <br>Página: {{ ultBookmark.pagina_actual }}</p>-->
-         
-  
-          
-          <!-- Botón para mostrar/ocultar el historial de lectura -->
-          <button (click)="toggleBookmarket()">
-            {{ showBookmarket ? 'Ocultar historial de lectura' : 'Mostrar historial de lectura' }}
+      <div class="containerTitulo">
+        <p class="tituloLibro"> {{libro.isbn}}</p>
+        
+      </div>
+      <div class="containerTitulo">
+
+        <!-- Botón para abrir el modal -->
+        <div class="button-group" style="display: flex; gap: 5px;">
+          <!-- Botón "Ver más detalles" -->
+          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#bookDetailsModal" (click)="setSelectedBook()" title="Ver más detalles del libro">
+            <i class="bi bi-search"></i>
           </button>
+        
+          <!-- Botón para mostrar/ocultar el historial de lectura -->
+          <button class="btn btn-primary" (click)="toggleBookmarket()" title="Mostrar u ocultar el historial de lectura">
+            <i *ngIf="!showBookmarket" class="bi bi-bookmark-star-fill"></i>
+            <i *ngIf="showBookmarket" class="bi bi-x-circle-fill"></i>
+
+          </button>
+        
+          <!-- Botón para abrir modal de añadir marcapáginas -->
+          <button class="btn btn-success" (click)="openBookmarkModal()" title="Añadir un marcapáginas">
+            <i class="bi bi-bookmark-plus-fill"></i>
+          </button>
+        </div>
+        
+
+        <!-- Modal Bootstrap -->
+        <div class="modal fade" id="bookDetailsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{ libro?.titulo }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                  <i class="bi bi-x-circle"></i>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p><strong>Autor:</strong> {{ libro?.id_autor?.nombre || 'Autor no disponible' }}</p>
+                <p><strong>ISBN:</strong> {{ libro?.isbn }}</p>
+                <p><strong>Fecha de Publicación:</strong> {{ libro?.fecha_publicacion | date:'dd/MM/yyyy' }}</p>
+                <p><strong>Descripción:</strong> {{ libro?.descripcion || 'No hay descripción disponible' }}</p>
+                <p><strong>Categorias:</strong> {{ libro?.categorias_libro.nombre || 'No hay categorias disponible' }}</p>
+                <p><strong>Generos:</strong> {{ libro?.generos_libro.nombre || 'No hay generos disponible' }}</p>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+      </div>
+      
+
+      <div class="book-container">
 
           <!-- Desplegable que muestra el `bookmarket` una vez cargado -->
           <div *ngIf="showBookmarket">
+          
             <!-- Contenedor para los marcapáginas -->
             <div *ngIf="bookmarket.length" class="bookmarket-container">
               <div class="bookmarket-container">
@@ -104,7 +152,6 @@
 
     <div class="pdf-container">
       <!-- Botón para añadir el marcapáginas -->
-      <button (click)="openBookmarkModal()">Añadir Marcapáginas</button>
 
       <!-- Modal personalizado -->
       <div *ngIf="showModal" class="modal-overlay">

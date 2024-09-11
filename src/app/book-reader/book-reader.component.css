@@ -159,3 +159,16 @@ body {
 .btn-secondary:hover {
   background-color: #bbb;
 }
+/*MODAL PARA VER MAS CONTENIDO DEL LIBRO*/
+.modal-content {
+  background-color: #f9f8f6; /* Color claro */
+  border: 1px solid #8b4513; /* Color marrón */
+}
+
+.modal-header, .modal-footer {
+  background-color: #f1e7db; /* Color suave */
+}
+
+.modal-title {
+  color: #8b4513; /* Texto en marrón */
+}

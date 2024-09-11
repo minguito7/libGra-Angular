@@ -113,7 +113,7 @@ export class HomeComponent implements OnInit {
       this.booksNovedad = response.resultado;
     });
 
-    //console.log(this.isLoggedIn);
+
 
 
    
@@ -254,7 +254,7 @@ checkLoginStatus() {
   }
   
   isAdmin(user: { ROLE: string | string[]; }){
-    return user.ROLE.includes('aFormDatadmin');
+    return user.ROLE.includes('admin');
   }
 
   isEditor(user: { ROLE: string | string[]; }){
@@ -263,6 +263,10 @@ checkLoginStatus() {
 
   isSoid(user: { ROLE: string | string[]; }){
     return user.ROLE.includes('soid');
+  }
+  isLector(user: { ROLE: string | string[]; }){
+
+    return user.ROLE.includes('lector');
   }
 
   determinarRol(user: { ROLE: string | string[]; }){
@@ -279,11 +283,12 @@ checkLoginStatus() {
 
       this.esEditor =true;
     }
-    else {
+    if (this.isLector(user)) {
       console.log("holaa aquii LECTOR: " + user)
 
       this.esLector =true;
     }
+
   }
 
    onFileSelected(event: Event, fieldName: string): void {
@@ -404,6 +409,11 @@ checkLoginStatus() {
 
     }
   }
+  irPanelControl():void{
+    this.router.navigate(['/panel-admin']);
+
+  }
+  
 }
 
 function base64UrlDecode(str: string): string {

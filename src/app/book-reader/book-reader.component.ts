@@ -117,6 +117,7 @@ export class BookReaderComponent implements OnInit{
       id_libro: this.libro._id,
       pagina_actual: pageNumber, // Usamos la página ingresada por el usuario
     };
+
     const idUsuario = this.authService.getUsuario()._id;  // Reemplaza con el ID del usuario
     const idLibro = this.libro._id;      // Reemplaza con el ID del libro
     this.loading = true;
@@ -283,6 +284,9 @@ get totalPages(): number {
   return Math.ceil(this.totalItems / this.itemsPerPage);
 }
   
+setSelectedBook(): void {
+  this.libro
+}
 
 }
 function base64UrlDecode(str: string): string {

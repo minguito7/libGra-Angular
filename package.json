@@ -21,6 +21,7 @@
     "@auth0/angular-jwt": "^5.2.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "jquery": "^3.7.1",
     "ngx-extended-pdf-viewer": "^21.3.8",
     "ngx-pagination": "^6.0.3",
