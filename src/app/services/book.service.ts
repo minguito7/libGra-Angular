@@ -54,10 +54,10 @@ export class BookService {
       return this.http.get(`${this.apiUrl}/descargar-libro/${bookId}`, { headers});
       }
 
-    deleteLibro(bookId: string): Observable<any> {
+    cambiarEstadoLibro(bookId: string): Observable<any> {
         const token = localStorage.getItem('Bearer');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-        return this.http.delete(`${this.apiUrl}/delete/${bookId}`, { headers });
+        return this.http.put(`${this.apiUrl}/cambiar-estado/${bookId}`,{}, { headers });
       }
       
 }

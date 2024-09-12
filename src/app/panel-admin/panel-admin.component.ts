@@ -2,6 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { BookService } from '../services/book.service';
+import { FormGroup,FormBuilder, Validators } from '@angular/forms';
+import { HttpEventType } from '@angular/common/http';
+import * as bootstrap from 'bootstrap';
+import { AutoresService } from '../services/autores.service';
+import { CategoriasService } from '../services/categorias.service';
+import { GenerosService } from '../services/generos.service';
 
 @Component({
   selector: 'app-panel-admin',
@@ -11,7 +17,16 @@ import { BookService } from '../services/book.service';
 export class PanelAdminComponent implements OnInit {
 
   baseUrl: string = 'http://localhost:3000/';
- 
+  //ADD LIBRO
+  bookForm!: FormGroup;
+  selectedPortada: File | undefined;
+  selectedArchivo: File | undefined;
+  progress = 0;
+  isLoading = false; 
+  generos: Array<{_id: any; id: number, NOMBRE: string }> = [];
+  autores: Array<{_id: any; id: number, NOMBRE: string, apellidos: string, fecha_nacimiento: Date, nacionalidad: string, generos_autor: ArrayBuffer }> = [];
+  categorias: Array<{_id: any; id: number, NOMBRE: string}> = [];
+  
   //USUARIO LOGUEADO
   isLoggedIn: boolean = false;
   esAdmin: boolean = false;
@@ -21,14 +36,21 @@ export class PanelAdminComponent implements OnInit {
   userProfileImage: string | undefined;
   photoUrl: any;
   fotoServ: string | undefined;
-  selectedSection!: string;
+  selectedSection: string | undefined | null;
+
   //
   librosActivos: any[] = [];
   librosNoActivos: any[] = [];
+  formBuilder: any;
 
-  constructor( private authService: AuthService, private router: Router, private libroService: BookService){}
+  constructor( private authService: AuthService, private router: Router, 
+    private libroService: BookService,private categoriaService: CategoriasService,
+    private autoresSevice:AutoresService, private generoService: GenerosService,
+    private fb: FormBuilder){
 
-  ngOnInit(){
+    }
+
+  ngOnInit(): void{
     this.checkLoginStatus();
 
     const token = localStorage.getItem('Bearer');
@@ -47,7 +69,23 @@ export class PanelAdminComponent implements OnInit {
      
       })
     }
+    this.bookForm = this.fb.group({
+      titulo: ['', Validators.required],
+      id_autor: ['', Validators.required],
+      portada: [''],
+      categorias_libro: [[], Validators.required],  // Array vacío por defecto
+      isbn: ['', Validators.required],
+      fecha_publicacion: ['', Validators.required],
+      generos_libro: [[], Validators.required],  // Array vacío por defecto
+      descripcion: [''],
+      archivo: [''],
+      resenas_libro: ['']
+    });
+    
     this.cargarLibros();
+    this.loadAutores();
+    this.loadCategorias();
+    this.loadGeneros();
   }
   checkLoginStatus() {
     const token = localStorage.getItem('Bearer');
@@ -121,8 +159,14 @@ export class PanelAdminComponent implements OnInit {
   }
 
   selectSection(section: string): void {
-    this.selectedSection = section;
+    // Si la sección actual está seleccionada, la deselecciona; de lo contrario, selecciona la nueva
+    if (this.selectedSection === section) {
+      this.selectedSection = null; // Cerrar la sección si ya está seleccionada
+    } else {
+      this.selectedSection = section; // Abrir la nueva sección
+    }
   }
+
   cargarLibros(): void {
     this.libroService.getBooks().subscribe((response: any) => {
       if (response.ok) {
@@ -135,22 +179,153 @@ export class PanelAdminComponent implements OnInit {
   }
 
 
-  eliminarLibro(libroId: string): void {
-    if (confirm('¿Estás seguro de que deseas desactivar este libro?')) {
-      this.libroService.deleteLibro(libroId).subscribe(
+  cambiarEstadoLibro(libroId: string): void {
+    const confirmacion = confirm('¿Estás seguro de que deseas cambiar el estado de este libro?');
+  
+    if (confirmacion) {
+      // Si el usuario acepta, realiza la actualización
+      this.libroService.cambiarEstadoLibro(libroId).subscribe(
         (response) => {
-          console.log('respuesta de la api: '+response);
-          if (response.resultado === 'Libro desactivado correctamente') {
-            console.log('Libro desactivado:', response);
+          if (response.ok) {
+            console.log(response.resultado);
             this.cargarLibros(); // Recargar los datos de los libros
           } else {
-            console.error('Error al desactivar el libro:', response);
+            console.error('Error:', response.resultado);
           }
         },
         (error) => {
-          console.error('Error al desactivar el libro:', error);
+          console.error('Error:', error);
         }
       );
+    } else {
+      // Si el usuario cancela, no se realiza ninguna acción
+      console.log('La acción ha sido cancelada.');
+    }
+  }
+  onFileSelected(event: Event, fieldName: string): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      if (fieldName === 'portada') {
+        this.selectedPortada = file;
+      } else if (fieldName === 'archivo') {
+        this.selectedArchivo = file;
+      }
+    }
+  }
+  loadCategorias(): void {
+    this.categoriaService.getCategorias().subscribe((resp: { resultado: { _id: any; id: number; NOMBRE: string; }[]; }) => {
+      this.categorias = resp.resultado;
+    }, (error: any) => {
+      console.error('Error loading poblaciones:', error);
+    });
+  }
+
+  loadAutores(): void {
+    this.autoresSevice.getAutores().subscribe((resp: { resultado: {_id: any; id: number, NOMBRE: string, apellidos: string, fecha_nacimiento: Date, nacionalidad: string, generos_autor: ArrayBuffer }[]; }) => {
+      this.autores = resp.resultado;
+    }, (error: any) => {
+      console.error('Error loading poblaciones:', error);
+    });
+  }
+
+  loadGeneros(): void {
+    this.generoService.getGeneros().subscribe((resp: { resultado: { _id: any; id: number; NOMBRE: string; }[]; }) => {
+      this.generos = resp.resultado;
+    }, (error: any) => {
+      console.error('Error loading poblaciones:', error);
+    });
+  }
+  addBook(): void {
+    if (this.bookForm.valid) {
+      const formData = new FormData();
+      
+      // Añadir todos los campos del formulario
+      Object.keys(this.bookForm.controls).forEach(key => {
+        formData.append(key, this.bookForm.get(key)?.value);
+      });
+
+      // Añadir los archivos (si se han seleccionado)
+      if (this.selectedPortada) {
+        formData.append('files', this.selectedPortada, this.selectedPortada.name);
+      }
+
+      if (this.selectedArchivo) {
+        formData.append('files', this.selectedArchivo, this.selectedArchivo.name);
+      }
+
+      // Inicializar el progreso
+      this.progress = 0;
+      this.isLoading = true;
+      console.log(formData);
+      // Enviar los datos al backend
+      this.libroService.addBook(formData, {
+        reportProgress: true,  // Habilitar el reporte de progreso
+        observe: 'events'      // Observar todos los eventos durante la subida
+      }).subscribe(
+        event => {
+          if (event.type === HttpEventType.UploadProgress) {
+            // Calcular el progreso de la subida
+            this.progress = Math.round(100 * event.loaded / (event.total ?? 1));
+          } else if (event.type === HttpEventType.Response) {
+            // Manejo de la respuesta
+            // Resetear el progreso
+            this.progress = 0;
+            this.isLoading = false;
+
+            // Cerrar el modal
+            this.hideModal();
+              
+            // Limpiar el formulario
+            this.bookForm.reset();
+
+            // Limpiar los archivos seleccionados
+            this.selectedPortada = undefined;
+            this.selectedArchivo = undefined;
+
+            // Actualizar la lista de libros en el home
+             this.updateBookList();
+
+            // Navegar de vuelta al home
+            this.router.navigate(['/']);
+          }
+        },
+        error => {
+          console.error('Error al añadir libro:', error);
+          this.progress = 0; 
+          this.isLoading = false;// Reiniciar el progreso en caso de error
+        }
+      );
+    }
+  }
+  hideModal(): void {
+    const modalElement = document.getElementById('addBookModal');
+    if (modalElement) {
+      
+      const modalInstance = bootstrap.Modal.getInstance(modalElement);
+      modalInstance?.hide();
+    }
+  }
+  updateBookList(): void {
+    this.libroService.getBooks().subscribe(response => {     
+         
+      this.librosActivos = response.resultado.ACTIVOS;
+      this.librosNoActivos = response.resultado.NO_ACTIVOS;
+
+      console.log("aquiiiiii: "+response.resultado)
+    }, (error: any) => {
+      console.error('Error al obtener la lista de libros:', error);
+    });
+  }
+  
+  
+  removeFile(fieldName: string): void {
+    if (fieldName === 'portada') {
+      this.selectedPortada = undefined;
+      (document.getElementById('portada') as HTMLInputElement).value = ''; // Limpiar el input file
+    } else if (fieldName === 'archivo') {
+      this.selectedArchivo = undefined;
+      (document.getElementById('archivo') as HTMLInputElement).value = ''; // Limpiar el input file
     }
   }
   
@@ -172,6 +347,7 @@ function base64UrlDecode(str: string): string {
       })
       .join('')
   );
+
 }
 
 function jwt_decode(token: string): any {

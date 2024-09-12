@@ -106,7 +106,7 @@
 
           <div class="container mt-4">
             <div class="row">
-                <div class="col-md-12">
+            <div class="col-md-12">
                    <!-- Botón para abrir el modal -->
             <button id="boton-style-app" class="btn btn-primary mb-3" *ngIf="(!esLector || esAdmin || esSoid) && isLoggedIn" data-bs-toggle="modal" data-bs-target="#addBookModal">
                 Añadir un libro
@@ -149,6 +149,13 @@
                         
                         <div class="mb-3">
                         <label for="categorias_libro" class="form-label">Categorías:</label>
+                      
+            <!-- Overlay de carga 
+            <div *ngIf="isLoading" class="overlay">
+                <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>-->
                         <select id="categorias_libro" formControlName="categorias_libro" class="form-select" multiple>
                             <option *ngFor="let categoria of categorias" [value]="categoria._id">{{ categoria.NOMBRE }}</option>
                         </select>

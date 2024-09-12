@@ -59,12 +59,127 @@
         <!-- Sección Libros -->
         <div *ngIf="selectedSection === 'books'">
           <h2>Administrar Libros</h2>
+          <div class="row">
+            <div class="col-md-12">
+                   <!-- Botón para abrir el modal -->
+            <button id="boton-style-app" class="btn btn-primary mb-3" *ngIf="(!esLector || esAdmin || esSoid) && isLoggedIn" data-bs-toggle="modal" data-bs-target="#addBookModal">
+                Añadir un libro
+            </button>
+            <!-- Overlay de carga -->
+            <div *ngIf="isLoading" class="overlay">
+                <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+                                <!-- Formulario desplegable para añadir un nuevo libro -->
+                                <!-- Modal para añadir un nuevo libro -->
+            <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="addBookModalLabel">Añadir Nuevo Libro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                    <form [formGroup]="bookForm" (ngSubmit)="addBook()">
+                        <div class="mb-3">
+                        <label for="titulo" class="form-label">Título:</label>
+                        <input type="text" id="titulo" formControlName="titulo" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                        <label for="id_autor" class="form-label">Autor:</label>
+                        <select id="id_autor" formControlName="id_autor" class="form-select">
+                            <option *ngFor="let autor of autores" [value]="autor._id">{{ autor.NOMBRE }} {{ autor.apellidos }}</option>
+                        </select>
+                      
+                        </div>
+                        
+                        <div class="mb-3">
+                        <label for="portada" class="form-label">Portada (imagen):</label>
+                        <input type="file" id="portada" (change)="onFileSelected($event, 'portada')" class="form-control">
+                        <button type="button" *ngIf="selectedPortada" (click)="removeFile('portada')" class="btn btn-danger mt-2">Eliminar Imagen</button>
+                        </div>
+                        
+                        <div class="mb-3">
+                        <label for="categorias_libro" class="form-label">Categorías:</label>
+                     
+            <!-- Overlay de carga 
+            <div *ngIf="isLoading" class="overlay">
+                <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>-->
+            <select id="categorias_libro" formControlName="categorias_libro" class="form-select" multiple>
+                <option *ngFor="let categoria of categorias" [value]="categoria._id">{{ categoria.NOMBRE }}</option>
+              </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                        <label for="isbn" class="form-label">ISBN:</label>
+                        <input type="text" id="isbn" formControlName="isbn" class="form-control">
+                        </div>
+                        
+                        <div class="mb-3">
+                        <label for="fecha_publicacion" class="form-label">Fecha de Publicación:</label>
+                        <input type="date" id="fecha_publicacion" formControlName="fecha_publicacion" class="form-control">
+                        </div>
+                        
+                        <div class="mb-3">
+                        <label for="generos_libro" class="form-label">Géneros:</label>
+                        <select id="generos_libro" formControlName="generos_libro" class="form-select" multiple>
+                            <option *ngFor="let genero of generos" [value]="genero._id">{{ genero.NOMBRE }}</option>
+                          </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción:</label>
+                        <textarea id="descripcion" formControlName="descripcion" class="form-control" rows="4"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                        <label for="archivo" class="form-label">Archivo (PDF):</label>
+                        <input type="file" id="archivo" (change)="onFileSelected($event, 'archivo')" class="form-control">
+                        <button type="button" *ngIf="selectedArchivo" (click)="removeFile('archivo')" class="btn btn-danger mt-2">Eliminar Imagen</button>
+                        </div>
+                        
+                        <div class="mb-3">
+                        <label for="resenas_libro" class="form-label">Reseñas:</label>
+                        <textarea id="resenas_libro" formControlName="resenas_libro" class="form-control" rows="4"></textarea>
+                        </div>
+                    <!-- Barra de Progreso -->
+                    <div *ngIf="progress > 0" class="progress mt-3">
+                        <div 
+                        class="progress-bar" 
+                        role="progressbar" 
+                        [style.width.%]="progress"
+                        [attr.aria-valuenow]="progress" 
+                        aria-valuemin="0" 
+                        aria-valuemax="100">
+                        {{ progress }}%
+                        </div>
+                    </div>
+                    <br>
+                        
+                        <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary">Añadir Libro</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+                </div>
+            </div>
+  
+                    
+                </div>
+            </div>
           <div class="container">
             <h2>Libros Activos</h2>
             <table class="table table-striped">
               <thead>
                 <tr>
-                    <th>Acciones</th>
+                  <th>Acciones</th>
                   <th>Título</th>
                   <th>Autor</th>
                   <th>Categoría</th>
@@ -77,14 +192,14 @@
                 <tr *ngFor="let libro of librosActivos">
                   <td>
                       <!-- Botón para eliminar el libro -->
-                    <button (click)="eliminarLibro(libro._id)" class="btn btn-danger">
+                    <button (click)="cambiarEstadoLibro(libro._id)" class="btn btn-danger">
                      Eliminar
                     </button>
                   </td>
                   <td>{{ libro.titulo }}</td>
                   <td>{{ libro.id_autor.nombre }}</td>
-                  <td>{{ libro.categorias_libro[0]?.nombre }}</td>
-                  <td>{{ libro.generos_libro[0]?.nombre }}</td>
+                  <td>{{ libro.categorias_libro[0]!.nombre }}</td>
+                  <td>{{ libro.generos_libro[0]!.nombre }}</td>
                   <td>{{ libro.isbn }}</td>
                   <td>{{ libro.fecha_publicacion | date: 'dd/MM/yyyy' }}</td>
                 </tr>
@@ -101,6 +216,7 @@
                   <th>Género</th>
                   <th>ISBN</th>
                   <th>Fecha de Publicación</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -111,6 +227,9 @@
                   <td>{{ libro.generos_libro[0]?.nombre }}</td>
                   <td>{{ libro.isbn }}</td>
                   <td>{{ libro.fecha_publicacion | date: 'dd/MM/yyyy' }}</td>
+                  <button (click)="cambiarEstadoLibro(libro._id)" class="btn btn-success">
+                    Activar
+                   </button>
                 </tr>
               </tbody>
             </table>

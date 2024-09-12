@@ -324,7 +324,7 @@ checkLoginStatus() {
         // Inicializar el progreso
         this.progress = 0;
         this.isLoading = true;
-
+        console.log(formData)
         // Enviar los datos al backend
         this.bookService.addBook(formData, {
           reportProgress: true,  // Habilitar el reporte de progreso
