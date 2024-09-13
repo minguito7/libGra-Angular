@@ -16,7 +16,7 @@ export class CategoriasService {
   }
 
   addCategoria(nombre: String): Observable<any> {
-    const body = { NOMBRE : nombre};
+
     return this.http.post(`${this.apiUrl}/add-categoria`, {nombre});
   }
 }

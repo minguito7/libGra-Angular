@@ -8,6 +8,9 @@ import * as bootstrap from 'bootstrap';
 import { AutoresService } from '../services/autores.service';
 import { CategoriasService } from '../services/categorias.service';
 import { GenerosService } from '../services/generos.service';
+import { Categoria } from '../interfaces/categoria';
+import { Genero } from '../interfaces/genero';
+import { Autor } from '../interfaces/autor';
 
 @Component({
   selector: 'app-panel-admin',
@@ -23,10 +26,14 @@ export class PanelAdminComponent implements OnInit {
   selectedArchivo: File | undefined;
   progress = 0;
   isLoading = false; 
-  generos: Array<{_id: any; id: number, NOMBRE: string }> = [];
-  autores: Array<{_id: any; id: number, NOMBRE: string, apellidos: string, fecha_nacimiento: Date, nacionalidad: string, generos_autor: ArrayBuffer }> = [];
-  categorias: Array<{_id: any; id: number, NOMBRE: string}> = [];
+  generos:any[] = [];
+  autores:any[] = [];
+  categorias:any[] = [];
   
+  //CATEGORIAS
+  categoryForm!: FormGroup;
+
+
   //USUARIO LOGUEADO
   isLoggedIn: boolean = false;
   esAdmin: boolean = false;
@@ -80,6 +87,10 @@ export class PanelAdminComponent implements OnInit {
       descripcion: [''],
       archivo: [''],
       resenas_libro: ['']
+    });
+
+    this.categoryForm = this.fb.group({
+      nombre: ['', Validators.required]
     });
     
     this.cargarLibros();
@@ -213,6 +224,23 @@ export class PanelAdminComponent implements OnInit {
       }
     }
   }
+
+  // Método para añadir una categoría
+  addCategory(): void {
+    if (this.categoryForm.valid) {
+      this.categoriaService.addCategoria(this.categoryForm.value).subscribe(
+        (response) => {
+          console.log('Categoría añadida:', response);
+          this.loadCategorias(); // Recargar las categorías después de añadir una nueva
+          this.categoryForm.reset(); // Limpiar el formulario
+        },
+        (error) => {
+          console.error('Error al añadir categoría:', error);
+        }
+      );
+    }
+  }
+
   loadCategorias(): void {
     this.categoriaService.getCategorias().subscribe((resp: { resultado: { _id: any; id: number; NOMBRE: string; }[]; }) => {
       this.categorias = resp.resultado;

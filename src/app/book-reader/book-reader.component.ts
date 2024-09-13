@@ -53,8 +53,8 @@ export class BookReaderComponent implements OnInit{
     private librosLeidos:LibroLeidoService
   ){}
   
-  ngOnInit(){
-    this.productId = this.route.snapshot.paramMap.get('bookId');
+  async ngOnInit(){
+    this.productId = await this.route.snapshot.paramMap.get('bookId');
     
     this.bookService.getOneBook(this.productId).subscribe(resp =>{
       console.log('libro: '+ resp.archivo);
@@ -95,6 +95,7 @@ export class BookReaderComponent implements OnInit{
 
   // Función para abrir el modal
   openBookmarkModal(): void {
+    console.log(this.libro)
     this.showModal = true;
   }
 
@@ -209,7 +210,9 @@ getCurrentPageFromIframe(url: string): number {
   isSoid(user: { ROLE: string | string[]; }){
     return user.ROLE.includes('soid');
   }
-
+  isLector(user: { ROLE: string | string[]; }){
+    return user.ROLE.includes('lector');
+  }
   determinarRol(user: { ROLE: string | string[]; }){
     if (this.isSoid(user)) {
       console.log("holaa aquii SOID: " + user)
@@ -224,8 +227,8 @@ getCurrentPageFromIframe(url: string): number {
 
       this.esEditor =true;
     }
-    else {
-      console.log("holaa aquii LECTOR: " + user)
+    if (this.isLector(user)) {
+      console.log("holaa aquii Lector: " + user)
 
       this.esLector =true;
     }

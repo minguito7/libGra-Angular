@@ -15,7 +15,7 @@ export class GenerosService {
   }
 
   addGenero(nombre: String): Observable<any> {
-    const body = { NOMBRE: nombre};
-    return this.http.post(`${this.apiUrl}/add-genero`, {body});
+
+    return this.http.post(`${this.apiUrl}/add-genero`, {nombre});
   }
 }

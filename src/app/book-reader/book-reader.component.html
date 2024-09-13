@@ -92,12 +92,12 @@
                 </button>
               </div>
               <div class="modal-body">
-                <p><strong>Autor:</strong> {{ libro?.id_autor?.nombre || 'Autor no disponible' }}</p>
+                <p><strong>Autor:</strong> {{ libro.id_autor?.nombre || 'Autor no disponible' }}</p>
                 <p><strong>ISBN:</strong> {{ libro?.isbn }}</p>
                 <p><strong>Fecha de Publicación:</strong> {{ libro?.fecha_publicacion | date:'dd/MM/yyyy' }}</p>
-                <p><strong>Descripción:</strong> {{ libro?.descripcion || 'No hay descripción disponible' }}</p>
-                <p><strong>Categorias:</strong> {{ libro?.categorias_libro.nombre || 'No hay categorias disponible' }}</p>
-                <p><strong>Generos:</strong> {{ libro?.generos_libro.nombre || 'No hay generos disponible' }}</p>
+                <p><strong>Descripción:</strong> {{ libro.descripcion || 'No hay descripción disponible' }}</p>
+                <p><strong>Categorias:</strong> {{ libro.categorias_libro.nombre || 'No hay categorias disponible' }}</p>
+                <p><strong>Generos:</strong> {{ libro.generos_libro.nombre || 'No hay generos disponible' }}</p>
 
               </div>
               <div class="modal-footer">
