@@ -299,4 +299,9 @@ li a#csesion{
     background: #000;
   }
   
+  .disabled {
+    pointer-events: none;
+    
+  }
+
   /*MODAL VER MAS CONTENIDO*/

@@ -244,11 +244,95 @@
         </div>
       
         <!-- Sección Categorías -->
-        <div *ngIf="selectedSection === 'categories'">
-          <h2>Administrar Categorías</h2>
-          <!--MODAL AÑADIR CATEGORIA-->
-          
+        <div *ngIf="selectedSection === 'categories'" class="container my-4">
+          <h2 class="text-secondary">Administrar Categorías</h2>
+        
+          <div class="row mb-4">
+            <div class="col-lg-4 col-sm-12">
+              <!-- Añadir Categoría -->
+              <div [formGroup]="categoryForm" class="d-flex align-items-center">
+                <input type="text" id="nombreCategoria" formControlName="nombre" class="form-control me-2" placeholder="Nueva Categoría" 
+                       [class.is-invalid]="categoryForm.get('nombre')?.invalid && categoryForm.get('nombre')?.touched">
+                <button type="button" class="btn btn-brown" (click)="confirmAddCategory()">Añadir</button>
+              </div>
+              <div *ngIf="categoryForm.get('nombre')?.invalid && categoryForm.get('nombre')?.touched" class="text-danger mt-1">
+                El nombre de la categoría es requerido y debe tener al menos 3 caracteres.
+              </div>
+            </div>
+        
+            <div class="col-lg-4 col-sm-12">
+              <button type="button" class="btn btn-brown" (click)="mostrarCategorias()">Mostrar Categorías</button>
+            </div>
+        
+            <div class="col-lg-4 col-sm-12">
+              <button type="button" class="btn btn-brown" (click)="showCategorySearch = !showCategorySearch">Mostrar Libros de una Categoría</button>
+              <!-- Desplegable tipo buscador -->
+              <div *ngIf="showCategorySearch" class="mt-2">
+                <label for="categorySelect" class="form-label">Selecciona una categoría:</label>
+                <select id="categorySelect" [(ngModel)]="selectedCategoryId" (change)="loadBooksByCategory()" class="form-select">
+                  <option *ngFor="let category of categorias" [value]="category._id">
+                    {{ category.nombre }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        
+          <!-- Tabla de Categorías -->
+          <table *ngIf="showCategorias" class="table table-striped table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let categoria of categorias; let i = index">
+                <td>{{ categoria.num_categoria }}</td>
+                <td>{{ categoria.nombre }}</td>
+                <td>
+                  <button class="btn btn-warning">Editar</button>
+                  <button class="btn btn-danger">Eliminar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        
+          <!-- Tabla de Libros -->
+          <table *ngIf="libros.length > 0 && showCategorySearch" class="table table-striped table-hover mt-4">
+            <thead class="table-light">
+              <tr>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>Categoría</th>
+                <th>Género</th>
+                <th>ISBN</th>
+                <th>Fecha de Publicación</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let libro of libros">
+                <td>{{ libro?.titulo }}</td>
+                <td>{{ libro?.id_autor.nombre || 'Autor no disponible' }}</td>
+                <td>{{ libro?.categorias_libro!.nombre || 'Categoría no disponible' }}</td>
+                <td>{{ libro?.generos_libro!.nombre || 'Género no disponible' }}</td>
+                <td>{{ libro?.isbn }}</td>
+                <td>{{ libro?.fecha_publicacion | date:'dd/MM/yyyy' }}</td>
+                <td>
+                  <button (click)="irLeerLibro(libro?._id)" class="btn btn-info"><i class="bi bi-eye-fill"></i></button>
+                  <button class="btn btn-danger"><i class="bi bi-file-earmark-x-fill"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        
+          <!-- Mensaje si no hay libros -->
+          <p *ngIf="libros?.length === 0 && selectedCategoryId">No hay libros en esta categoría.</p>
         </div>
+        
+        
       
         <!-- Sección Géneros -->
         <div *ngIf="selectedSection === 'genres'">

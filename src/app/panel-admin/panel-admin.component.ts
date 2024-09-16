@@ -32,7 +32,10 @@ export class PanelAdminComponent implements OnInit {
   
   //CATEGORIAS
   categoryForm!: FormGroup;
-
+  showCategorias: boolean = false; //
+  showCategorySearch = false;
+  selectedCategoryId!: string;
+  libros: any[]=[]// Se llenará con los libros de la categoría seleccionada
 
   //USUARIO LOGUEADO
   isLoggedIn: boolean = false;
@@ -90,7 +93,7 @@ export class PanelAdminComponent implements OnInit {
     });
 
     this.categoryForm = this.fb.group({
-      nombre: ['', Validators.required]
+      nombre: ['',[ Validators.required, Validators.minLength(3)]]
     });
     
     this.cargarLibros();
@@ -241,12 +244,54 @@ export class PanelAdminComponent implements OnInit {
     }
   }
 
+  confirmAddCategory(): void {
+    const nombreCategoria = this.categoryForm.get('nombre')?.value;
+    if (this.categoryForm.valid) {
+      // Mostrar la alerta de confirmación
+      const confirmed = window.confirm(`¿Está seguro que quiere añadir la categoría "${nombreCategoria}"?`);
+      if (confirmed) {
+        this.addCategory(); // Si se confirma, añadir la categoría
+      }
+    } else {
+      // Marcar el campo como tocado si no es válido para mostrar el mensaje de error
+      this.categoryForm.markAllAsTouched();
+    }
+  }
+
   loadCategorias(): void {
     this.categoriaService.getCategorias().subscribe((resp: { resultado: { _id: any; id: number; NOMBRE: string; }[]; }) => {
       this.categorias = resp.resultado;
     }, (error: any) => {
       console.error('Error loading poblaciones:', error);
     });
+  }
+  mostrarCategorias(): void {
+    // Alternar la visibilidad de la tabla de categorías
+    this.showCategorias = !this.showCategorias;
+
+    // Si se decide mostrar la tabla, cargar las categorías
+    if (this.showCategorias) {
+      this.loadCategorias();
+    }
+  }
+
+  async loadBooksByCategory() {
+    if (this.selectedCategoryId) {
+      await this.categoriaService.getLibrosByCategoria(this.selectedCategoryId).subscribe((data) => {
+        this.libros = data.resultado;
+      });
+    }
+  }
+
+  irLeerLibro(bookId: any){
+
+    //const file: string =this.baseUrl+book;
+    if (bookId) {
+      //this.pdfService.setPdfFile(bookId);
+
+      this.router.navigate(['/book-reader', bookId]);
+
+    }
   }
 
   loadAutores(): void {
