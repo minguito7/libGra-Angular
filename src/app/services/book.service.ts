@@ -38,6 +38,12 @@ export class BookService {
     return this.http.get(`${this.apiUrl}/activos`);
   }
 
+  getBooksNoActivos(): Observable<any> {
+    const token = localStorage.getItem('Bearer');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${this.apiUrl}/no-activos`, { headers});
+  }
+
   getBooksActivosAddedUser(id_user: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/activos/${id_user}`);
   }
@@ -54,10 +60,16 @@ export class BookService {
       return this.http.get(`${this.apiUrl}/descargar-libro/${bookId}`, { headers});
       }
 
-    cambiarEstadoLibro(bookId: string): Observable<any> {
+  cambiarEstadoLibro(bookId: string): Observable<any> {
         const token = localStorage.getItem('Bearer');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
         return this.http.put(`${this.apiUrl}/cambiar-estado/${bookId}`,{}, { headers });
       }
-      
+
+  updateLibro(libroId: string, data: FormData): Observable<any> {
+    const token = localStorage.getItem('Bearer');
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+        return this.http.put(`${this.apiUrl}/edit-libro/${libroId}`, data,{headers, responseType: 'blob'})
+  }
+     
 }

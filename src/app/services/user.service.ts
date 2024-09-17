@@ -24,13 +24,13 @@ export class UserService {
       return this.http.post(`${this.apiUrl}/edit-password/${userId}`, body, { headers, responseType: 'blob' });
   }
 
-  changeAvatar(userId: string, avatar: string){   
+  changeAvatar(userId: string, avatar: FormData){   
     const token = localStorage.getItem('Bearer');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    console.log('Guardando la contraseña en el usuario... ');
-    const body = { AVATAR: avatar };
+    console.log('Guardando el avatar en el usuario... ');
+    
 
-    return this.http.post(`${this.apiUrl}/modify-avatar/${userId}`, body, { headers, responseType: 'blob' });
+    return this.http.post(`${this.apiUrl}/modify-avatar/${userId}`, avatar, { headers, responseType: 'blob' });
 }
   
 

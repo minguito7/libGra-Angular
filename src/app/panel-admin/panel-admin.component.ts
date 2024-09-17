@@ -29,9 +29,11 @@ export class PanelAdminComponent implements OnInit {
   generos:any[] = [];
   autores:any[] = [];
   categorias:any[] = [];
+  selectedLibro: any;
   
   //CATEGORIAS
   categoryForm!: FormGroup;
+  editLibroForm!: FormGroup;
   showCategorias: boolean = false; //
   showCategorySearch = false;
   selectedCategoryId!: string;
@@ -49,9 +51,13 @@ export class PanelAdminComponent implements OnInit {
   selectedSection: string | undefined | null;
 
   //
+  showModal: boolean = false;
   librosActivos: any[] = [];
   librosNoActivos: any[] = [];
   formBuilder: any;
+  mostrarLibrosNoActivos: boolean = false;
+  mostrarLibrosActivos: boolean = false;
+  
 
   constructor( private authService: AuthService, private router: Router, 
     private libroService: BookService,private categoriaService: CategoriasService,
@@ -95,8 +101,20 @@ export class PanelAdminComponent implements OnInit {
     this.categoryForm = this.fb.group({
       nombre: ['',[ Validators.required, Validators.minLength(3)]]
     });
+
+    this.editLibroForm = this.fb.group({
+      titulo: ['', Validators.required],
+      id_autor: ['', Validators.required],
+      portada: [''],
+      categorias_libro: [[], Validators.required],  // Array vacío por defecto
+      isbn: ['', Validators.required],
+      fecha_publicacion: ['', Validators.required],
+      generos_libro: [[], Validators.required],  // Array vacío por defecto
+      descripcion: [''],
+      archivo: [''],
+    });
     
-    this.cargarLibros();
+    this.cargarLibros(); 
     this.loadAutores();
     this.loadCategorias();
     this.loadGeneros();
@@ -171,7 +189,7 @@ export class PanelAdminComponent implements OnInit {
   irAAdministrarPerfil(): void {
     this.router.navigate(['/perfil-user']);
   }
-
+  /*TODO LIBROS */
   selectSection(section: string): void {
     // Si la sección actual está seleccionada, la deselecciona; de lo contrario, selecciona la nueva
     if (this.selectedSection === section) {
@@ -182,15 +200,38 @@ export class PanelAdminComponent implements OnInit {
   }
 
   cargarLibros(): void {
-    this.libroService.getBooks().subscribe((response: any) => {
-      if (response.ok) {
-        this.librosActivos = response.resultado.ACTIVOS;
-        this.librosNoActivos = response.resultado.NO_ACTIVOS;
-      }
-    }, (error) => {
-      console.error('Error al cargar libros', error);
-    });
+    try{
+      this.libroService.getBooksActivos().subscribe((response: any) => {
+        if (response.ok) {
+          
+          this.librosActivos = response.resultado;
+          
+          console.log('Libros activos: '+this.librosActivos)
+        }
+             
+      })
+      this.libroService.getBooksNoActivos().subscribe((response: any) => {
+        if (response.ok) {
+          
+          this.librosNoActivos = response.resultado;
+          
+          console.log('Libros NO activos: '+this.librosNoActivos)
+        } 
+        else{
+          this.librosNoActivos = []
+        }    
+      })
+      
+
   }
+    catch (error) {
+      console.error('Error decoding JWT:', error);
+      
+    }
+    
+    
+}
+
 
 
   cambiarEstadoLibro(libroId: string): void {
@@ -205,6 +246,7 @@ export class PanelAdminComponent implements OnInit {
             this.cargarLibros(); // Recargar los datos de los libros
           } else {
             console.error('Error:', response.resultado);
+            this.cargarLibros(); // Recargar los datos de los libros
           }
         },
         (error) => {
@@ -228,6 +270,86 @@ export class PanelAdminComponent implements OnInit {
     }
   }
 
+  openModal(libro: any) {
+    this.selectedLibro = libro;
+    this.showModal = true;
+// Rellenar el formulario con los datos del libro
+this.editLibroForm.patchValue({
+  titulo: libro.titulo,
+  id_autor: libro.id_autor?._id, // Asegúrate de que el id exista
+  categorias_libro: libro.categorias_libro.map((cat: any) => cat._id), // Selecciona solo los IDs
+  generos_libro: libro.generos_libro.map((gen: any) => gen._id), // Selecciona solo los IDs
+  isbn: libro.isbn,
+  fecha_publicacion: libro.fecha_publicacion,
+  descripcion: libro.descripcion
+});
+  
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.editLibroForm.reset();
+  }
+
+  // Método para manejar el envío del formulario
+  onSubmit() {
+    if (this.editLibroForm.valid) {
+      const formData = new FormData();
+      formData.append('titulo', this.editLibroForm.value.titulo);
+      formData.append('id_autor', this.editLibroForm.value.id_autor);
+      formData.append('categorias_libro', this.editLibroForm.value.categorias_libro);
+      formData.append('generos_libro', this.editLibroForm.value.generos_libro);
+      formData.append('isbn', this.editLibroForm.value.isbn);
+      formData.append('fecha_publicacion', this.editLibroForm.value.fecha_publicacion);
+      formData.append('descripcion', this.editLibroForm.value.descripcion);
+
+      // Añadir archivos si existen
+      if (this.selectedPortada) {
+        formData.append('portada', this.selectedPortada);
+      }
+      if (this.selectedArchivo) {
+        formData.append('archivo', this.selectedArchivo);
+      }
+
+      // Aquí llamas a tu servicio para enviar los datos a la API
+      this.actualizarLibro(formData, this.editLibroForm.value.id);
+    }
+  }
+
+  cambiarPortada(){
+    
+  }
+
+   // Método para actualizar el libro (llamada al servicio)
+   actualizarLibro(data: FormData, bookId: string) {
+    // Suponiendo que tienes un servicio llamado 'libroService'
+    this.libroService.updateLibro(bookId, data).subscribe(
+      response => {
+        console.log('Libro actualizado', response);
+        this.closeModal();
+      },
+      error => {
+        console.error('Error al actualizar el libro', error);
+      }
+    );
+  }
+
+  async saveChanges() {
+    if (this.editLibroForm.valid) {
+      const updatedData = this.editLibroForm.value;
+      const libroId = this.selectedLibro._id;
+  
+      // Aquí puedes hacer la llamada a tu API para actualizar el libro
+      try {
+        await this.libroService.updateLibro(libroId, updatedData);
+        this.closeModal();
+        // Actualizar la lista de libros o notificar al usuario
+      } catch (error) {
+        console.error('Error al actualizar el libro:', error);
+      }
+    }
+  }
+  
   // Método para añadir una categoría
   addCategory(): void {
     if (this.categoryForm.valid) {
@@ -357,10 +479,10 @@ export class PanelAdminComponent implements OnInit {
             this.selectedArchivo = undefined;
 
             // Actualizar la lista de libros en el home
-             this.updateBookList();
+             this.cargarLibros();
 
             // Navegar de vuelta al home
-            this.router.navigate(['/']);
+            this.router.navigate(['/panel-admin']);
           }
         },
         error => {
@@ -443,3 +565,5 @@ function jwt_decode(token: string): any {
     return null;
   }
 }
+
+

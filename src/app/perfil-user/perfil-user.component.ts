@@ -26,6 +26,7 @@ export class PerfilUserComponent implements OnInit {
   usuario: any;
   password: string = '';
   password2: string = '';
+  avatar: string = '';
   usuarioForm:FormGroup | undefined;
   showForm: boolean = false;
   selectedFile: File | null = null;
@@ -186,9 +187,16 @@ toggleForm(): void {
   guardarAvatar() {
     if (this.selectedFile) {
       const formData = new FormData();
-      formData.append('avatar', this.selectedFile); // 'avatar' es el nombre del campo que espera el backend
+      formData.append('myFile', this.selectedFile); // 'avatar' es el nombre del campo que espera el backend
+      console.log(formData);
       //TODO - LLAMAR AL SERRVICIO PARA CAMBIAR LA FOTO
-
+      this.userService.changeAvatar(this.usuario._id,formData).subscribe(resp=>{
+        console.log('Foto cambiada exitosamente', resp);
+        this.avatar='';
+      }, error => {
+        console.error('Error al cambiar la fotografia', error);
+        // Aquí puedes manejar el error y mostrar un mensaje al usuario si algo sale mal
+      });
     } else {
       console.error('No se ha seleccionado ningún archivo');
     }
