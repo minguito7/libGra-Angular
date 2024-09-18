@@ -91,7 +91,7 @@
                     <li class="list-group-item text-muted">Actividad <i class="fa fa-dashboard fa-1x"></i></li>
                     <li class="list-group-item text-right"><span class="pull-left"><strong>ROLE: </strong></span> {{usuario.ROLE}}
                     </li>
-                    <li class="list-group-item text-right"><span class="pull-left"><strong>Libros Leidos: </strong></span> 13</li>
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>Libros Leidos: </strong></span> {{this.arrayLibrosLeidos.length}}</li>
                     <li class="list-group-item text-right"><span class="pull-left"*ngIf="(esEditor || esAdmin || esSoid)"><strong>Libros Subidos: {{libros_usuario.length}} </strong></span> </li>
                 </ul>
             </div>

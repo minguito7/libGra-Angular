@@ -9,7 +9,7 @@ import { CategoriasService } from '../services/categorias.service';
 import { AutoresService } from '../services/autores.service';
 import { GenerosService } from '../services/generos.service';
 
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HttpEventType } from '@angular/common/http';
 import * as bootstrap from 'bootstrap';
@@ -27,6 +27,7 @@ import { PdfStorageService } from '../services/pdf.service';
 export class HomeComponent implements OnInit {
   selectedPortada: File | undefined;
   selectedArchivo: File | undefined;
+  usuario: any;
   books: any[] = [];
   paginatedBooks: any[] = [];
   booksNovedad: any[] = [];
@@ -65,7 +66,7 @@ export class HomeComponent implements OnInit {
     private bookService: BookService,private authService: AuthService, 
     private poblacionService:PoblacionService, private categoriaService: CategoriasService,
     private autoresSevice:AutoresService, private generoService: GenerosService, private datePipe: DatePipe,
-    private pdfService: PdfStorageService ) { 
+    private pdfService: PdfStorageService,private route: ActivatedRoute ) { 
     this.poblacionForm = this.fb.group({
       nombre: ['', [Validators.required]],
 
@@ -90,6 +91,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.checkLoginStatus();
+
+
     const token = localStorage.getItem('Bearer');
     console.log("TOKEN DEL ALMACENAMIENTO LOCAL: "+ token);
     if (token) {
@@ -397,6 +400,7 @@ checkLoginStatus() {
   }
 
   irAAdministrarPerfil(): void {
+    
     this.router.navigate(['/perfil-user']);
   }
   irLeerLibro(bookId: any){
@@ -404,7 +408,7 @@ checkLoginStatus() {
     //const file: string =this.baseUrl+book;
     if (bookId) {
       this.pdfService.setPdfFile(bookId);
-
+      
       this.router.navigate(['/book-reader', bookId]);
 
     }

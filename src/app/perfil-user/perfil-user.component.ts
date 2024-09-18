@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import bootstrap from 'bootstrap';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { LibroLeidoService } from '../services/libro-leido.service';
 
 @Component({
   selector: 'app-perfil-user',
@@ -30,9 +31,11 @@ export class PerfilUserComponent implements OnInit {
   usuarioForm:FormGroup | undefined;
   showForm: boolean = false;
   selectedFile: File | null = null;
+  arrayLibrosLeidos : [] = [];
 
   constructor(private userService : UserService, private authService: AuthService,
-    private bookService: BookService, private router: Router, private usuarioService: UserService,
+    private bookService: BookService, private router: Router,
+    private usuarioService: UserService,private librosLeidos:LibroLeidoService,
     private http: HttpClient
   ){}
   
@@ -50,6 +53,7 @@ export class PerfilUserComponent implements OnInit {
       this.authService.validateToken(token).subscribe(resp => {
         this.fotoServ = this.baseUrl+resp.usuarioLogged.AVATAR;
         this.determinarRol(resp.usuarioLogged);
+        this.usuario = resp.usuarioLogged
         //this.loadUserData(resp.usuarioLogged._id);
 
         console.log(this.esAdmin + ' ' + this.esSoid + ' ' + this.esEditor + ' '+ this.esLector);
@@ -58,7 +62,7 @@ export class PerfilUserComponent implements OnInit {
      
       });
     } 
-
+    this.calcularLibrosLeidos();
     
   }
   ngAfterViewInit() {
@@ -193,6 +197,7 @@ toggleForm(): void {
       this.userService.changeAvatar(this.usuario._id,formData).subscribe(resp=>{
         console.log('Foto cambiada exitosamente', resp);
         this.avatar='';
+        this.checkLoginStatus();
       }, error => {
         console.error('Error al cambiar la fotografia', error);
         // Aquí puedes manejar el error y mostrar un mensaje al usuario si algo sale mal
@@ -200,6 +205,14 @@ toggleForm(): void {
     } else {
       console.error('No se ha seleccionado ningún archivo');
     }
+  }
+
+  calcularLibrosLeidos(){
+    console.log('ENTRADO EN CALCULAR LIBROS LEIDOS')
+    this.librosLeidos.getLibrosLeidosUsuario(this.usuario._id).subscribe(resp =>{
+      console.log("respuesta libros leidos: " + resp.resultado);
+      this.arrayLibrosLeidos = resp.resultado;
+   })
   }
 
 }

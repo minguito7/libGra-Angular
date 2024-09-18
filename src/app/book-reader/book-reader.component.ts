@@ -91,7 +91,6 @@ export class BookReaderComponent implements OnInit{
 
   }
 
-//PRUEBA
 
   // Función para abrir el modal
   openBookmarkModal(): void {
