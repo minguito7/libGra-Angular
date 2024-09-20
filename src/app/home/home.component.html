@@ -19,7 +19,7 @@
           <a class="nav-link" href="#">Acerca de</a>
       </li>
       <li class="nav-item">
-          <a class="nav-link" href="#">Contacto</a>
+          <a class="nav-link" (click)="irPanelContacto()">Contacto</a>
       </li>
       <li class="nav-item" *ngIf="(esAdmin || esSoid) && isLoggedIn">
         <a class="nav-link" (click)="irPanelControl()">Panel de Administrador</a>

@@ -417,6 +417,11 @@ checkLoginStatus() {
     this.router.navigate(['/panel-admin']);
 
   }
+
+  irPanelContacto():void{
+    this.router.navigate(['/panel-contacto']);
+
+  }
   
 }
 

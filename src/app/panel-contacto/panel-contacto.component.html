@@ -1,0 +1,19 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="contactForm">
+    <label for="nombre">Nombre:</label>
+    <input id="nombre" formControlName="nombre" type="text" required>
+  
+    <label for="apellidos">Apellidos:</label>
+    <input id="apellidos" formControlName="apellidos" type="text" required>
+  
+    <label for="telefono">Teléfono de contacto:</label>
+    <input id="telefono" formControlName="telefono" type="tel" required>
+  
+    <label for="email">Email:</label>
+    <input id="email" formControlName="email" type="email" required>
+  
+    <label for="sugerencia">Sugerencia o Descripción:</label>
+    <textarea id="sugerencia" formControlName="sugerencia" required></textarea>
+  
+    <button type="submit">Enviar</button>
+  </form>
+  

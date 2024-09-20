@@ -15,6 +15,7 @@ import { PerfilUserComponent } from './perfil-user/perfil-user.component';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { BookReaderComponent } from './book-reader/book-reader.component';
 import { PanelAdminComponent } from './panel-admin/panel-admin.component';
+import { PanelContactoComponent } from './panel-contacto/panel-contacto.component';
 
 
 @NgModule({
@@ -25,8 +26,8 @@ import { PanelAdminComponent } from './panel-admin/panel-admin.component';
     HomeComponent,
     PerfilUserComponent,
     BookReaderComponent,
-    PanelAdminComponent
-
+    PanelAdminComponent,
+    PanelContactoComponent
   ],
   imports: [
     BrowserModule,
