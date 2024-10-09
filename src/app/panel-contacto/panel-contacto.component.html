@@ -1,19 +1,65 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="contactForm">
-    <label for="nombre">Nombre:</label>
-    <input id="nombre" formControlName="nombre" type="text" required>
-  
-    <label for="apellidos">Apellidos:</label>
-    <input id="apellidos" formControlName="apellidos" type="text" required>
-  
-    <label for="telefono">Teléfono de contacto:</label>
-    <input id="telefono" formControlName="telefono" type="tel" required>
-  
-    <label for="email">Email:</label>
-    <input id="email" formControlName="email" type="email" required>
-  
-    <label for="sugerencia">Sugerencia o Descripción:</label>
-    <textarea id="sugerencia" formControlName="sugerencia" required></textarea>
-  
-    <button type="submit">Enviar</button>
-  </form>
-  
+
+
+<div class="d-flex justify-content-center align-items-center vh-100" id="page">
+  <div class="background-overlay"></div>
+  <div class="container p-4 shadow rounded" style="max-width: 600px; background-color: #cccccc7a;">
+    <h2 class="text-center mb-4">Formulario de Contacto</h2>
+    <form (ngSubmit)="onSubmit()" [formGroup]="contactForm" class="needs-validation" novalidate>
+      <div class="row mb-3">
+        <div class="col-sm-12 col-md-6">
+          <label for="nombre" class="form-label">Nombre:</label>
+          <input id="nombre" formControlName="nombre" type="text" class="form-control" required>
+          <div class="invalid-feedback">
+            El nombre es obligatorio.
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6">
+          <label for="apellidos" class="form-label">Apellidos:</label>
+          <input id="apellidos" formControlName="apellidos" type="text" class="form-control" required>
+          <div class="invalid-feedback">
+            Los apellidos son obligatorios.
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-sm-12 col-md-6">
+          <label for="telefono" class="form-label">Teléfono de contacto:</label>
+          <input id="telefono" formControlName="telefono" type="tel" class="form-control" required>
+          <div class="invalid-feedback">
+            El teléfono es obligatorio.
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6">
+          <label for="email" class="form-label">Email:</label>
+          <input id="email" formControlName="email" type="email" class="form-control" required>
+          <div class="invalid-feedback">
+            El email es obligatorio y debe ser válido.
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-12">
+          <label for="sugerencia" class="form-label">Sugerencia o Descripción:</label>
+          <textarea id="sugerencia" formControlName="sugerencia" class="form-control" rows="3" required></textarea>
+          <div class="invalid-feedback">
+            La sugerencia o descripción es obligatoria.
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-12 text-center">
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+

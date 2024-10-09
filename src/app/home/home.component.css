@@ -147,24 +147,76 @@ button #book-form{
 
 
 #contenido {
-    padding: 20px;
-    width: 100%;
-}
-
-.card-img-top {
-    width: 100%;
-}
-
-.card {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ocupa todo el alto de la ventana para centrar el contenido */
+    text-align: center;
+  }
+  
+  .card-container {
+    perspective: 1000px;
     margin: 10px;
-}
-
-#cards {
-    margin-left: 50px;
-}
+    width: 200px; /* Ancho específico */
+    height: 300px; /* Alto específico */
+  }
+  
+  .card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .card-container:hover .card {
+    transform: rotateY(180deg);
+  }
+  
+  .card-front, .card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+  }
+  
+  .card-front {
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card-front .card-title {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px;
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  .card-back {
+    background-color: white;
+    transform: rotateY(180deg);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .card-back .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
 /*carrousel novedades*/
 .container-novedades {
     width: 100%; /* Ocupa todo el ancho disponible */
@@ -219,8 +271,8 @@ li a#csesion{
 }
 #verArchivo{
     align-items: center;
-    padding-left: 25%;
-    padding-right: 25%;
+    text-align: center;
+
     
 }
 
@@ -304,4 +356,78 @@ li a#csesion{
     
   }
 
-  /*MODAL VER MAS CONTENIDO*/
+  /*PRUEBA*/
+  .box:hover{
+    animation-play-state: paused;
+    
+}
+.box {
+    margin-top: 75px;
+    align-items: center;
+    position: relative;
+    width: 200px;
+    height: 350px;
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+    animation: animate 30s linear infinite;
+}
+
+@keyframes animate {
+    0% {
+        transform: perspective(1000px) rotateY(0deg);
+    }
+    100% {
+        transform: perspective(1000px) rotateY(360deg);
+    }
+}
+
+.box span {
+    position: absolute;
+    width: 75%;
+    height: 75%;
+    background: #fff;
+    transform: rotateY(calc(var(--i) * 45deg)) translateZ(240px);
+    display: flex;
+    flex-direction: column; /* Flex para que los elementos se apilen */
+    align-items: center;    /* Centra la imagen y el enlace horizontalmente */
+    justify-content: space-between; /* Espacio entre la imagen y el enlace */
+}
+
+.box span::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+}
+
+.box span img {
+    position: relative;
+    width: 150px;  /* Ancho fijo de 150px */
+    height: 285px; /* Alto fijo de 285px */
+    object-fit: contain; /* La imagen se ajusta al contenedor sin recortarse ni distorsionarse */
+    margin-bottom: 5px;
+    background-color: #f0f0f0; /* Opcional: añadir un fondo para ver claramente el espacio sobrante */
+}
+
+
+
+.box span p#bookNovedadTitulo {
+    position: relative;
+    z-index: 3;
+    text-decoration: none;
+    color: #000; /* Estilo del enlace */
+    margin-top: 5px; /* Añade un margen superior para separar del resto */
+    font-weight: bold;
+    text-align: center; /* Centra el texto */
+    padding: 2px 4px;
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo semitransparente */
+    border-radius: 2px;
+    font-size: 15px;
+    margin-bottom:5px;
+}
+
+.box span p#bookNovedadTitulo:hover {
+    background-color: rgba(0, 0, 0, 0.8); /* Cambia el fondo al pasar el ratón */
+    color: rgb(253, 0, 0); /* Cambia el color del texto al pasar el ratón */
+}

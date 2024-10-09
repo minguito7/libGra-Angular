@@ -2,14 +2,15 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { BookService } from '../services/book.service';
 import { PdfStorageService } from '../services/pdf.service';
 
-import * as pdfjsLib from 'pdfjs-dist';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LibroLeidoService } from '../services/libro-leido.service';
-import Swiper from 'swiper/bundle';
 import 'swiper/swiper-bundle.css';
+import * as pdfjsLib from 'pdfjs-dist/build/pdf';
 import { LibroLeido } from '../interfaces/libro-leido';
+import { Usuario } from '../interfaces/usuario';
+//import { loadPdfWorker } from '../shared/ng2-pdf-viewer-overridden'; // Cambia la ruta según tu estructura
 
 
 @Component({
@@ -18,7 +19,7 @@ import { LibroLeido } from '../interfaces/libro-leido';
   styleUrl: './book-reader.component.css'
 })
 export class BookReaderComponent implements OnInit{
-  private pdfDoc: any = null;
+  pdfDoc: any = null;
   currentPage: number = 1;
   itemsPerPage: number = 3; // Número de elementos por página
   totalItems:number = 0;
@@ -36,34 +37,43 @@ export class BookReaderComponent implements OnInit{
   userProfileImage: string | undefined;
   photoUrl: any;
   fotoServ: string | undefined;
+  usuario!:Usuario;
   //Libro
   productId: any = '';
   libro:any;
+  libroArchivo!:string;
+
   safePdfUrl!:SafeResourceUrl;
   ultBookmark:any;
   showBookmarket: boolean = false;
   showModal = false;  // Para mostrar u ocultar el modal
   userPageInput!: number;  // Donde guardaremos la página ingresada por el usuario
 
+//PRUEBA PDF.js
 
 
   constructor(private bookService: BookService, private pdfService: PdfStorageService
     , private authService: AuthService, private router: Router,
     private route: ActivatedRoute, private sanitizer: DomSanitizer,
     private librosLeidos:LibroLeidoService
-  ){}
+  ){
+    this.productId = this.route.snapshot.paramMap.get('bookId');
+
+    this.bookService.getOneBook(this.productId).subscribe((resp: any) =>{
+      this.libro = resp;
+    });
+    this.bookService.getArchivoBook(this.productId).subscribe((resp: any) =>{
+      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.baseUrl+resp.resultado);
+    });
+    const iframe = document.getElementById('pdfIframe') as HTMLIFrameElement;
+
+  }
+
+  
   
   async ngOnInit(){
-    this.productId = await this.route.snapshot.paramMap.get('bookId');
     
-    this.bookService.getOneBook(this.productId).subscribe(resp =>{
-      console.log('libro: '+ resp.archivo);
-      this.libro = resp;
-      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.baseUrl+resp.archivo);
-
-      console.log('id producto:_ '+this.baseUrl+this.safePdfUrl);
-
-    });
+    
     this.checkLoginStatus();
 
     const token = localStorage.getItem('Bearer');
@@ -71,11 +81,12 @@ export class BookReaderComponent implements OnInit{
     if (token) {
       const decodedToken: any = jwt_decode(token);
       const userId = decodedToken.decodedToken;
-      this.authService.validateToken(token).subscribe(resp => {
+      this.authService.validateToken(token).subscribe((resp: { usuarioLogged: Usuario; }) => {
         this.fotoServ = this.baseUrl+resp.usuarioLogged.AVATAR;
         this.determinarRol(resp.usuarioLogged);
         this.authService.setUsuario(resp.usuarioLogged);
-
+        this.usuario=resp.usuarioLogged;
+        
         console.log(this.esAdmin + ' ' + this.esSoid + ' ' + this.esEditor + ' '+ this.esLector);
         //const objectURL = URL.createObjectURL(this.fotoServ);
         //this.photoUrl = this.sanitizer.bypanombressSecurityTrustUrl(objectURL);
@@ -87,9 +98,44 @@ export class BookReaderComponent implements OnInit{
     
      
   }
-  ngAfterViewInit() {
+  // Método que se ejecuta después de que la vista está completamente inicializada
+  ngAfterViewInit(): void {
+    const iframe = document.getElementById('pdfIframe') as HTMLIFrameElement;
 
+    // Verificamos si el iframe está listo para ser manipulado
+    iframe.onload = () => {
+      try {
+        // Accedemos al documento dentro del iframe
+        const iframeDocument = iframe.contentDocument || iframe.contentWindow?.document;
+
+        // Inyectamos un script para detectar clics dentro del iframe
+        const script = iframeDocument!.createElement('script');
+        script.innerHTML = `
+          document.addEventListener('click', function(event) {
+            // Comprobamos si el elemento clicado es el botón de descarga
+            if (event.target.tagName === 'A' && event.target.getAttribute('href').includes('.pdf')) {
+              window.parent.postMessage('descarga-pdf', '*');
+            }
+          });
+        `;
+        iframeDocument!.body.appendChild(script);
+      } catch (error) {
+        console.error('No se pudo acceder al contenido del iframe:', error);
+      }
+    };
+
+    // Escuchamos mensajes desde el iframe
+    window.addEventListener('message', (event) => {
+      if (event.data === 'descarga-pdf') {
+        alert('El botón de descarga fue clicado en el iframe'); // Mostrar alerta
+      }
+    });
   }
+
+/* */
+
+
+/* */
 
 
   // Función para abrir el modal
@@ -131,10 +177,10 @@ export class BookReaderComponent implements OnInit{
           
           // Llamada a la API para guardar el marcapáginas
           this.librosLeidos.postBookMarket(bookmarkData).subscribe(
-            (response) => {
+            (response: any) => {
               console.log('Marcador guardado', response);
             },
-            (error) => {
+            (error: any) => {
               console.error('Error al guardar el marcador', error);
             }
           );
@@ -144,7 +190,7 @@ export class BookReaderComponent implements OnInit{
         }
         this.loading = false;
       },
-      (error) => {
+      (error: any) => {
         console.error('Error en la comprobación de página', error);
         this.loading = false;
       }
@@ -250,7 +296,7 @@ getCurrentPageFromIframe(url: string): number {
         this.loading = false; // Desactiva el indicador de carga
         console.log(response.resultado);
       },
-      (error) => {
+      (error: any) => {
         console.error('Error al cargar los datos del bookmarket:', error);
         this.loading = false; // Desactiva el indicador de carga si hay un error
       }
@@ -262,7 +308,7 @@ getCurrentPageFromIframe(url: string): number {
       this.loadBookmarket(); // Carga los datos solo si el historial se va a mostrar
     }
   }
-
+//pdf2
  // Métodos para cambiar de página
  goToPage(page: number): void {
   if (page > 0 && page <= Math.ceil(this.totalItems / this.itemsPerPage)) {
@@ -287,7 +333,27 @@ get totalPages(): number {
 }
   
 setSelectedBook(): void {
-  this.libro
+  this.safePdfUrl
+}
+nextPage() {
+  this.currentPage++;;
+}
+
+prevPage() {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+  }
+}
+
+// Ajustar zoom
+zoomIn() {
+  this.currentPage += 0.1;
+}
+
+
+
+onPdfLoaded(event:any) {
+  console.log("PDF cargado correctamente:", event);
 }
 
 }
@@ -307,6 +373,9 @@ function base64UrlDecode(str: string): string {
       })
       .join('')
   );
+
+  
+  
 }
 
 function jwt_decode(token: string): any {

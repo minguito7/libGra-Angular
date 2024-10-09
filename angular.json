@@ -86,7 +86,9 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+               "src/assets",
+                "src/assets/pdfjs/pdf.worker.js"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",

@@ -2,7 +2,7 @@
 
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -13,6 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   })
 export class AppComponent {
   title = 'BookStoreApp';
+  constructor(public router: Router) {}
 }
 
 

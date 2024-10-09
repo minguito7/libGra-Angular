@@ -16,7 +16,10 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { BookReaderComponent } from './book-reader/book-reader.component';
 import { PanelAdminComponent } from './panel-admin/panel-admin.component';
 import { PanelContactoComponent } from './panel-contacto/panel-contacto.component';
-
+import { NavbarComponent } from './shared/navbar/navbar.component';
+import { FooterComponent } from './shared/footer/footer.component';
+import { error404Componente } from './shared/404/404.component';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @NgModule({
   declarations: [
@@ -27,7 +30,10 @@ import { PanelContactoComponent } from './panel-contacto/panel-contacto.componen
     PerfilUserComponent,
     BookReaderComponent,
     PanelAdminComponent,
-    PanelContactoComponent
+    PanelContactoComponent,
+    NavbarComponent,
+    FooterComponent,
+    error404Componente
   ],
   imports: [
     BrowserModule,
@@ -38,6 +44,7 @@ import { PanelContactoComponent } from './panel-contacto/panel-contacto.componen
     NgxPaginationModule,
     FormsModule,
     NgxExtendedPdfViewerModule,
+    PdfViewerModule
 ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

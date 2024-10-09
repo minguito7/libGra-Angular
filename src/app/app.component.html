@@ -1,8 +1,14 @@
+<div *ngIf="router.url !== '/login' && router.url !== '/registro' && router.url !== '/404'">
+  <app-navbar></app-navbar>
+</div>
 
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
 
-  <router-outlet />
-
-
+<div *ngIf="router.url !== '/login' && router.url !== '/registro' && router.url !== '/404'">
+  <app-footer></app-footer>
+</div>
 
 
 

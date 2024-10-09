@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -16,6 +16,9 @@ export class AutoresService {
   }
 
   addAutores(nombre: String): Observable<any> {
-    return this.http.post(`${this.apiUrl}/add-autor`, {nombre});
+    const token = localStorage.getItem('Bearer');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
+    return this.http.post(`${this.apiUrl}/add-autor`, nombre, {headers});
   }
 }

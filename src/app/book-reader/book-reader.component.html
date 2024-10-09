@@ -1,45 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-library">
-  <a class="navbar-brand" href="#">LibGra</a>
-  <button class="navbar-toggler" type="button" id="boton-style-app" data-toggle="collapse" data-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <!-- Enlaces de la izquierda -->
-    <ul class="navbar-nav">
-      <li class="nav-item">
-          <a class="nav-link" href="/">Inicio</a>
-      </li>
-      <li class="nav-item">
-          <a class="nav-link" href="#">Biblioteca</a>
-      </li>
-      <li class="nav-item">
-          <a class="nav-link" href="#">Acerca de</a>
-      </li>
-      <li class="nav-item">
-          <a class="nav-link" href="#">Contacto</a>
-      </li>
-      <li class="nav-item" *ngIf="(esAdmin || esSoid) && isLoggedIn">
-        <a class="nav-link" href="#">Panel de Administrador</a>
-        </li>
-    </ul>
-    <!-- Enlaces de la derecha -->
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item" *ngIf="!isLoggedIn">
-        <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
-      </li>
-      <li class="nav-item" *ngIf="!isLoggedIn">
-        <a class="nav-link" routerLink="/registro" routerLinkActive="active">Registro</a>
-      </li>
-      <li class="nav-item" *ngIf="isLoggedIn">
-        <a class="nav-link" id="csesion" (click)="logout()">Cerrar sesión</a>
-      </li>
-      <li class="nav-item" *ngIf="isLoggedIn">
-        <img [src]="this.fotoServ" class="rounded-circle" alt="User Image" style="width: 40px; height: 40px; margin-left: 10px;" (click)="irAAdministrarPerfil()">
-      </li>
-    </ul>
-  </div>
-</nav>
+
 
 
 
@@ -96,10 +55,24 @@
                 <p><strong>ISBN:</strong> {{ libro?.isbn }}</p>
                 <p><strong>Fecha de Publicación:</strong> {{ libro?.fecha_publicacion | date:'dd/MM/yyyy' }}</p>
                 <p><strong>Descripción:</strong> {{ libro.descripcion || 'No hay descripción disponible' }}</p>
-                <p><strong>Categorias:</strong> {{ libro.categorias_libro.nombre || 'No hay categorias disponible' }}</p>
-                <p><strong>Generos:</strong> {{ libro.generos_libro.nombre || 'No hay generos disponible' }}</p>
-
+              
+                <!-- Lista de categorías -->
+                <strong>Categorías:</strong>
+                <ul>
+                  <li *ngFor="let categoria of libro.categorias_libro">
+                    {{ categoria.nombre || 'No hay categorías disponible' }}
+                  </li>
+                </ul>
+              
+                <!-- Lista de géneros -->
+                <strong>Géneros:</strong>
+                <ul>
+                  <li *ngFor="let genero of libro.generos_libro">
+                    {{ genero.NOMBRE || 'No hay géneros disponible' }}
+                  </li>
+                </ul>
               </div>
+              
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
               </div>
@@ -168,13 +141,11 @@
       </div>
 
       <iframe #pdfIframe [src]="this.safePdfUrl" class="pdf-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+    
+
+   
     </div>
     
-      <!--<iframe [src]="this.safePdfUrl" class="pdf-iframe" sandbox="allow-scripts allow-same-origin"></iframe>-->
-  </div>
-</div>
 
 
-<footer class="footer-library mt-5">
-  <p>&copy; 2024 BookApp. Todos los derechos reservados.</p>
-</footer>
+

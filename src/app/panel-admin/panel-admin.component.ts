@@ -11,6 +11,9 @@ import { GenerosService } from '../services/generos.service';
 import { Categoria } from '../interfaces/categoria';
 import { Genero } from '../interfaces/genero';
 import { Autor } from '../interfaces/autor';
+import { Usuario } from '../interfaces/usuario';
+import { PoblacionService } from '../services/poblacion.service';
+import { Libro } from '../interfaces/libro';
 
 @Component({
   selector: 'app-panel-admin',
@@ -26,7 +29,7 @@ export class PanelAdminComponent implements OnInit {
   selectedArchivo: File | undefined;
   progress = 0;
   isLoading = false; 
-  generos:any[] = [];
+  generos!:Genero[];
   autores:any[] = [];
   categorias:any[] = [];
   selectedLibro: any;
@@ -39,6 +42,15 @@ export class PanelAdminComponent implements OnInit {
   selectedCategoryId!: string;
   libros: any[]=[]// Se llenará con los libros de la categoría seleccionada
 
+  //POBLACION
+  poblacionesForm!:FormGroup;
+  poblaciones: any[]=[];
+  showPoblaciones: boolean = false;
+
+  //AUTORES
+  autoresForm!:FormGroup;
+  showAutores: boolean = false;
+  
   //USUARIO LOGUEADO
   isLoggedIn: boolean = false;
   esAdmin: boolean = false;
@@ -49,7 +61,7 @@ export class PanelAdminComponent implements OnInit {
   photoUrl: any;
   fotoServ: string | undefined;
   selectedSection: string | undefined | null;
-
+  usuario!:Usuario;
   //
   showModal: boolean = false;
   librosActivos: any[] = [];
@@ -57,13 +69,65 @@ export class PanelAdminComponent implements OnInit {
   formBuilder: any;
   mostrarLibrosNoActivos: boolean = false;
   mostrarLibrosActivos: boolean = false;
-  
+  libro!:Libro;
+
+  //GENERO
+  generoForm!:FormGroup;
+  showGeneros: boolean = false;
+
+  //MENSAJES DE ERROR
+  errorMessagePoblacionesDuplicateKey = '';
+  errorMessageAutorDuplicateKey='';
+  errorMessageGeneroDuplicateKey='';
+  errorMessage='';
 
   constructor( private authService: AuthService, private router: Router, 
     private libroService: BookService,private categoriaService: CategoriasService,
     private autoresSevice:AutoresService, private generoService: GenerosService,
-    private fb: FormBuilder){
-
+    private fb: FormBuilder, private poblacionService:PoblacionService){
+      this.bookForm = this.fb.group({
+        titulo: ['', Validators.required],
+        id_autor: ['', Validators.required],
+        portada: [''],
+        categorias_libro: [[], Validators.required],  // Array vacío por defecto
+        isbn: ['', Validators.required],
+        fecha_publicacion: ['', Validators.required],
+        generos_libro: [[], Validators.required],  // Array vacío por defecto
+        descripcion: [''],
+        archivo: [''],
+        resenas_libro: ['']
+      });
+  
+      this.categoryForm = this.fb.group({
+        nombre: ['',[ Validators.required, Validators.minLength(3)]]
+      });
+  
+      this.generoForm = this.fb.group({
+        nombre: ['',[ Validators.required, Validators.minLength(3)]]
+      });
+  
+      this.poblacionesForm = this.fb.group({
+        nombre: ['',[ Validators.required, Validators.minLength(3)]]
+      });
+      this.autoresForm = this.fb.group({
+        nombre: ['',[ Validators.required, Validators.minLength(3)]],
+        apellidos: ['',[ Validators.required, Validators.minLength(3)]],
+        fecha_nacimiento: [''],
+        nacionalidad: [''],
+        generos_autor: [''], 
+        libros_autor: ['']
+      });
+  
+      this.editLibroForm = this.fb.group({
+        _id: ['', Validators.required],
+        titulo: ['', Validators.required],
+        id_autor: ['', Validators.required],
+        categorias_libro: ['', Validators.required],
+        generos_libro: ['', Validators.required],
+        isbn: ['', Validators.required],
+        fecha_publicacion: ['', Validators.required],
+        descripcion: ['', Validators.required]
+      });
     }
 
   ngOnInit(): void{
@@ -78,46 +142,20 @@ export class PanelAdminComponent implements OnInit {
         this.fotoServ = this.baseUrl+resp.usuarioLogged.AVATAR;
         this.determinarRol(resp.usuarioLogged);
         this.authService.setUsuario(resp.usuarioLogged);
-
-        console.log(this.esAdmin + ' ' + this.esSoid + ' ' + this.esEditor + ' '+ this.esLector);
+        this.usuario = resp.usuarioLogged
+        //console.log(this.esAdmin + ' ' + this.esSoid + ' ' + this.esEditor + ' '+ this.esLector);
         //const objectURL = URL.createObjectURL(this.fotoServ);
         //this.photoUrl = this.sanitizer.bypanombressSecurityTrustUrl(objectURL);
      
       })
     }
-    this.bookForm = this.fb.group({
-      titulo: ['', Validators.required],
-      id_autor: ['', Validators.required],
-      portada: [''],
-      categorias_libro: [[], Validators.required],  // Array vacío por defecto
-      isbn: ['', Validators.required],
-      fecha_publicacion: ['', Validators.required],
-      generos_libro: [[], Validators.required],  // Array vacío por defecto
-      descripcion: [''],
-      archivo: [''],
-      resenas_libro: ['']
-    });
-
-    this.categoryForm = this.fb.group({
-      nombre: ['',[ Validators.required, Validators.minLength(3)]]
-    });
-
-    this.editLibroForm = this.fb.group({
-      titulo: ['', Validators.required],
-      id_autor: ['', Validators.required],
-      portada: [''],
-      categorias_libro: [[], Validators.required],  // Array vacío por defecto
-      isbn: ['', Validators.required],
-      fecha_publicacion: ['', Validators.required],
-      generos_libro: [[], Validators.required],  // Array vacío por defecto
-      descripcion: [''],
-      archivo: [''],
-    });
+    
     
     this.cargarLibros(); 
     this.loadAutores();
     this.loadCategorias();
     this.loadGeneros();
+    this.loadPoblaciones();
   }
   checkLoginStatus() {
     const token = localStorage.getItem('Bearer');
@@ -201,7 +239,7 @@ export class PanelAdminComponent implements OnInit {
 
   cargarLibros(): void {
     try{
-      this.libroService.getBooksActivos().subscribe((response: any) => {
+      this.libroService.getBooksActivos().subscribe(response => {
         if (response.ok) {
           
           this.librosActivos = response.resultado;
@@ -264,25 +302,18 @@ export class PanelAdminComponent implements OnInit {
       const file = input.files[0];
       if (fieldName === 'portada') {
         this.selectedPortada = file;
-      } else if (fieldName === 'archivo') {
+      }
+      if (fieldName === 'archivo') {
         this.selectedArchivo = file;
       }
+
     }
   }
 
   openModal(libro: any) {
-    this.selectedLibro = libro;
+    this.libro = libro;
+    this.editLibroForm.patchValue(libro);
     this.showModal = true;
-// Rellenar el formulario con los datos del libro
-this.editLibroForm.patchValue({
-  titulo: libro.titulo,
-  id_autor: libro.id_autor?._id, // Asegúrate de que el id exista
-  categorias_libro: libro.categorias_libro.map((cat: any) => cat._id), // Selecciona solo los IDs
-  generos_libro: libro.generos_libro.map((gen: any) => gen._id), // Selecciona solo los IDs
-  isbn: libro.isbn,
-  fecha_publicacion: libro.fecha_publicacion,
-  descripcion: libro.descripcion
-});
   
   }
 
@@ -293,32 +324,43 @@ this.editLibroForm.patchValue({
 
   // Método para manejar el envío del formulario
   onSubmit() {
-    if (this.editLibroForm.valid) {
-      const formData = new FormData();
-      formData.append('titulo', this.editLibroForm.value.titulo);
-      formData.append('id_autor', this.editLibroForm.value.id_autor);
-      formData.append('categorias_libro', this.editLibroForm.value.categorias_libro);
-      formData.append('generos_libro', this.editLibroForm.value.generos_libro);
-      formData.append('isbn', this.editLibroForm.value.isbn);
-      formData.append('fecha_publicacion', this.editLibroForm.value.fecha_publicacion);
-      formData.append('descripcion', this.editLibroForm.value.descripcion);
-
-      // Añadir archivos si existen
-      if (this.selectedPortada) {
-        formData.append('portada', this.selectedPortada);
-      }
-      if (this.selectedArchivo) {
-        formData.append('archivo', this.selectedArchivo);
-      }
-
-      // Aquí llamas a tu servicio para enviar los datos a la API
-      this.actualizarLibro(formData, this.editLibroForm.value.id);
+    if (this.editLibroForm.invalid) {
+      return;
     }
-  }
 
-  cambiarPortada(){
-    
+    const libroData = this.editLibroForm.value;
+    const libroId = libroData._id;
+
+    const formData = new FormData();
+    formData.append('_id', libroData._id);
+    formData.append('titulo', libroData.titulo);
+    formData.append('id_autor', libroData.id_autor);
+    formData.append('categorias_libro', libroData.categorias_libro);
+    formData.append('generos_libro', libroData.generos_libro);
+    formData.append('isbn', libroData.isbn);
+    formData.append('fecha_publicacion', libroData.fecha_publicacion);
+    formData.append('descripcion', libroData.descripcion);
+
+    if (this.selectedPortada) {
+      formData.append('portada', this.selectedPortada);
+    }
+
+    if (this.selectedArchivo) {
+      formData.append('archivo', this.selectedArchivo);
+    }
+
+    this.libroService.updateLibro(libroId, formData).subscribe(
+      response => {
+        console.log('Libro actualizado:', response);
+        this.closeModal();
+      },
+      error => {
+        console.error('Error al actualizar el libro:', error);
+      }
+    );
   }
+  
+
 
    // Método para actualizar el libro (llamada al servicio)
    actualizarLibro(data: FormData, bookId: string) {
@@ -404,6 +446,135 @@ this.editLibroForm.patchValue({
       });
     }
   }
+  mostrarPoblaciones(): void {
+    // Alternar la visibilidad de la tabla de categorías
+    this.showPoblaciones = !this.showPoblaciones;
+
+    // Si se decide mostrar la tabla, cargar las categorías
+    if (this.showPoblaciones) {
+      this.loadPoblaciones();
+    }
+  }
+  loadPoblaciones(): void {
+    this.poblacionService.getPoblacion().subscribe((resp: { resultado: { _id: any; id: number; NOMBRE: string; }[]; }) => {
+      this.poblaciones = resp.resultado;
+    }, (error: any) => {
+      console.error('Error loading poblaciones:', error);
+    });
+  }
+  
+  addPoblacion(): void {
+    if (this.poblacionesForm.valid) {
+      this.poblacionService.addPoblacion(this.poblacionesForm.value).subscribe(
+        (response) => {
+          console.log('Poblacion añadida:', response);
+          this.loadPoblaciones(); // Recargar las categorías después de añadir una nueva
+          this.poblacionesForm.reset(); // Limpiar el formulario
+        },
+        (error) => {
+          if(error.error.mensaje.includes('duplicate key')){
+            this.errorMessagePoblacionesDuplicateKey = `No puede haber dos nombres de Población iguales! ${this.poblacionesForm.get('nombre')?.value} YA EXITE`;
+          }
+          
+          console.error('Error al añadir categoría:', error);
+        }
+      );
+    }
+  }
+  
+  confirmAddPoblacion(): void {
+    const nombrePoblaciones = this.poblacionesForm.get('nombre')?.value;
+    if (this.poblacionesForm.valid) {
+      // Mostrar la alerta de confirmación
+      const confirmed = window.confirm(`¿Está seguro que quiere añadir la categoría "${nombrePoblaciones}"?`);
+      if (confirmed) {
+        this.addPoblacion(); // Si se confirma, añadir la categoría
+      }
+    } else {
+      // Marcar el campo como tocado si no es válido para mostrar el mensaje de error
+      this.poblacionesForm.markAllAsTouched();
+    }
+  }
+  mostrarGenero(): void {
+    // Alternar la visibilidad de la tabla de categorías
+    this.showGeneros = !this.showGeneros;
+
+    // Si se decide mostrar la tabla, cargar las categorías
+    if (this.showGeneros) {
+      this.loadGeneros();
+    }
+  }
+  addGenero(): void {
+    if (this.generoForm.valid) {
+      this.generoService.addGenero(this.generoForm.value).subscribe(
+        (response) => {
+          console.log('Genero añadido:', response);
+          this.loadGeneros(); // Recargar las categorías después de añadir una nueva
+          this.generoForm.reset(); // Limpiar el formulario
+        },
+        (error) => {
+          if(error.error.mensaje.includes('duplicate key')){
+            this.errorMessageGeneroDuplicateKey = `No puede haber dos nombres de Genero iguales! ${this.generoForm.get('nombre')?.value} YA EXITE`;
+          }
+          
+          console.error('Error al añadir generoos:', error);
+        }
+      );
+    }
+  }
+  confirmAddGenero(): void {
+    const nombreGenero = this.generoForm.get('nombre')?.value ;
+    if (this.generoForm.valid) {
+      // Mostrar la alerta de confirmación
+      const confirmed = window.confirm(`¿Está seguro que quiere añadir el Genero: "${nombreGenero}"?`);
+      if (confirmed) {
+        this.addGenero(); // Si se confirma, añadir la categoría
+      }
+    } else {
+      // Marcar el campo como tocado si no es válido para mostrar el mensaje de error
+      this.generoForm.markAllAsTouched();
+    }
+  }
+   mostrarAutor(): void {
+    // Alternar la visibilidad de la tabla de categorías
+    this.showAutores = !this.showAutores;
+
+    // Si se decide mostrar la tabla, cargar las categorías
+    if (this.showAutores) {
+      this.loadAutores();
+    }
+  }
+  addAutor(): void {
+    if (this.autoresForm.valid) {
+      this.autoresSevice.addAutores(this.autoresForm.value).subscribe(
+        (response) => {
+          console.log('Autores añadida:', response);
+          this.loadAutores(); // Recargar las categorías después de añadir una nueva
+          this.autoresForm.reset(); // Limpiar el formulario
+        },
+        (error) => {
+          if(error.error.mensaje.includes('duplicate key')){
+            this.errorMessageAutorDuplicateKey = `No puede haber dos nombres de Autor iguales! ${this.autoresForm.get('nombre')?.value} YA EXITE`;
+          }
+          
+          console.error('Error al añadir categoría:', error);
+        }
+      );
+    }
+  }
+  confirmAddAutor(): void {
+    const nombreAutor = this.autoresForm.get('nombre')?.value + this.autoresForm.get('apellidos')?.value;
+    if (this.autoresForm.valid) {
+      // Mostrar la alerta de confirmación
+      const confirmed = window.confirm(`¿Está seguro que quiere añadir el Autor "${nombreAutor}"?`);
+      if (confirmed) {
+        this.addAutor(); // Si se confirma, añadir la categoría
+      }
+    } else {
+      // Marcar el campo como tocado si no es válido para mostrar el mensaje de error
+      this.autoresForm.markAllAsTouched();
+    }
+  }
 
   irLeerLibro(bookId: any){
 
@@ -425,10 +596,11 @@ this.editLibroForm.patchValue({
   }
 
   loadGeneros(): void {
-    this.generoService.getGeneros().subscribe((resp: { resultado: { _id: any; id: number; NOMBRE: string; }[]; }) => {
+    this.generoService.getGeneros().subscribe(resp => {
       this.generos = resp.resultado;
+      console.log('Esto son los generoos: '+ this.generos[0].nombre)
     }, (error: any) => {
-      console.error('Error loading poblaciones:', error);
+      console.error('Error loading generoos:', error);
     });
   }
   addBook(): void {
@@ -448,6 +620,7 @@ this.editLibroForm.patchValue({
       if (this.selectedArchivo) {
         formData.append('files', this.selectedArchivo, this.selectedArchivo.name);
       }
+      console.log(this.selectedArchivo);
 
       // Inicializar el progreso
       this.progress = 0;

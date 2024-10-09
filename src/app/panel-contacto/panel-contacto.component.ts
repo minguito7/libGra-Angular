@@ -3,6 +3,7 @@ import { ContactService } from '../services/contact.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { Usuario } from '../interfaces/usuario';
 
 @Component({
   selector: 'app-panel-contacto',
@@ -11,6 +12,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class PanelContactoComponent {
   contactForm!: FormGroup;
+
   //USUARIO LOGUEADO - principal
   isLoggedIn: boolean = false;
   esAdmin: boolean = false;
@@ -21,7 +23,7 @@ export class PanelContactoComponent {
   photoUrl: any;
   fotoServ: string | undefined;
   baseUrl: string = 'http://localhost:3000/';
-
+  usuario!: Usuario;
 
   constructor(private fb: FormBuilder, private contactService: ContactService, 
     private router: Router, private authService: AuthService) {
@@ -32,27 +34,12 @@ export class PanelContactoComponent {
       email: ['', [Validators.required, Validators.email]],
       sugerencia: ['', Validators.required]
     });
+
+    this.usuario = this.authService.getUsuario();
   }
   ngOnInit() {
-    this.checkLoginStatus();
+   
 
-
-    const token = localStorage.getItem('Bearer');
-    console.log("TOKEN DEL ALMACENAMIENTO LOCAL: "+ token);
-    if (token) {
-      const decodedToken: any = jwt_decode(token);
-      const userId = decodedToken.decodedToken;
-      this.authService.validateToken(token).subscribe(resp => {
-        this.fotoServ = this.baseUrl+resp.usuarioLogged.AVATAR;
-        this.determinarRol(resp.usuarioLogged);
-        this.authService.setUsuario(resp.usuarioLogged);
-
-        console.log(this.esAdmin + ' ' + this.esSoid + ' ' + this.esEditor + ' '+ this.esLector);
-        //const objectURL = URL.createObjectURL(this.fotoServ);
-        //this.photoUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-     
-      });
-    }
   }
   onSubmit() {
     if (this.contactForm.valid) {
@@ -65,28 +52,7 @@ export class PanelContactoComponent {
     }
   }
 
-  checkLoginStatus() {
-    const token = localStorage.getItem('Bearer');
-    console.log(token);
-    if (token) {
-      // Aquí podrías llamar a tu servicio para verificar el token
-      this.authService.validateToken(token).subscribe({
-        next: (response: {
-          usuarioLogged: any; valid: boolean; 
-          }) => {
-          console.log(response.usuarioLogged.AVATAR);
-          this.isLoggedIn = response.valid;
-          if (this.isLoggedIn) {
-            // Obtener la imagen de perfil del usuario (esto puede variar según tu implementación)
-            this.userProfileImage = response.usuarioLogged.AVATAR; // Cambia esto por la URL de la imagen del perfil
-          }
-        },
-        error: () => {
-          this.isLoggedIn = false;
-        }
-      });
-    }
-  }
+
   logout() {
     console.log("Logout button clicked!");
     this.isLoggedIn = false;
@@ -137,44 +103,7 @@ export class PanelContactoComponent {
     }
 
   }
+
 }
 
 
-function base64UrlDecode(str: string): string {
-  // Reemplazar caracteres específicos de URL
-  str = str.replace(/-/g, '+').replace(/_/g, '/');
-
-  // Decodificar base64
-  const decodedStr = atob(str);
-
-  // Decodificar URI
-  return decodeURIComponent(
-    decodedStr
-      .split('')
-      .map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join('')
-  );
-}
-
-function jwt_decode(token: string): any {
-  try {
-    // Dividir el token en sus tres partes
-    const parts = token.split('.');
-
-    if (parts.length !== 3) {
-      throw new Error('El token JWT no tiene el formato adecuado');
-    }
-
-    // Decodificar la parte del payloadthis.fotoServ
-    const payload = parts[1];
-    const decodedPayload = base64UrlDecode(payload);
-
-    // Parsear el payload a un objeto JSON
-    return JSON.parse(decodedPayload);
-  } catch (error) {
-    console.error('Error decoding JWT:', error);
-    return null;
-  }
-}

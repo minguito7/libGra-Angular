@@ -18,12 +18,16 @@ export class LibroLeidoService {
   }
 
   //TODOS LOS LIBROS LEIDOS POR UN USUARIO
-  getLibrosLeidosUsuario(idUsuario : any): Observable<any>{
+  getLibrosLeidosUsuario(idUsuario: any): Observable<any> {
     const token = localStorage.getItem('Bearer');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     
-    return this.http.get(`${this.apiUrl}/usuario/${idUsuario}`, { headers});
+    // Verifica que la URL sea correcta
+    console.log('API URL:', `${this.apiUrl}/usuario/${idUsuario}`);
+    
+    return this.http.get(`${this.apiUrl}/usuario/${idUsuario}`, { headers });
   }
+  
 
   getComprobacionBookMarketPagina(idUsuario : any,idLibro : any, pagina_actual:any){
     const token = localStorage.getItem('Bearer');

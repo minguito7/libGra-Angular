@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -11,12 +11,14 @@ export class PoblacionService {
 
   constructor(private http: HttpClient) { }
 
-  getPoblicaciones(): Observable<any> {
+  getPoblacion(): Observable<any> {
     return this.http.get(`${this.apiUrl}`);
   }
 
-  addPoblicacion(nombre: String): Observable<any> {
-    return this.http.post(`${this.apiUrl}/add-poblacion`, {nombre});
+  addPoblacion(nombre: String): Observable<any> {
+    const token = localStorage.getItem('Bearer');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post(`${this.apiUrl}/add-poblacion`, nombre , {headers});
   }
 
 }

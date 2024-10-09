@@ -1,4 +1,5 @@
 export interface LibroLeido {
+    _id: string,
     id_usuario: string,
     id_libro: string,
     fecha_lectura: Date,

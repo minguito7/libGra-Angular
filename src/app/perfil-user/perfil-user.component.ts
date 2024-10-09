@@ -8,6 +8,8 @@ import bootstrap from 'bootstrap';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { LibroLeidoService } from '../services/libro-leido.service';
+import { Usuario } from '../interfaces/usuario';
+import { PoblacionService } from '../services/poblacion.service';
 
 @Component({
   selector: 'app-perfil-user',
@@ -24,7 +26,7 @@ export class PerfilUserComponent implements OnInit {
   esSoid: boolean = false;
   esLector: boolean = false;
   libros_usuario: [] =[];
-  usuario: any;
+  usuario!: Usuario;
   password: string = '';
   password2: string = '';
   avatar: string = '';
@@ -36,8 +38,10 @@ export class PerfilUserComponent implements OnInit {
   constructor(private userService : UserService, private authService: AuthService,
     private bookService: BookService, private router: Router,
     private usuarioService: UserService,private librosLeidos:LibroLeidoService,
-    private http: HttpClient
-  ){}
+    private http: HttpClient, private poblacionesService:PoblacionService){
+   
+
+  }
   
   ngOnInit(): void {
     
@@ -53,7 +57,7 @@ export class PerfilUserComponent implements OnInit {
       this.authService.validateToken(token).subscribe(resp => {
         this.fotoServ = this.baseUrl+resp.usuarioLogged.AVATAR;
         this.determinarRol(resp.usuarioLogged);
-        this.usuario = resp.usuarioLogged
+        this.usuario = resp.usuarioLogged;
         //this.loadUserData(resp.usuarioLogged._id);
 
         console.log(this.esAdmin + ' ' + this.esSoid + ' ' + this.esEditor + ' '+ this.esLector);
@@ -89,7 +93,9 @@ export class PerfilUserComponent implements OnInit {
           if (this.isLoggedIn) {
             // Obtener la imagen de perfil del usuario (esto puede variar según tu implementación)
             this.usuario = response.usuarioLogged;
-            this.userProfileImage = response.usuarioLogged.AVATAR; // Cambia esto por la URL de la imagen del perfil
+    // Cambia esto por la URL de la imagen del perfil
+            this.userProfileImage = response.usuarioLogged.AVATAR;
+            this.calcularLibrosLeidos();
           }
         },
         error: () => {
@@ -207,13 +213,24 @@ toggleForm(): void {
     }
   }
 
-  calcularLibrosLeidos(){
-    console.log('ENTRADO EN CALCULAR LIBROS LEIDOS')
-    this.librosLeidos.getLibrosLeidosUsuario(this.usuario._id).subscribe(resp =>{
-      console.log("respuesta libros leidos: " + resp.resultado);
-      this.arrayLibrosLeidos = resp.resultado;
-   })
+  calcularLibrosLeidos() {
+    
+    this.librosLeidos.getLibrosLeidosUsuario(this.usuario._id).subscribe(resp => {
+      if (resp && resp.ok) {
+    console.log('ENTRADO EN CALCULAR LIBROS LEIDOS DE ' + resp.resultado);
+
+        //console.log("Respuesta libros leídos: ", resp.libros);
+        console.log("Total de libros leídos: ", resp.resultado);
+        
+        this.arrayLibrosLeidos = resp.resultado;
+      } else {
+        console.error('Error en la respuesta de la API o no se encontraron libros leídos.');
+      }
+    }, error => {
+      console.error('Error en la petición de libros leídos:', error);
+    });
   }
+  
 
 }
 

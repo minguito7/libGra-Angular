@@ -49,4 +49,8 @@ export class LoginComponent {
       });
     }
   }
+  irARegistro(){
+    this.router.navigate(['/registro']);
+
+  }
 }

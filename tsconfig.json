@@ -23,7 +23,11 @@
       "ES2022",
       "dom"
     ],
-    "types": ["jquery"]
+    "types": ["jquery"],
+    "typeRoots": [
+      "node_modules/@types",
+      "src/@types"
+    ],
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

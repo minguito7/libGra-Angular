@@ -45,7 +45,7 @@
             </div>
             <div class="mb-3">
               <label for="ID_POBLACION" class="form-label">Población:</label>
-              <select formControlName="ID_POBLACION" id="ID_POBLACION" class="form-select">
+              <select formControlName="ID_POBLACION" id="ID_POBLACION" class="form-select" *ngIf="poblaciones">
                 <option *ngFor="let poblacion of poblaciones" [value]="poblacion._id">{{ poblacion.nombre }}</option>
               </select>
             </div>

@@ -1,5 +1,6 @@
 export interface Autor {
-    nombre: string,
+  _id: String,
+  nombre: string,
   apellidos: string,
   fecha_nacimiento:  Date ,
   nacionalidad: string ,

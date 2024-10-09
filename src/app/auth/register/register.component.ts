@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { PoblacionService } from '../../services/poblacion.service';
+import { Poblacion } from '../../interfaces/poblacion';
 
 
 @Component({
@@ -13,11 +14,9 @@ import { PoblacionService } from '../../services/poblacion.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  registerForm: FormGroup;
+  registerForm!: FormGroup;
   selectedFile: File | null = null;
-  poblaciones: Array<{
-_id: any; id: number, nombre: string 
-}> = [];
+  poblaciones !: Array<Poblacion>;
 
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private poblacionService: PoblacionService) {
@@ -30,7 +29,7 @@ _id: any; id: number, nombre: string
       PASSWORD: ['', [Validators.required]],
       FECHANAC: ['', [Validators.required]],
       DIRECCION: [''],
-      ID_POBLACION: ['', Validators.required],
+      ID_POBLACION: [''],
       COD_POSTAL: [''],
       SEXO: [''],
       AVATAR: [''],
@@ -48,7 +47,7 @@ _id: any; id: number, nombre: string
   }
   
   loadPoblaciones(): void {
-    this.poblacionService.getPoblicaciones().subscribe((resp: { resultado: { _id: any; id: number; nombre: string; }[]; }) => {
+    this.poblacionService.getPoblacion().subscribe(resp => {
       this.poblaciones = resp.resultado;
     }, (error: any) => {
       console.error('Error loading poblaciones:', error);
@@ -64,8 +63,15 @@ _id: any; id: number, nombre: string
       });
 
       if (this.selectedFile) {
+        console.log('Archivo seleccionado:', this.selectedFile); // Agrega esto
         formData.append('myFile', this.selectedFile, this.selectedFile.name);
+      } else {
+        console.warn('No hay archivo seleccionado'); // Agrega esto
       }
+
+      console.log('Formulario válido:', this.registerForm.valid);
+
+      
 
       // Convertir FormData a objeto
       const formDataObject: {[key: string]: any} = {};
@@ -74,12 +80,23 @@ _id: any; id: number, nombre: string
       });
       console.log('FormData Object:', formDataObject);
 
-      this.authService.registro(formData).subscribe((response: any) => {
-        
-        this.router.navigate(['/login']);
-      }, (error: any) => {
-        console.error('Error during registration:', error);
-      });
+      this.authService.registro(formData).subscribe(
+        (response: any) => {
+          console.log('Registro exitoso:', response);
+          this.router.navigate(['/login']);
+        },
+        (error: any) => {
+          console.error('Error durante el registro:', error);
+          if (error.error) {
+            console.error('Detalles del error:', error.error);
+          }
+        }
+      );
+      
+    }
+    else{
+      console.log('NO ENTRA EN EL IF DE FORMULARIO VALIDO')
     }
   }
+
 }

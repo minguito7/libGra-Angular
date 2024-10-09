@@ -22,6 +22,7 @@
           </div>
     
           <button type="submit" class="btn btn-primary btn-block mt-4" [disabled]="loginForm.invalid">Login</button>
+          <button type="submit" class="btn btn-success btn-block mt-4" (click)="irARegistro()">Registro</button>
     
           <div *ngIf="errorMessage" class="alert alert-danger mt-3">
             <p>{{ errorMessage }}</p>

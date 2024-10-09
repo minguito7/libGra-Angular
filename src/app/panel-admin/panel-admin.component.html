@@ -1,45 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-library">
-    <a class="navbar-brand" href="#">LibGra</a>
-    <button class="navbar-toggler" type="button" id="boton-style-app" data-toggle="collapse" data-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <!-- Enlaces de la izquierda -->
-      <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link" href="/">Inicio</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Biblioteca</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Acerca de</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Contacto</a>
-        </li>
-        <li class="nav-item" *ngIf="(esAdmin || esSoid) && isLoggedIn">
-          <a class="nav-link" href="#">Panel de Administrador</a>
-          </li>
-      </ul>
-      <!-- Enlaces de la derecha -->
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item" *ngIf="!isLoggedIn">
-          <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
-        </li>
-        <li class="nav-item" *ngIf="!isLoggedIn">
-          <a class="nav-link" routerLink="/registro" routerLinkActive="active">Registro</a>
-        </li>
-        <li class="nav-item" *ngIf="isLoggedIn">
-          <a class="nav-link" id="csesion" (click)="logout()">Cerrar sesión</a>
-        </li>
-        <li class="nav-item" *ngIf="isLoggedIn">
-          <img [src]="this.fotoServ" class="rounded-circle" alt="User Image" style="width: 40px; height: 40px; margin-left: 10px;" (click)="irAAdministrarPerfil()">
-        </li>
-      </ul>
-    </div>
-  </nav>
+
 
 
 <!--pantalla-->
@@ -54,6 +13,8 @@
           <button (click)="selectSection('categories')">Categorías</button>
           <button (click)="selectSection('genres')">Géneros</button>
           <button (click)="selectSection('authors')">Autores</button>
+          <button (click)="selectSection('poblaciones')">Poblaciones</button>
+
         </nav>
       
         <!-- Sección Libros -->
@@ -96,7 +57,7 @@
                               <div class="mb-3">
                               <label for="id_autor" class="form-label">Autor:</label>
                               <select id="id_autor" formControlName="id_autor" class="form-select">
-                                  <option *ngFor="let autor of autores" [value]="autor._id">{{ autor.NOMBRE }} {{ autor.apellidos }}</option>
+                                  <option *ngFor="let autor of autores" [value]="autor._id">{{ autor.nombre }} {{ autor.apellidos }}</option>
                               </select>
                             
                               </div>
@@ -127,7 +88,7 @@
                               <div class="mb-3">
                               <label for="generos_libro" class="form-label">Géneros:</label>
                               <select id="generos_libro" formControlName="generos_libro" class="form-select" multiple>
-                                  <option *ngFor="let genero of generos" [value]="genero._id">{{ genero.NOMBRE }}</option>
+                                  <option *ngFor="let genero of generos" [value]="genero._id">{{ genero.nombre }}</option>
                                 </select>
                               </div>
                               
@@ -170,80 +131,9 @@
                       </div>
                   
                   </div>
-                  <!-- Modal para editar un libro -->
-                  <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show d-block': showModal}">
-                    <div class="modal-dialog modal-lg" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header bg-primary text-white">
-                          <h5 class="modal-title">Editar Libro</h5>
-                          <button type="button" class="btn-close" (click)="closeModal()"></button>
-                        </div>
-                        <div class="modal-body">
-                          <form [formGroup]="editLibroForm">
-                            <div class="row mb-3">
-                              <div class="col-md-6">
-                                <label for="titulo" class="form-label">Título</label>
-                                <input type="text" id="titulo" formControlName="titulo" class="form-control">
-                              </div>
-                              <div class="col-md-6">
-                                <label for="id_autor" class="form-label">Autor</label>
-                                <select id="id_autor" formControlName="id_autor" class="form-select">
-                                  <option *ngFor="let autor of autores" [value]="autor._id">{{ autor.nombre }} {{ autor.apellidos }}</option>
-                                </select>
-                              </div>
-                            </div>
+
                   
-                            <div class="row mb-3">
-                              <div class="col-md-6">
-                                <label for="categorias_libro" class="form-label">Categorías</label>
-                                <select id="categorias_libro" formControlName="categorias_libro" class="form-select" multiple>
-                                  <option *ngFor="let categoria of categorias" [value]="categoria._id">{{ categoria.nombre }}</option>
-                                </select>
-                              </div>
-                              <div class="col-md-6">
-                                <label for="generos_libro" class="form-label">Géneros</label>
-                                <select id="generos_libro" formControlName="generos_libro" class="form-select" multiple>
-                                  <option *ngFor="let genero of generos" [value]="genero._id">{{ genero.NOMBRE }}</option>
-                                </select>
-                              </div>
-                            </div>
                   
-                            <div class="row mb-3">
-                              <div class="col-md-6">
-                                <label for="isbn" class="form-label">ISBN</label>
-                                <input type="text" id="isbn" formControlName="isbn" class="form-control">
-                              </div>
-                              <div class="col-md-6">
-                                <label for="fecha_publicacion" class="form-label">Fecha de Publicación</label>
-                                <input type="date" id="fecha_publicacion" formControlName="fecha_publicacion" class="form-control">
-                              </div>
-                            </div>
-                  
-                            <div class="row mb-3">
-                              <div class="col-md-6">
-                                <label for="portada" class="form-label">Portada (imagen)</label>
-                                <input type="file" id="portada" (change)="onFileSelected($event, 'portada')" class="form-control">
-                              </div>
-                              <div class="col-md-6">
-                                <label for="archivo" class="form-label">Archivo (PDF)</label>
-                                <input type="file" id="archivo" (change)="onFileSelected($event, 'archivo')" class="form-control">
-                              </div>
-                            </div>
-                  
-                            <div class="mb-3">
-                              <label for="descripcion" class="form-label">Descripción</label>
-                              <textarea id="descripcion" formControlName="descripcion" class="form-control" rows="3"></textarea>
-                            </div>
-                  
-                            <div class="text-end">
-                              <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
-                              <button type="submit" class="btn btn-primary" (click)="onSubmit()">Guardar Cambios</button>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                   
 
               </div>
@@ -328,7 +218,7 @@
                     <td>{{ libro.titulo }}</td>
                     <td>{{ libro.id_autor.nombre }}</td>
                     <td>{{ libro.categorias_libro[0]?.nombre }}</td>
-                    <td>{{ libro.generos_libro[0]?.nombre }}</td>
+                    <td><p *ngFor="let genero of libro.generos_libro">{{ genero.nombre }}</p></td>
                     <td>{{ libro.isbn }}</td>
                     <td>{{ libro.fecha_publicacion | date: 'dd/MM/yyyy' }}</td>
                     <td>
@@ -343,7 +233,7 @@
                 </tbody>
               </table>
             </div>
-            
+
           </div>
           
         </div>
@@ -449,18 +339,206 @@
         <div *ngIf="selectedSection === 'genres'">
           <h2>Administrar Géneros</h2>
           <!-- Contenido de géneros -->
+          <div class="row mb-4">
+            <div class="col-lg-4 col-sm-12">
+              <!-- Añadir Categoría -->
+              <div [formGroup]="generoForm" class="d-flex align-items-center">
+                <input type="text" id="nombreGenero" formControlName="nombre" class="form-control me-2" placeholder="Nuevo Genero" 
+                       [class.is-invalid]="generoForm.get('nombre')?.invalid && generoForm.get('nombre')?.touched">
+                <button type="button" class="btn btn-brown" (click)="confirmAddGenero()">Añadir</button>
+              </div>
+              <div *ngIf="generoForm.get('nombre')?.invalid && generoForm.get('nombre')?.touched" class="text-danger mt-1">
+                El nombre de la Generos es requerido y debe tener al menos 3 caracteres.
+              </div>
+            </div>
+        
+            <div class="col-lg-4 col-sm-12">
+              <button type="button" class="btn btn-brown" (click)="mostrarGenero()">Mostrar Generos</button>
+            </div>
+            <div *ngIf="errorMessageGeneroDuplicateKey" class="error-message">
+              <p>{{ errorMessageGeneroDuplicateKey }}</p>
+            </div>
+            
+        
+          </div>
+        
+          <!-- Tabla de Categorías -->
+          <table *ngIf="showGeneros" class="table table-striped table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let genero of generos; let i = index">
+                <td>{{ genero.numGenero }}</td>
+                <td>{{ genero.nombre }}</td>
+                <td>
+                  <button class="btn btn-warning">Editar</button>
+                  <button class="btn btn-danger">Eliminar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       
         <!-- Sección Autores -->
         <div *ngIf="selectedSection === 'authors'">
           <h2>Administrar Autores</h2>
           <!-- Contenido de autores -->
+          <div class="row mb-4">
+            <div class="col-lg-4 col-sm-12">
+              <!-- Añadir Categoría -->
+              <!-- Botón para abrir el modal -->
+              <button type="button" class="btn btn-brown" data-bs-toggle="modal" data-bs-target="#autorModal">
+                Añadir Autor
+              </button>
+
+           
+            </div>
+        
+            <div class="col-lg-4 col-sm-12">
+              <button type="button" class="btn btn-brown" (click)="mostrarAutor()">Mostrar Autores</button>
+            </div>
+            <div *ngIf="errorMessageAutorDuplicateKey" class="error-message">
+              <p>{{ errorMessageAutorDuplicateKey }}</p>
+            </div>
+
+            <div class="col-lg-4 col-sm-12">
+
+            </div>
+            
+        
+          </div>
+        
+          <!-- Tabla de Autores -->
+          <table *ngIf="showAutores" class="table table-striped table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>                
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Opciones</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let autor of autores; let i = index">
+                <td>{{ autor.numPoblacion }}</td>
+                <td>{{ autor.nombre }}</td>
+                <td> {{autor.apellidos}}</td>
+
+                <td>
+                  <button class="btn btn-success">Ver Libros</button>
+                  <button class="btn btn-warning">Editar</button>
+                  <button class="btn btn-danger">Eliminar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Modal -->
+<div class="modal fade" id="autorModal" tabindex="-1" aria-labelledby="autorModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="autorModalLabel">Añadir Autor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Formulario dentro del modal -->
+        <form [formGroup]="autoresForm">
+          <div class="mb-3">
+            <label for="nombreAutor" class="form-label">Nombre</label>
+            <input type="text" id="nombreAutor" formControlName="nombre" class="form-control" placeholder="Nombre del Autor"
+                   [class.is-invalid]="autoresForm.get('nombre')?.invalid && autoresForm.get('nombre')?.touched">
+            <div *ngIf="autoresForm.get('nombre')?.invalid && autoresForm.get('nombre')?.touched" class="text-danger">
+              El nombre del autor es requerido y debe tener al menos 3 caracteres.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="apellidosAutor" class="form-label">Apellidos</label>
+            <input type="text" id="apellidosAutor" formControlName="apellidos" class="form-control" placeholder="Apellidos del Autor"
+                   [class.is-invalid]="autoresForm.get('apellidos')?.invalid && autoresForm.get('apellidos')?.touched">
+          </div>
+          <div class="mb-3">
+            <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+            <input type="date" id="fecha_nacimiento" formControlName="fecha_nacimiento" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="nacionalidad" class="form-label">Nacionalidad</label>
+            <input type="text" id="nacionalidad" formControlName="nacionalidad" class="form-control" placeholder="Nacionalidad">
+          </div>
+          <div class="mb-3">
+            <label for="generos_autor" class="form-label">Géneros</label>
+            <select id="generos_autor" formControlName="generos_autor" class="form-select" multiple>
+              <!-- Opciones para los géneros -->
+              <option *ngFor="let genero of generos" [value]="genero._id">{{ genero.nombre }}</option>
+            </select>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-brown" (click)="confirmAddAutor()">Añadir Autor</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+        <div *ngIf="selectedSection === 'poblaciones'">
+          <h2>Administrar Poblaciones</h2>
+          <!-- Contenido de autores -->
+           <div class="row mb-4">
+            <div class="col-lg-4 col-sm-12">
+              <!-- Añadir Categoría -->
+              <div [formGroup]="poblacionesForm" class="d-flex align-items-center">
+                <input type="text" id="nombrePoblacion" formControlName="nombre" class="form-control me-2" placeholder="Nueva Población" 
+                       [class.is-invalid]="poblacionesForm.get('nombre')?.invalid && poblacionesForm.get('nombre')?.touched">
+                <button type="button" class="btn btn-brown" (click)="confirmAddPoblacion()">Añadir</button>
+              </div>
+              <div *ngIf="poblacionesForm.get('nombre')?.invalid && poblacionesForm.get('nombre')?.touched" class="text-danger mt-1">
+                El nombre de la población es requerido y debe tener al menos 3 caracteres.
+              </div>
+            </div>
+        
+            <div class="col-lg-4 col-sm-12">
+              <button type="button" class="btn btn-brown" (click)="mostrarPoblaciones()">Mostrar Poblaciones</button>
+            </div>
+            <div *ngIf="errorMessagePoblacionesDuplicateKey" class="error-message">
+              <p>{{ errorMessagePoblacionesDuplicateKey }}</p>
+            </div>
+            
+        
+          </div>
+        
+          <!-- Tabla de Categorías -->
+          <table *ngIf="showPoblaciones" class="table table-striped table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let poblacion of poblaciones; let i = index">
+                <td>{{ poblacion.numPoblacion }}</td>
+                <td>{{ poblacion.nombre }}</td>
+                <td>
+                  <button class="btn btn-warning">Editar</button>
+                  <button class="btn btn-danger">Eliminar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
       
 </div>
 
 
-<footer class="footer-library mt-5">
-    <p>&copy; 2024 BookApp. Todos los derechos reservados.</p>
-</footer>

@@ -15,7 +15,7 @@ export class BookService {
   addBook(libro: FormData, options: { reportProgress: boolean; observe: string; }): Observable<any> {
     const token = localStorage.getItem('Bearer');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  
+    console.log(libro)
     // Incluye las opciones de reportProgress y observe en la llamada HTTP
     return this.http.post(`${this.apiUrl}/add-libro`, libro, {
       headers: headers,
@@ -33,6 +33,12 @@ export class BookService {
     const token = localStorage.getItem('Bearer');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(`${this.apiUrl}/${bookId}`, { headers});
+  }
+
+  getArchivoBook(bookId:string): Observable<any>{
+    const token = localStorage.getItem('Bearer');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${this.apiUrl}/devolver-url/${bookId}`, { headers });
   }
   getBooksActivos(): Observable<any> {
     return this.http.get(`${this.apiUrl}/activos`);
@@ -57,7 +63,11 @@ export class BookService {
   getArchivoLibro(bookId:string): Observable<any> {
       const token = localStorage.getItem('Bearer');
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-      return this.http.get(`${this.apiUrl}/descargar-libro/${bookId}`, { headers});
+
+      return this.http.get(`${this.apiUrl}/descargar-libro/${bookId}`, { 
+        headers: headers,
+        responseType: 'blob'
+      });
       }
 
   cambiarEstadoLibro(bookId: string): Observable<any> {
@@ -69,7 +79,9 @@ export class BookService {
   updateLibro(libroId: string, data: FormData): Observable<any> {
     const token = localStorage.getItem('Bearer');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-        return this.http.put(`${this.apiUrl}/edit-libro/${libroId}`, data,{headers, responseType: 'blob'})
+        console.log(libroId)
+        
+        return this.http.put(`${this.apiUrl}/edit-libro/${libroId}`, data ,{headers, responseType: 'blob'})
   }
      
 }

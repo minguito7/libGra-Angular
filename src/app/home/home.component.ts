@@ -17,6 +17,11 @@ import Swiper from 'swiper/bundle';
 import 'swiper/swiper-bundle.css';
 import { DatePipe } from '@angular/common';
 import { PdfStorageService } from '../services/pdf.service';
+import { Usuario } from '../interfaces/usuario';
+import { Categoria } from '../interfaces/categoria';
+import { Libro } from '../interfaces/libro';
+import { Genero } from '../interfaces/genero';
+import { Autor } from '../interfaces/autor';
 
 @Component({
   selector: 'app-home',
@@ -27,10 +32,10 @@ import { PdfStorageService } from '../services/pdf.service';
 export class HomeComponent implements OnInit {
   selectedPortada: File | undefined;
   selectedArchivo: File | undefined;
-  usuario: any;
+  usuario!: Usuario;
   books: any[] = [];
   paginatedBooks: any[] = [];
-  booksNovedad: any[] = [];
+  booksNovedad!: Array<Libro>;
   baseUrl: string = 'http://localhost:3000/';
   poblacionForm: FormGroup;
   bookForm:FormGroup;
@@ -45,9 +50,9 @@ export class HomeComponent implements OnInit {
   fotoServ: string | undefined;
   showDropdown = false;
   selectedFile: any;
-  categorias: Array<{_id: any; id: number, NOMBRE: string}> = [];
-  generos: Array<{_id: any; id: number, NOMBRE: string }> = [];
-  autores: Array<{_id: any; id: number, NOMBRE: string, apellidos: string, fecha_nacimiento: Date, nacionalidad: string, generos_autor: ArrayBuffer }> = [];
+  categorias!: Array<Categoria>;
+  generos!: Array<Genero>;
+  autores!: Array<Autor>;
   progress = 0;
   isLoading = false; 
   currentPage: number = 1;
@@ -84,49 +89,25 @@ export class HomeComponent implements OnInit {
       resenas_libro: [],
   
      });
+     this.usuario = this.authService.getUsuario();
   }
   toggleDropdown(): void {
     this.showDropdown = !this.showDropdown;
   }
 
   ngOnInit() {
-    this.checkLoginStatus();
-
-
-    const token = localStorage.getItem('Bearer');
-    console.log("TOKEN DEL ALMACENAMIENTO LOCAL: "+ token);
-    if (token) {
-      const decodedToken: any = jwt_decode(token);
-      const userId = decodedToken.decodedToken;
-      this.authService.validateToken(token).subscribe(resp => {
-        this.fotoServ = this.baseUrl+resp.usuarioLogged.AVATAR;
-        this.determinarRol(resp.usuarioLogged);
-        this.authService.setUsuario(resp.usuarioLogged);
-
-        console.log(this.esAdmin + ' ' + this.esSoid + ' ' + this.esEditor + ' '+ this.esLector);
-        //const objectURL = URL.createObjectURL(this.fotoServ);
-        //this.photoUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-     
-      });
-    } 
+  this.checkLoginStatus();
+   console.log(this.usuario);
     this.loadBooks();
    
-    this.bookService.getNovedadesLibros().subscribe(response => {     
-      console.log(response);
-      this.booksNovedad = response.resultado;
-    });
-
-
-
-
-   
+  
     this.loadAutores();
     this.loadCategorias();
     this.loadGeneros();
     console.log(this.categorias +' '+this.generos);
     const swiper = new Swiper('.swiper-container', {
-      slidesPerView: 'auto', // Permite que el ancho de las diapositivas se ajuste automáticamente
-      spaceBetween: 25, // Espacio entre las diapositivas
+      slidesPerView: 1,  // Mostrar solo una tarjeta a la vez
+      spaceBetween: 10,  // Espacio entre slides, si quieres
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
@@ -134,11 +115,8 @@ export class HomeComponent implements OnInit {
       pagination: {
         el: '.swiper-pagination',
         clickable: true,
-      },      
-      autoplay: {
-        delay: 5000, // Cambia las diapositivas cada 5 segundos (puedes ajustar el tiempo)
-        disableOnInteraction: false, // Evita que el autoplay se detenga cuando el usuario interactúa con el carrusel
-      }
+      },
+      loop: true,  // Activar si quieres que el slider sea continuo
     });
   }
 
@@ -149,6 +127,30 @@ export class HomeComponent implements OnInit {
     });
   }
   
+  checkLoginStatus() {
+    const token = localStorage.getItem('Bearer');
+    console.log(token);
+    if (token) {
+      // Aquí podrías llamar a tu servicio para verificar el token
+      this.authService.validateToken(token).subscribe({
+        next: (response: {
+          usuarioLogged: any; valid: boolean; 
+          }) => {
+          console.log(response.usuarioLogged.AVATAR);
+          this.isLoggedIn = response.valid;
+          if (this.isLoggedIn) {
+            // Obtener la imagen de perfil del usuario (esto puede variar según tu implementación)
+            this.userProfileImage = response.usuarioLogged.AVATAR; // Cambia esto por la URL de la imagen del perfil
+            this.usuario = response.usuarioLogged;
+          }
+        },
+        error: () => {
+          this.isLoggedIn = false;
+        }
+      });
+    }
+  }
+
   loadBooks() {
     this.bookService.getBooksActivos().subscribe(data => {
       this.books = data.resultado; // Asegúrate de que data es un array
@@ -156,6 +158,13 @@ export class HomeComponent implements OnInit {
     }, error => {
       console.error('Error loading books:', error);
     });
+
+    this.bookService.getNovedadesLibros().subscribe(response => {     
+      console.log(response);
+      this.booksNovedad = response.resultado;
+    },error => {
+      console.error('Error loading books novedad:', error);
+    });  
   }
 
   updatePaginatedBooks() {
@@ -178,7 +187,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadCategorias(): void {
-    this.categoriaService.getCategorias().subscribe((resp: { resultado: { _id: any; id: number; NOMBRE: string; }[]; }) => {
+    this.categoriaService.getCategorias().subscribe(resp => {
       this.categorias = resp.resultado;
     }, (error: any) => {
       console.error('Error loading poblaciones:', error);
@@ -186,7 +195,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadAutores(): void {
-    this.autoresSevice.getAutores().subscribe((resp: { resultado: {_id: any; id: number, NOMBRE: string, apellidos: string, fecha_nacimiento: Date, nacionalidad: string, generos_autor: ArrayBuffer }[]; }) => {
+    this.autoresSevice.getAutores().subscribe(resp => {
       this.autores = resp.resultado;
     }, (error: any) => {
       console.error('Error loading poblaciones:', error);
@@ -194,7 +203,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadGeneros(): void {
-    this.generoService.getGeneros().subscribe((resp: { resultado: { _id: any; id: number; NOMBRE: string; }[]; }) => {
+    this.generoService.getGeneros().subscribe(resp => {
       this.generos = resp.resultado;
     }, (error: any) => {
       console.error('Error loading poblaciones:', error);
@@ -205,7 +214,7 @@ addPoblacion(){
   if (this.poblacionForm.valid) {
       const {nombre} = this.poblacionForm.value;
       
-    this.poblacionService.addPoblicacion(nombre).subscribe({
+    this.poblacionService.addPoblacion(nombre).subscribe({
       next: (response: any) => {
           console.log('AQUIII: ', nombre);
 
@@ -221,36 +230,7 @@ addPoblacion(){
   }
 }
 
-checkLoginStatus() {
-    const token = localStorage.getItem('Bearer');
-    console.log(token);
-    if (token) {
-      // Aquí podrías llamar a tu servicio para verificar el token
-      this.authService.validateToken(token).subscribe({
-        next: (response: {
-          usuarioLogged: any; valid: boolean; 
-          }) => {
-          console.log(response.usuarioLogged.AVATAR);
-          this.isLoggedIn = response.valid;
-          if (this.isLoggedIn) {
-            // Obtener la imagen de perfil del usuario (esto puede variar según tu implementación)
-            this.userProfileImage = response.usuarioLogged.AVATAR; // Cambia esto por la URL de la imagen del perfil
-          }
-        },
-        error: () => {
-          this.isLoggedIn = false;
-        }
-      });
-    }
-  }
-  logout() {
-    console.log("Logout button clicked!");
-    this.isLoggedIn = false;
-    // Redireccionar a la página de login
-    this.authService.logout();
-    this.router.navigate(['/']);
-    
-  }
+
 
   isLogged() {
     return this.authService.isLoggedIn;
@@ -323,6 +303,7 @@ checkLoginStatus() {
         if (this.selectedArchivo) {
           formData.append('files', this.selectedArchivo, this.selectedArchivo.name);
         }
+        console.log("ARCHIVO SELECCIONADO "+this.selectedArchivo)
   
         // Inicializar el progreso
         this.progress = 0;
@@ -399,12 +380,9 @@ checkLoginStatus() {
     }
   }
 
-  irAAdministrarPerfil(): void {
-    
-    this.router.navigate(['/perfil-user']);
-  }
+ 
   irLeerLibro(bookId: any){
-
+    console.log("Yendo a leer el libro: "+bookId);
     //const file: string =this.baseUrl+book;
     if (bookId) {
       this.pdfService.setPdfFile(bookId);
@@ -413,53 +391,7 @@ checkLoginStatus() {
 
     }
   }
-  irPanelControl():void{
-    this.router.navigate(['/panel-admin']);
-
-  }
-
-  irPanelContacto():void{
-    this.router.navigate(['/panel-contacto']);
-
-  }
+  
   
 }
 
-function base64UrlDecode(str: string): string {
-  // Reemplazar caracteres específicos de URL
-  str = str.replace(/-/g, '+').replace(/_/g, '/');
-
-  // Decodificar base64
-  const decodedStr = atob(str);
-
-  // Decodificar URI
-  return decodeURIComponent(
-    decodedStr
-      .split('')
-      .map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join('')
-  );
-}
-
-function jwt_decode(token: string): any {
-  try {
-    // Dividir el token en sus tres partes
-    const parts = token.split('.');
-
-    if (parts.length !== 3) {
-      throw new Error('El token JWT no tiene el formato adecuado');
-    }
-
-    // Decodificar la parte del payloadthis.fotoServ
-    const payload = parts[1];
-    const decodedPayload = base64UrlDecode(payload);
-
-    // Parsear el payload a un objeto JSON
-    return JSON.parse(decodedPayload);
-  } catch (error) {
-    console.error('Error decoding JWT:', error);
-    return null;
-  }
-}

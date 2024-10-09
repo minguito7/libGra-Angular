@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -14,8 +14,10 @@ export class GenerosService {
     return this.http.get(`${this.apiUrl}`);
   }
 
-  addGenero(nombre: String): Observable<any> {
-
-    return this.http.post(`${this.apiUrl}/add-genero`, {nombre});
+  addGenero(genero: FormData): Observable<any> {
+    const token = localStorage.getItem('Bearer');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
+    return this.http.post(`${this.apiUrl}/add-genero`, genero, {headers});
   }
 }

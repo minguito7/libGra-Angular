@@ -172,3 +172,7 @@ body {
 .modal-title {
   color: #8b4513; /* Texto en marrón */
 }
+
+ul{
+  list-style:none;
+}
