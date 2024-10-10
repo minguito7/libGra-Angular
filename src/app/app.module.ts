@@ -18,8 +18,9 @@ import { PanelAdminComponent } from './panel-admin/panel-admin.component';
 import { PanelContactoComponent } from './panel-contacto/panel-contacto.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { FooterComponent } from './shared/footer/footer.component';
-import { error404Componente } from './shared/404/404.component';
+import { error404Component } from './shared/404/404.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { PanelBibliotecaComponent } from './panel-biblioteca/panel-biblioteca.component';
 
 @NgModule({
   declarations: [
@@ -31,9 +32,10 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     BookReaderComponent,
     PanelAdminComponent,
     PanelContactoComponent,
+    PanelBibliotecaComponent,
     NavbarComponent,
     FooterComponent,
-    error404Componente
+    error404Component
   ],
   imports: [
     BrowserModule,

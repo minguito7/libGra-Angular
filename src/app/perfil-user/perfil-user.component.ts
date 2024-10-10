@@ -60,7 +60,7 @@ export class PerfilUserComponent implements OnInit {
         this.usuario = resp.usuarioLogged;
         //this.loadUserData(resp.usuarioLogged._id);
 
-        console.log(this.esAdmin + ' ' + this.esSoid + ' ' + this.esEditor + ' '+ this.esLector);
+        console.log(this.usuario);
         //const objectURL = URL.createObjectURL(this.fotoServ);
         //this.photoUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
      

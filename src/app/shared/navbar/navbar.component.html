@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" routerLink="/">LibGra</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto"> <!-- mr-auto empuja los elementos siguientes a la derecha -->
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/home" routerLinkActive="active">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/biblioteca" routerLinkActive="active">Biblioteca</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/panel-contacto" routerLinkActive="active">Contacto</a>
+      </li>
+      <li class="nav-item" *ngIf="esAdmin || esSoid">
+        <a class="nav-link" routerLink="/panel-admin" routerLinkActive="active">Panel Administrador</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav">
+      <!-- Condición para mostrar el botón de "Login" o "Cerrar sesión" -->
+      <li class="nav-item" *ngIf="!isLoggedIn">
+        <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
+      </li>
+      <li class="nav-item" *ngIf="!isLoggedIn">
+        <a class="nav-link" routerLink="/registro" routerLinkActive="active">Registro</a>
+      </li>
+      <li class="nav-item" *ngIf="isLoggedIn">
+        <a class="nav-link" (click)="logout()">Cerrar sesión</a>
+      </li>
+      <!-- Imagen del usuario -->
+      <li class="nav-item" *ngIf="isLoggedIn">
+        <img [src]="this.baseUrl+this.userProfileImage" class="rounded-circle" alt="User Image" style="width: 40px; height: 40px; margin-left: 10px;" (click)="irAPerfilUsu()">
+      </li>
+    </ul>
+  </div>
+</nav>

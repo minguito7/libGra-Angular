@@ -33,6 +33,8 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('Bearer');
+    this.isLoggedIn = false;
+    
     //this._userImage = 'path_to_default_user_image'; // Restablecer la imagen a la predeterminada al cerrar sesión
   }
 
@@ -72,7 +74,10 @@ export class AuthService {
     createdAt: new Date(),
     FECHANAC: new Date(),
     DIRECCION: '',
-    ID_POBLACION: {_id:'', nombre:'', numPoblacion:0}, // Referencia al esquema de poblacion
+    ID_POBLACION:{
+      nombre: '', numPoblacion: 0,
+      _id: ''
+    } , // Referencia al esquema de poblacion
     COD_POSTAL: '',
     TITULO1: '',
     SEXO: '',

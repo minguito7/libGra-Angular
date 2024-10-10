@@ -7,7 +7,7 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LibroLeidoService } from '../services/libro-leido.service';
 import 'swiper/swiper-bundle.css';
-import * as pdfjsLib from 'pdfjs-dist/build/pdf';
+//import * as pdfjsLib from 'pdfjs-dist/build/pdf';
 import { LibroLeido } from '../interfaces/libro-leido';
 import { Usuario } from '../interfaces/usuario';
 //import { loadPdfWorker } from '../shared/ng2-pdf-viewer-overridden'; // Cambia la ruta según tu estructura
