@@ -23,7 +23,6 @@ export const routes: Routes = [
   { path: 'panel-admin', component: PanelAdminComponent },
   { path: 'panel-contacto', component: PanelContactoComponent },
   { path: 'panel-biblioteca', component: PanelBibliotecaComponent },
-
   { path: '**', redirectTo: '' } // Redirige cualquier ruta desconocida a HomeComponent
 ];
 

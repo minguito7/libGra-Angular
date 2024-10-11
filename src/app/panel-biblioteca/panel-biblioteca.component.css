@@ -1,0 +1,61 @@
+.container{
+    margin-top: 50px;
+}
+
+
+  .carousel-caption {
+    background: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente para el texto */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+  }
+
+  .fixed-img {
+    object-fit: cover; /* Para asegurar que la imagen ocupe todo el espacio */
+
+    margin-left: 150px;
+    width: 200px;
+    height: 300px;
+    object-fit: cover; /* Mantiene la relación de aspecto */
+  }
+
+  /*BOTONES*/
+  .carousel-control-prev,
+.carousel-control-next {
+  background: none; /* Quitar fondo */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: black; /* Cambiar color a negro */
+}
+
+p button#botonVerMas {
+    color: #20b102; /* Cambia el color a uno que te guste */
+    cursor: pointer;
+    text-decoration: underline; /* Subrayado para parecer un enlace */
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+  }
+
+  p button#botonVerMenos {
+    color: #7e0303; /* Cambia el color a uno que te guste */
+    cursor: pointer;
+    text-decoration: underline; /* Subrayado para parecer un enlace */
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+  }
+  
+#divImg{
+   
+    margin-top: 50px;
+    height: 600px;
+    width: 300px;
+}
+#divText{
+    margin-bottom: 150px;
+}
+  

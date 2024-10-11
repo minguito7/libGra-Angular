@@ -20,4 +20,11 @@ export class GenerosService {
   
     return this.http.post(`${this.apiUrl}/add-genero`, genero, {headers});
   }
+
+  getLibrosGenero(generoId:string): Observable<any> {
+    const token = localStorage.getItem('Bearer');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
+    return this.http.get(`${this.apiUrl}/${generoId}`, {headers});
+  }
 }

@@ -1,1 +1,77 @@
-<p>panel-biblioteca works!</p>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item" *ngFor="let genero of generos">
+          <a class="nav-link" (click)="getLibrosGenero(genero._id)">{{ genero.nombre }}</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-1 col-lg-1 col-xl-1">
+        
+      </div>
+      <div class="col-sm-12 col-md-10 col-lg-10 col-xl-10">
+        <!--CARROUSEL NOVEDADES-->
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel"  data-bs-interval="5000">
+          <div class="carousel-inner">
+            <ng-container *ngFor="let libro of novedadesLibros; let i = index">
+              <div class="carousel-item" [class.active]="i === 0">
+                <div class="row">
+                  <!-- Parte izquierda: Imagen -->
+                  <div class="col-md-6" id="divImg">
+                    <img [src]="this.baseUrl + libro.portada" class="d-block fixed-img" alt="{{ libro.titulo }}">
+                  </div>
+                  <!-- Parte derecha: Información -->
+                  <div class="col-md-6 d-flex align-items-center">
+                    <div class="carousel-caption text-start" id="divText">
+                      <p><strong>{{ libro.titulo }}</strong></p>
+                      <p>
+                        {{ isExpanded ? libro.descripcion : (libro.descripcion.trim().length > 400 ? (libro.descripcion | slice:0:400) + '...' : libro.descripcion) }}
+                        <button *ngIf="(libro.descripcion.trim().length > 400) && !isExpanded" (click)="toggleDescription()" id="botonVerMas">
+                          {{ isExpanded ? 'Ver menos' : 'Ver más' }}
+                        </button>
+                        <button *ngIf="(libro.descripcion.trim().length > 400) && isExpanded" (click)="toggleDescription()" id="botonVerMenos">
+                          {{ isExpanded ? 'Ver menos' : 'Ver más' }}
+                        </button>
+                      </p>
+                     </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          
+          <!-- Controles del carrusel -->
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+        <!--BIBLIOTECA LIBROS ACTIVOS-->
+
+      </div>
+      <div class="col-md-1 col-lg-1 col-xl-1">
+        
+      </div>
+    </div>
+  </div>
+
+
+  
+  
+  
+  
+  
+  
+  
+  
