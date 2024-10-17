@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service'; // Asegúrate de importar tu servicio de autenticación
 import { Router } from '@angular/router';
+import { Usuario } from '../../interfaces/usuario';
 
 @Component({
   selector: 'app-navbar',
@@ -12,7 +13,7 @@ export class NavbarComponent implements OnInit {
 
   isLoggedIn: boolean = false;
   userProfileImage: string | null = null;
-
+  usuario !: Usuario;
   esAdmin: boolean = false;
   esEditor: boolean = false;
   esSoid: boolean = false;
@@ -25,8 +26,19 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.checkLoginStatus();
     console.log(this.isLoggedIn);
+
+    this.authService.isLoggedIn$.subscribe(loggedIn => {
+      this.isLoggedIn = loggedIn;
+    });
+
+    this.authService.usuario$.subscribe(usuario => {
+      this.usuario = usuario;
+    })
   }
 
+  ngAfterViewInit(){
+    this.checkLoginStatus();
+  }
 
   checkLoginStatus() {
     const token = localStorage.getItem('Bearer');
@@ -61,7 +73,7 @@ export class NavbarComponent implements OnInit {
   }
 
   isLogged() {
-    return this.authService.isLoggedIn;
+    return this.authService.isLoggedIn$;
   }
   irAPerfilUsu(){
     //console.log("Yendo a leer el libro: "); 

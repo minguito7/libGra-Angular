@@ -2,19 +2,25 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Usuario } from '../interfaces/usuario';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
- 
-  isLoggedIn = false;
   private apiUrl = 'http://localhost:3000/auth';
   private _userImage = 'path_to_default_user_image';
   private usuarioLogueado!: Usuario;
-  
+
+  //PRUEBA
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  public isLoggedIn$ = this.isLoggedInSubject.asObservable();
+  private usuarioSubject = new BehaviorSubject<any>(null);
+  public usuario$ = this.usuarioSubject.asObservable();
+
+
+
   constructor(private http: HttpClient) { }
 
   login(email: string, password: string): Observable<any> {
@@ -22,7 +28,7 @@ export class AuthService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     }); 
-    this.isLoggedIn = true;
+    this.isLoggedInSubject.next(true);
     return this.http.post<any>(`${this.apiUrl}/login`, body, { headers });
 
   }
@@ -33,7 +39,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('Bearer');
-    this.isLoggedIn = false;
+    this.isLoggedInSubject.next(false);
     
     //this._userImage = 'path_to_default_user_image'; // Restablecer la imagen a la predeterminada al cerrar sesión
   }
@@ -48,12 +54,21 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/usuarios/${userId}`, { headers, responseType: 'blob' });
   }
 
- validateToken(token: string): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.get<any>(`${this.apiUrl}/validate-token`, { headers });
-  }
+// Método para validar el token
+validateToken(token: string): Observable<any> {
+  return this.http.get<{ valid: boolean; usuarioLogged: any }>(`${this.apiUrl}/validate-token`, {
+    headers: { Authorization: `Bearer ${token}` },
+  }).pipe(
+    tap(response => {
+      this.isLoggedInSubject.next(response.valid);
+      if (response.valid) {
+        this.usuarioSubject.next(response.usuarioLogged);
+      } else {
+        this.usuarioSubject.next(null);
+      }
+    })
+  );
+}
   setUsuario(usuario: Usuario): void {
     this.usuarioLogueado = usuario;
   }

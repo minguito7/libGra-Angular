@@ -189,7 +189,7 @@ export class PanelAdminComponent implements OnInit {
   }
 
   isLogged() {
-    return this.authService.isLoggedIn;
+    return this.authService.isLoggedIn$;
   }
   
   isAdmin(user: { ROLE: string | string[]; }){

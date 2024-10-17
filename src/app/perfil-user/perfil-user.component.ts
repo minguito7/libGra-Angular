@@ -117,7 +117,7 @@ export class PerfilUserComponent implements OnInit {
     
   }
   isLogged() {
-    return this.authService.isLoggedIn;
+    return this.authService.isLoggedIn$;
   }
   isLector(user: { ROLE: string | string[]; }){
     return user.ROLE.includes('lector');

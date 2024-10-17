@@ -233,7 +233,7 @@ addPoblacion(){
 
 
   isLogged() {
-    return this.authService.isLoggedIn;
+    return this.authService.isLoggedIn$;
   }
   
   isAdmin(user: { ROLE: string | string[]; }){

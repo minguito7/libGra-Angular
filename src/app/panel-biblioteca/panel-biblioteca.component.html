@@ -23,13 +23,16 @@
             <ng-container *ngFor="let libro of novedadesLibros; let i = index">
               <div class="carousel-item" [class.active]="i === 0">
                 <div class="row">
+                  <div class="col-md-1">
+
+                  </div>
                   <!-- Parte izquierda: Imagen -->
-                  <div class="col-md-6" id="divImg">
+                  <div class="col-md-4" id="divImg">
                     <img [src]="this.baseUrl + libro.portada" class="d-block fixed-img" alt="{{ libro.titulo }}">
                   </div>
                   <!-- Parte derecha: Información -->
-                  <div class="col-md-6 d-flex align-items-center">
-                    <div class="carousel-caption text-start" id="divText">
+                  <div class="col-md-6 d-flex align-items-center" id="divText">
+                    <div class="carousel-caption text-start" >
                       <p><strong>{{ libro.titulo }}</strong></p>
                       <p>
                         {{ isExpanded ? libro.descripcion : (libro.descripcion.trim().length > 400 ? (libro.descripcion | slice:0:400) + '...' : libro.descripcion) }}
@@ -41,6 +44,9 @@
                         </button>
                       </p>
                      </div>
+                  </div>
+                  <div class="col-md-1">
+
                   </div>
                 </div>
               </div>
@@ -59,12 +65,173 @@
         </div>
         <!--BIBLIOTECA LIBROS ACTIVOS-->
 
+        <div class="container">
+          
+          <!-- Campo de búsqueda general -->
+  <div class="row mb-4" *ngIf="!clickGenero">
+        <div class="col-md-6">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Buscar libros..."
+            (input)="onSearch($event)"
+          />
+        </div>
+      </div>
+
+      <!-- Campo de búsqueda para libros por género -->
+      <div class="row mb-4" *ngIf="clickGenero">
+        <div class="col-md-6">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Buscar libros en {{searchGenero.toLocaleLowerCase()}}..."
+            (input)="onSearchGenero($event)"
+          />
+        </div>
+      </div>
+        
+          <!-- Biblioteca de libros (cuando no hay búsqueda activa) -->
+          <div *ngIf="!isSearching && libros.length && !clickGenero" class="row mt-4">
+            <h5>BIBLIOTECA DE LIBROS</h5>
+            <div *ngFor="let book of libros | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" class="col-md-4 mb-4">
+              <div class="card-container">
+                <div class="card">
+                  <div class="card-front" [ngStyle]="{'background-image': 'url(' + baseUrl + book.portada + ')'}">
+                    <h5 class="card-title">{{ book.titulo }}</h5>
+                  </div>
+                  <div class="card-back">
+                    <div class="card-body">
+                      <p class="card-text"><strong>ISBN: </strong> {{ book.isbn }}</p>
+                      <p class="card-text"><strong>Fecha de Publicación:</strong> {{ book.fecha_publicacion | date:'dd/MM/yyyy' }}</p>
+                      <p class="card-text">{{ book.id_autor.nombre + ' ' + book.id_autor.apellidos || 'No hay autor disponible.' }}</p>
+                      <a (click)="irLeerLibro(book._id)" class="btn btn-primary" *ngIf="book.archivo && isLoggedIn">Ver Archivo</a>
+                      <a [href]="book.resenas_libro.length ? '/resenas/' + book.id_autor : ''" class="btn btn-secondary" *ngIf="book.resenas_libro.length && isLoggedIn">Leer Reseñas</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+          </div>
+        
+          <!-- Resultados de la búsqueda -->
+          <div *ngIf="isSearching && filteredLibros.length && !clickGenero" class="row mt-4">
+            <h5>RESULTADOS DE BÚSQUEDA</h5>
+            <div *ngFor="let book of filteredLibros | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" class="col-md-4 mb-4">
+              <div class="card-container">
+                <div class="card">
+                  <div class="card-front" [ngStyle]="{'background-image': 'url(' + baseUrl + book.portada + ')'}">
+                    <h5 class="card-title">{{ book.titulo }}</h5>
+                  </div>
+                  <div class="card-back">
+                    <div class="card-body">
+                      <p class="card-text"><strong>ISBN: </strong> {{ book.isbn }}</p>
+                      <p class="card-text"><strong>Fecha de Publicación:</strong> {{ book.fecha_publicacion | date:'dd/MM/yyyy' }}</p>
+                      <p class="card-text">{{ book.id_autor.nombre + ' ' + book.id_autor.apellidos || 'No hay autor disponible.' }}</p>
+                      <a (click)="irLeerLibro(book._id)" class="btn btn-primary" *ngIf="book.archivo && isLoggedIn">Ver Archivo</a>
+                      <a [href]="book.resenas_libro.length ? '/resenas/' + book.id_autor : ''" class="btn btn-secondary" *ngIf="book.resenas_libro.length && isLoggedIn">Leer Reseñas</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+          </div>
+        
+          <!-- Biblioteca de libros por género -->
+          <div *ngIf="librosGeneroIndicado.length && !filteredLibrosGenero.length && clickGenero" class="row mt-4">
+            <h5>BIBLIOTECA DE LIBROS: {{searchGenero.toLocaleUpperCase()}}</h5>
+            <div *ngFor="let book of librosGeneroIndicado | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" class="col-md-4 mb-4">
+              <div class="card-container">
+                <div class="card">
+                  <div class="card-front" [ngStyle]="{'background-image': 'url(' + baseUrl + book.portada + ')'}">
+                    <h5 class="card-title">{{ book.titulo }}</h5>
+                  </div>
+                  <div class="card-back">
+                    <div class="card-body">
+                      <p class="card-text"><strong>ISBN: </strong> {{ book.isbn }}</p>
+                      <p class="card-text"><strong>Fecha de Publicación:</strong> {{ book.fecha_publicacion | date:'dd/MM/yyyy' }}</p>
+                      <p class="card-text">{{ book.id_autor.nombre + ' ' + book.id_autor.apellidos || 'No hay autor disponible.' }}</p>
+                      <a (click)="irLeerLibro(book._id)" class="btn btn-primary" *ngIf="book.archivo && isLoggedIn">Ver Archivo</a>
+                      <a [href]="book.resenas_libro.length ? '/resenas/' + book.id_autor : ''" class="btn btn-secondary" *ngIf="book.resenas_libro.length && isLoggedIn">Leer Reseñas</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+          </div>
+        </div>
+         <!-- Resultados de la búsqueda en libros por género -->
+  <div *ngIf="filteredLibrosGenero.length && clickGenero" class="row mt-4">
+    <h5>RESULTADOS DE BÚSQUEDA EN EL GÉNERO: {{ searchGenero.toLocaleUpperCase() }}</h5>
+    <div *ngFor="let book of filteredLibrosGenero | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" class="col-md-4 mb-4">
+      <!-- Tarjetas de libros filtrados por género -->
+      <div class="card-container">
+        <div class="card">
+          <div class="card-front" [ngStyle]="{'background-image': 'url(' + baseUrl + book.portada + ')'}">
+            <h5 class="card-title">{{ book.titulo }}</h5>
+          </div>
+          <div class="card-back">
+            <div class="card-body">
+              <p class="card-text"><strong>ISBN: </strong> {{ book.isbn }}</p>
+              <p class="card-text"><strong>Fecha de Publicación:</strong> {{ book.fecha_publicacion | date:'dd/MM/yyyy' }}</p>
+              <p class="card-text">{{ book.id_autor.nombre + ' ' + book.id_autor.apellidos || 'No hay autor disponible.' }}</p>
+              <a (click)="irLeerLibro(book._id)" class="btn btn-primary" *ngIf="book.archivo && isLoggedIn">Ver Archivo</a>
+              <a [href]="book.resenas_libro.length ? '/resenas/' + book.id_autor : ''" class="btn btn-secondary" *ngIf="book.resenas_libro.length && isLoggedIn">Leer Reseñas</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+  </div>
+        
+        
+        
+      
+    
+    
       </div>
       <div class="col-md-1 col-lg-1 col-xl-1">
         
       </div>
     </div>
   </div>
+
+  <!-- Modal SINO ESTA LOGUEADO-->
+
+  <!-- Botón para abrir el modal -->
+<button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#loginModal" #loginModalButton>
+  Iniciar sesión
+</button>
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">Iniciar sesión o registrarse</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Aquí puedes incluir tus formularios de inicio de sesión y registro -->
+        <form (ngSubmit)="onLogin()">
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" [(ngModel)]="loginData.email" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="password" [(ngModel)]="loginData.password" name="password" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+        </form>
+
+        <p class="text-center">¿No tienes cuenta? <a href="#">Registrarse</a></p>
+      </div>
+    </div>
+  </div>
+</div>
 
 
   

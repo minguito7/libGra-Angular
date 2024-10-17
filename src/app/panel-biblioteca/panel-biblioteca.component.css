@@ -1,18 +1,15 @@
 .container{
-    margin-top: 50px;
+    margin-top: 25px;
 }
 
 
   .carousel-caption {
     background: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente para el texto */
-    padding: 20px; /* Espaciado interno */
+    padding: 5px; /* Espaciado interno */
     border-radius: 5px; /* Bordes redondeados */
   }
 
   .fixed-img {
-    object-fit: cover; /* Para asegurar que la imagen ocupe todo el espacio */
-
-    margin-left: 150px;
     width: 200px;
     height: 300px;
     object-fit: cover; /* Mantiene la relación de aspecto */
@@ -50,12 +47,88 @@ p button#botonVerMas {
   }
   
 #divImg{
-   
-    margin-top: 50px;
-    height: 600px;
+    /*height: 600px;*/
     width: 300px;
 }
 #divText{
-    margin-bottom: 150px;
+  height: calc(100vh - 200px);;
+  width: 500px;
+    margin-bottom: 10px;
 }
   
+/* CARDS BODY PRINCIPAL*/
+.card-container {
+  perspective: 1000px;
+  margin: 10px;
+  width: 200px; /* Ancho específico */
+  height: 300px; /* Alto específico */
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-image: ('src/assets/libgra-ingles.png');
+}
+
+.card-container:hover .card {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.card-front {
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-front .card-title {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 5px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.card-back {
+  background-color: white;
+  transform: rotateY(180deg);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-back .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.btn-primary{
+  background-color: #6f4e37;
+  color: #fff3e6;
+  text-align: center;
+  padding: 10px 0;
+  font-family: 'Georgia', serif;  
+}
+#verArchivo{
+  align-items: center;
+  text-align: center;
+
+  
+}
