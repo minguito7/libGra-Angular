@@ -1,0 +1,40 @@
+<nav class="flex items-center bg-libgra_naranja shadow-md m-3 p-2">
+  <a class="text-white font-bold text-xl mx-3" routerLink="/">
+    <img src="assets/logo1.png" alt="LibGra Logo" class="h-8"> <!-- Ajusta la altura según sea necesario -->
+  </a>
+  <button class="ml-auto lg:hidden p-2 text-white focus:outline-none" type="button" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="libgra-material-icon">menu</span>
+  </button>
+  
+
+  <div class="hidden lg:flex lg:items-center lg:space-x-6 w-full justify-between" id="navbarNav">
+    <ul class="flex space-x-4">
+      <li class="nav-item">
+        <a class="text-white hover:text-yellow-300" routerLink="/home" routerLinkActive="font-bold">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="text-white hover:text-yellow-300" routerLink="/panel-biblioteca" routerLinkActive="font-bold">Biblioteca</a>
+      </li>
+      <li class="nav-item">
+        <a class="text-white hover:text-yellow-300" routerLink="/panel-contacto" routerLinkActive="font-bold">Contacto</a>
+      </li>
+      <li class="nav-item" *ngIf="esAdmin || esSoid">
+        <a class="text-white hover:text-yellow-300" routerLink="/panel-admin" routerLinkActive="font-bold">Panel Administrador</a>
+      </li>
+    </ul>
+    <ul class="flex items-center space-x-4">
+      <li class="nav-item" *ngIf="!isLoggedIn">
+        <a class="text-white hover:text-yellow-300" routerLink="/login" routerLinkActive="font-bold">Login</a>
+      </li>
+      <li class="nav-item" *ngIf="!isLoggedIn">
+        <a class="text-white hover:text-yellow-300" routerLink="/registro" routerLinkActive="font-bold">Registro</a>
+      </li>
+      <li class="nav-item" *ngIf="isLoggedIn">
+        <a class="text-white hover:text-yellow-300 cursor-pointer" (click)="logout()">Cerrar sesión</a>
+      </li>
+      <li class="nav-item" *ngIf="isLoggedIn">
+        <img [src]="this.baseUrl+this.userProfileImage" class="rounded-full w-10 h-10 ml-2 cursor-pointer" alt="User Image" (click)="irAPerfilUsu()">
+      </li>
+    </ul>
+  </div>
+</nav>

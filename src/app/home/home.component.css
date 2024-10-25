@@ -1,0 +1,433 @@
+/* Skeleton Loader Styles */
+.skeleton-loader {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .skeleton-card {
+    width: 100%;
+    max-width: 100%;
+    height: 250px;
+    background: #e0e0e0;
+    border-radius: 8px;
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+  .navbar-library {
+    background-color: #6f4e37;
+}
+
+.navbar-library .nav-link {
+    color: #fff3e6;
+}
+
+.navbar-library .nav-link:hover {
+    color: #ffd9b3;
+}
+
+.navbar-library .navbar-brand {
+    color: #fff3e6;
+    font-family: 'Georgia', serif;
+}
+
+.navbar-library .nav-item .btn {
+    color: #6f4e37;
+    background-color: #fff3e6;
+    border: 1px solid #fff3e6;
+    border-radius: 5px;
+    margin-left: 10px;    
+    object-fit: cover;
+}
+
+.navbar-library .nav-item .btn:hover {
+    color: #fff3e6;
+    background-color: #6f4e37;
+    border-color: #6f4e37;
+}
+
+.footer-library {
+    background-color: #6f4e37;
+    color: #fff3e6;
+    text-align: center;
+    padding: 10px 0;
+    font-family: 'Georgia', serif;
+}
+
+.banner {
+    height: 300px;
+    background-color: #d3c6b1;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-family: 'Georgia', serif;
+}
+
+.ad-container {
+    background-color: #fff200;
+    padding: 0;
+    margin: 0;
+    border: 1px solid black;
+}
+
+.ad-sidebar {
+    padding: 0;
+    margin: 0;
+    height: 300px;
+}
+
+/*AÑADIR LIBRO*/
+.book-form {
+    background-color: #d3c6b1; /* Similar al fondo del banner */
+    padding: 20px;
+    border-radius: 8px;
+    font-family: 'Georgia', serif;
+    color: #6f4e37; /* Texto en el mismo tono marrón */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button #book-form{
+    color: #6f4e37; /* Texto en el mismo tono marrón */
+    border-radius: 8px;
+    font-weight: bold;
+    font-family: 'Georgia', serif;
+
+}
+
+.book-form .form-group label {
+    color: #6f4e37;
+    font-weight: bold;
+}
+
+.book-form .form-control {
+    border: 1px solid #6f4e37;
+    border-radius: 5px;
+    background-color: #fff3e6; /* Fondo claro similar a los botones */
+    color: #6f4e37;
+}
+
+.book-form .form-control:focus {
+    border-color: #6f4e37;
+    box-shadow: 0 0 5px rgba(111, 78, 55, 0.5);
+}
+
+.book-form .btn-primary {
+    background-color: #6f4e37;
+    color: #fff3e6;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-family: 'Georgia', serif;
+    transition: background-color 0.3s ease;
+}
+
+.book-form .btn-primary:hover {
+    background-color: #8c6b54; /* Un poco más oscuro para el hover */
+    color: #fff3e6;
+}
+
+.book-form .btn-secondary {
+    background-color: #8c6b54;
+    color: #fff3e6;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-family: 'Georgia', serif;
+    transition: background-color 0.3s ease;
+}
+
+.book-form .btn-secondary:hover {
+    background-color: #6f4e37;
+    color: #fff3e6;
+}
+
+
+
+
+
+#contenido {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ocupa todo el alto de la ventana para centrar el contenido */
+    text-align: center;
+  }
+  
+  .card-container {
+    perspective: 1000px;
+    margin: 10px;
+    width: 200px; /* Ancho específico */
+    height: 300px; /* Alto específico */
+  }
+  
+  .card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .card-container:hover .card {
+    transform: rotateY(180deg);
+  }
+  
+  .card-front, .card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+  }
+  
+  .card-front {
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card-front .card-title {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px;
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  .card-back {
+    background-color: white;
+    transform: rotateY(180deg);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .card-back .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+/*carrousel novedades*/
+.container-novedades {
+    width: 100%; /* Ocupa todo el ancho disponible */
+    padding: 0 20px; /* Opcional: añadir algo de relleno a los lados */
+}
+
+#square {
+    width: 100%; /* Ocupa todo el ancho del contenedor */
+    height: 250px; /* Altura fija de 250px */
+    background-color: #3498db; /* Color de fondo opcional */
+}
+
+
+li a#csesion{
+  color: rgb(255, 0, 0);
+  cursor: pointer;   
+}
+
+.custom-select-wrapper {
+    position: relative;
+}
+
+.custom-select {
+    border-radius: 0.375rem; /* Bordes redondeados */
+    box-shadow: 0 0 0.125rem rgba(0, 0, 0, 0.075); /* Sombra sutil */
+    padding: 0.5rem 1rem; /* Espaciado interno */
+    background-color: #f8f9fa; /* Fondo claro */
+}
+
+.custom-select option {
+    padding: 0.5rem; /* Espaciado para opciones */
+}
+
+.custom-select:focus {
+    border-color: #007bff; /* Color del borde en foco */
+    box-shadow: 0 0 0.125rem rgba(0, 0, 0, 0.075); /* Sombra en foco */
+}
+
+/* Estilo para opciones seleccionadas */
+.custom-select option:checked {
+    background-color: #007bff; /* Fondo azul */
+    color: #fff; /* Texto blanco */
+}
+
+/*BOTONES*/
+.btn-primary{
+    background-color: #6f4e37;
+    color: #fff3e6;
+    text-align: center;
+    padding: 10px 0;
+    font-family: 'Georgia', serif;  
+}
+#verArchivo{
+    align-items: center;
+    text-align: center;
+
+    
+}
+
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.25em;
+  }
+
+/* Configura el contenedor del Swiper */
+.swiper-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  /* Configura el contenedor de las diapositivas */
+  .swiper-wrapper {
+    display: flex;
+    flex-direction: row; /* Asegura que las diapositivas se alineen horizontalmente */
+  }
+  
+  /* Configura el contenedor del Swiper */
+.swiper-container {
+    width: 100%;
+    
+    overflow: hidden;
+  }
+  
+  /* Configura el contenedor de las diapositivas */
+  .swiper-wrapper {
+    display: flex;
+  }
+  
+  /* Configura cada diapositiva */
+  .swiper-slide {
+    width: 200px !important;
+    height:400px; /* Ancho fijo de cada diapositiva */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    flex-shrink: 0; /* Evita que las diapositivas se reduzcan de tamaño */
+  }
+  
+  /* Configura el estilo de la tarjeta del producto */
+  .product-card {
+    width: 100%; /* La tarjeta ocupa todo el ancho de la diapositiva */
+    height: 100%; /* La tarjeta ocupa toda la altura de la diapositiva */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Estilo de los botones de navegación */
+  .swiper-button-next, .swiper-button-prev {
+    color: #ff0000; /* Personaliza el color aquí */
+  }
+  
+  /* Estilo de los puntos de paginación */
+  .swiper-pagination-bullet {
+    background: #000;
+  }
+  
+  .disabled {
+    pointer-events: none;
+    
+  }
+
+  /*PRUEBA*/
+  .box:hover{
+    animation-play-state: paused;
+    
+}
+.box {
+    margin-top: 75px;
+    align-items: center;
+    position: relative;
+    width: 200px;
+    height: 350px;
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+    animation: animate 30s linear infinite;
+}
+
+@keyframes animate {
+    0% {
+        transform: perspective(1000px) rotateY(0deg);
+    }
+    100% {
+        transform: perspective(1000px) rotateY(360deg);
+    }
+}
+
+.box span {
+    position: absolute;
+    width: 75%;
+    height: 75%;
+    background: #fff;
+    transform: rotateY(calc(var(--i) * 45deg)) translateZ(240px);
+    display: flex;
+    flex-direction: column; /* Flex para que los elementos se apilen */
+    align-items: center;    /* Centra la imagen y el enlace horizontalmente */
+    justify-content: space-between; /* Espacio entre la imagen y el enlace */
+}
+
+.box span::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+}
+
+.box span img {
+    position: relative;
+    width: 150px;  /* Ancho fijo de 150px */
+    height: 285px; /* Alto fijo de 285px */
+    object-fit: contain; /* La imagen se ajusta al contenedor sin recortarse ni distorsionarse */
+    margin-bottom: 5px;
+    background-color: #f0f0f0; /* Opcional: añadir un fondo para ver claramente el espacio sobrante */
+}
+
+
+
+.box span p#bookNovedadTitulo {
+    position: relative;
+    z-index: 3;
+    text-decoration: none;
+    color: #000; /* Estilo del enlace */
+    margin-top: 5px; /* Añade un margen superior para separar del resto */
+    font-weight: bold;
+    text-align: center; /* Centra el texto */
+    padding: 2px 4px;
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo semitransparente */
+    border-radius: 2px;
+    font-size: 15px;
+    margin-bottom:5px;
+}
+
+.box span p#bookNovedadTitulo:hover {
+    background-color: rgba(0, 0, 0, 0.8); /* Cambia el fondo al pasar el ratón */
+    color: rgb(253, 0, 0); /* Cambia el color del texto al pasar el ratón */
+}

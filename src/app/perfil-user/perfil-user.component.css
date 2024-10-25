@@ -1,0 +1,12 @@
+.password-form-container {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .avatar{
+    height: 350px;
+    width: 350px;
+  }

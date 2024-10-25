@@ -1,0 +1,22 @@
+#page {
+    position: relative; /* Necesario para posicionar el overlay dentro del contenedor */
+
+}
+
+.background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("../../assets/porton-logo.png");
+    background-position: center; /* Centra la imagen en la pantalla */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    opacity: 0.3; /* Ajusta la opacidad de la imagen */
+    z-index: -1; /* La coloca detrás del formulario */
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con opacidad en el formulario */
+    z-index: 1; /* Asegura que el formulario esté por encima de la imagen */
+}
